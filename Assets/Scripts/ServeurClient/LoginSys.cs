@@ -16,7 +16,36 @@ public class LoginSys : MonoBehaviour
     void Start()
     {
         LOGINbutton.onClick.AddListener(() => StartLogin(LOGINusernameInput.text, LOGINpasswordInput.text));
+        StartCoroutine(checkVersion());
     }
+
+    IEnumerator checkVersion(){
+        string url = DataManager.Instance.GetData("serverIP") + "/version";
+        string version = Application.version;
+        string jsonData = "{\"version\":\"" + version + "\"}";
+        byte[] postData = System.Text.Encoding.UTF8.GetBytes(jsonData);
+        UnityWebRequest request = new UnityWebRequest(url, "POST");
+        request.uploadHandler = new UploadHandlerRaw(postData);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+        yield return request.SendWebRequest();
+        if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+        {
+            Debug.LogError("Erreur de connexion: " + request.error);
+        }
+        else
+        {
+            string responseText = request.downloadHandler.text;
+            Debug.Log("Réponse du serveur: " + responseText);
+            if (responseText == "NOPE")
+            {
+                Debug.Log("Version non supportée");
+                UnityEngine.SceneManagement.SceneManager.LoadScene("VersionError");
+            }
+        }
+    }
+
+
 
 
     // Méthode pour démarrer le processus de connexion
