@@ -36,6 +36,8 @@ zip -r "$OUTPUT_PATH/HexWar_${VERSION}_linux.zip" "Builds/Linux/" > /dev/null 2>
 zip -r "$OUTPUT_PATH/HexWar_${VERSION}_windows.zip" "Builds/Windows/" > /dev/null 2>&1
 
 rm -rf "Builds/Linux"
+rm -rf "Builds/Windows"
+rm -rf "Builds/version.txt"
 
 
 echo "Build archive created successfully."
