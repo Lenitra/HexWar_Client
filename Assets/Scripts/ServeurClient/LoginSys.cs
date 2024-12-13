@@ -19,30 +19,50 @@ public class LoginSys : MonoBehaviour
         StartCoroutine(checkVersion());
     }
 
-    IEnumerator checkVersion(){
+    IEnumerator checkVersion()
+    {
+
+#if UNITY_EDITOR
+
+        Debug.Log("Mode éditeur");
+        yield return new WaitForSeconds(1f);
+#else
+
         string url = DataManager.Instance.GetData("serverIP") + "/version";
         string version = Application.version;
-        string jsonData = "{\"version\":\"" + version + "\"}";
+
+        // Construire les données JSON de manière sécurisée
+        string jsonData = JsonUtility.ToJson(new { version });
         byte[] postData = System.Text.Encoding.UTF8.GetBytes(jsonData);
-        UnityWebRequest request = new UnityWebRequest(url, "POST");
-        request.uploadHandler = new UploadHandlerRaw(postData);
-        request.downloadHandler = new DownloadHandlerBuffer();
-        request.SetRequestHeader("Content-Type", "application/json");
-        yield return request.SendWebRequest();
-        if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+
+        using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
         {
-            Debug.LogError("Erreur de connexion: " + request.error);
-        }
-        else
-        {
-            string responseText = request.downloadHandler.text;
-            Debug.Log("Réponse du serveur: " + responseText);
-            if (responseText == "NOPE")
+            request.uploadHandler = new UploadHandlerRaw(postData);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            // Envoyer la requête
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
             {
-                Debug.Log("Version non supportée");
-                UnityEngine.SceneManagement.SceneManager.LoadScene("VersionError");
+                Debug.LogError("Erreur de connexion: " + request.error);
+            }
+            else
+            {
+                string responseText = request.downloadHandler.text;
+                Debug.Log("Réponse du serveur: " + responseText);
+
+                if (responseText.Trim() == "NOPE") // .Trim() pour éviter les problèmes d'espaces
+                {
+                    Debug.Log("Version non supportée");
+                    UnityEngine.SceneManagement.SceneManager.LoadScene("VersionError");
+                }
             }
         }
+
+#endif
+
     }
 
 
@@ -50,7 +70,7 @@ public class LoginSys : MonoBehaviour
 
     // Méthode pour démarrer le processus de connexion
     public void StartLogin(string username, string password)
-    {   
+    {
         LOGINloading.gameObject.SetActive(true);
         StartCoroutine(Login(username, password));
     }
@@ -59,20 +79,20 @@ public class LoginSys : MonoBehaviour
     IEnumerator Login(string username, string password)
     {
         string url = DataManager.Instance.GetData("serverIP") + "/login";
-        
+
         // Création des données JSON à envoyer
         string jsonData = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
         byte[] postData = System.Text.Encoding.UTF8.GetBytes(jsonData);
-        
+
         // Configuration de la requête UnityWebRequest
         UnityWebRequest request = new UnityWebRequest(url, "POST");
         request.uploadHandler = new UploadHandlerRaw(postData);
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
-        
+
         // Envoi de la requête et attente de la réponse
         yield return request.SendWebRequest();
-        
+
         // Gestion des erreurs de connexion
         if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
         {
@@ -86,7 +106,7 @@ public class LoginSys : MonoBehaviour
             LOGINloading.gameObject.SetActive(false);
 
             if (responseText == "NOPE")
-            {                
+            {
                 // Connexion échouée
                 Debug.Log("Connexion échouée");
                 StartCoroutine(shakeUI());
@@ -121,7 +141,7 @@ public class LoginSys : MonoBehaviour
                 }
                 Debug.Log(tmp);
 
-                
+
 
 
                 // ajouter le username dans les PlayerPrefs
@@ -135,7 +155,7 @@ public class LoginSys : MonoBehaviour
             }
         }
     }
-    
+
     IEnumerator shakeUI()
     {
         LOGINpasswordInput.text = "";
