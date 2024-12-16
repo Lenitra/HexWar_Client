@@ -133,8 +133,11 @@ try:
     else:
         print("Le serveur n'a pas été redémarré.")
 
-    # Fermeture de la session SFTP
-    sftp_client.close()
+    try:
+        # Fermeture de la session SFTP
+        sftp_client.close()
+    except:
+        pass # Le serveur est déjà fermé car il a été redémarré
 
 except Exception as e:
     print(f"Erreur lors de l'upload : \n{e}")
