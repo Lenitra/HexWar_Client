@@ -23,7 +23,6 @@ public class LoginSys : MonoBehaviour
     {
 
 #if UNITY_EDITOR
-
         Debug.Log("Mode éditeur");
         yield return new WaitForSeconds(1f);
 #else

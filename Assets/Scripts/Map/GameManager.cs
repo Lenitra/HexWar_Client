@@ -11,15 +11,7 @@ public class GameManager : MonoBehaviour
     private GridGenerator gridGenerator;
     private CamController camControler;
     private ServerClient serverClient;
-
-    // UI
-    [Header("UI")]
-    [SerializeField] private Button seeAllUnitsBtn;
-    [SerializeField] private Button seeHQ;
-    [SerializeField] private TMP_Text moneyText;
-
-    
-    public bool seeAllUnitsBool = false;
+    private PlayerControler playerControler;
 
 
     // EFFECTS
@@ -32,38 +24,18 @@ public class GameManager : MonoBehaviour
         serverClient = GetComponent<ServerClient>();
         gridGenerator = GetComponent<GridGenerator>();
         camControler = Camera.main.GetComponent<CamController>();
-
-        // Events listeners
-        seeAllUnitsBtn.onClick.AddListener(seeAllUnits);
-        seeHQ.onClick.AddListener(seeHQBtnClic);
-    }
-
-    public void seeHQBtnClic(){
-        // loop through all children
-        foreach (Transform child in transform){
-            if (child.gameObject.GetComponent<Tile>().type.Split(':')[0] == "hq" && child.gameObject.GetComponent<Tile>().owner == PlayerPrefs.GetString("username")){
-                camControler.lookTile(child.gameObject);
-                return;
-            }
-        }
-    }
-
-    public void seeAllUnits(){
-        seeAllUnitsBool = !seeAllUnitsBool;
-        foreach (Transform child in transform){
-            child.gameObject.GetComponent<Tile>().moreInfo.SetActive(seeAllUnitsBool);
-        }
+        playerControler = GetComponent<PlayerControler>();
     }
 
 
+    // Depuis le régulier pool du serveur, actualise la valeur de l'argent du joueur et call le playerController qui mets à jour dans le view
     public void UpdateMoney(string money)
     {
-        // Mettre à jour l'argent du joueur
-        moneyText.text = "¤ " + money;
         PlayerPrefs.SetInt("money", int.Parse(money));
+        playerControler.UpdateMoney(money);
     }
 
-
+    // Met à jour la grille de jeu
     public void SetupTiles(string jsonData)
     {
         // Désérialiser le JSON dans une structure adaptée à JsonUtility
@@ -101,7 +73,6 @@ public class GameManager : MonoBehaviour
         serverClient.build(tile, type);
     }
 
-
     public void moveUnitsBtnClic(string origin , string destination, int units)
     {
         // send a http request to the server
@@ -111,7 +82,7 @@ public class GameManager : MonoBehaviour
 
 
 
-
+    // Animation de déplacement des unités
     public IEnumerator moveUnitsAnimation(string[] moves, float animationDuration = 0.1f, float retractDuration = 0.01f)
     {
         // moves is an array of strings with the format ["x:z","x:z","x:z",...]
@@ -193,8 +164,6 @@ public class GameManager : MonoBehaviour
         // Finally, clear the line renderer completely
         moveUnitsLine.positionCount = 0;
     }
-
-
 
 
 

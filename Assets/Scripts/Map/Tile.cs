@@ -15,7 +15,7 @@ public class Tile : MonoBehaviour
     public TextMeshPro tileInfos;
     public string color;
 
-    private float originalBaseY;
+    private float originalBaseY = 0;
     private float selectionOffset = 0.8f;
 
     // textmeshpro for info on the tile
@@ -39,7 +39,6 @@ public class Tile : MonoBehaviour
 
     void Start()
     {
-        originalBaseY = transform.position.y;
 
         // name of the object is "Hexagon x, z"
         position[0] = int.Parse(gameObject.name.Split("Hexagon ")[1].Split(":")[0]);
@@ -49,6 +48,7 @@ public class Tile : MonoBehaviour
         toShowOnSelected.gameObject.SetActive(false);
 
         if (owner != ""){
+            originalBaseY = 0.025f;
             glow.SetActive(true);
             // add a material to the hoverOwner
             // set renderinmode to transparent
@@ -73,7 +73,7 @@ public class Tile : MonoBehaviour
                 float a = 1;
                 material.SetColor("_EmissionColor", new Color(r,g,b,a));
                 material.color = new Color(r,g,b,a);
-                transform.position = new Vector3(transform.position.x, transform.position.y + 0.025f, transform.position.z);
+                transform.position = new Vector3(transform.position.x, originalBaseY, transform.position.z);
             }
             else
             {
@@ -83,6 +83,7 @@ public class Tile : MonoBehaviour
             material.SetFloat("_EmissionScaleUI", 2f);
         } else {
             glow.SetActive(false);
+            transform.position = new Vector3(transform.position.x, originalBaseY, transform.position.z);
         }
 
 
@@ -166,6 +167,7 @@ public class Tile : MonoBehaviour
 
     public void select()
     {
+        transform.position = new Vector3(transform.position.x, originalBaseY, transform.position.z);
         if (activeCoroutine != null)
         {
             StopCoroutine(activeCoroutine);
@@ -175,6 +177,7 @@ public class Tile : MonoBehaviour
 
     public void unselect()
     {
+        transform.position = new Vector3(transform.position.x, originalBaseY+selectionOffset, transform.position.z);
         if (activeCoroutine != null)
         {
             StopCoroutine(activeCoroutine);

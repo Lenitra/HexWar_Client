@@ -14,19 +14,26 @@ public class PlayerControler : MonoBehaviour
     [SerializeField] private GameObject upgradePanel;
     [SerializeField] private TextMeshProUGUI stateInfoText;
 
+        // UI
+    [Header("HUD")]
+    [SerializeField] private Button seeAllUnitsBtn;
+    [SerializeField] private Button seeHQ;
+    [SerializeField] private TMP_Text moneyText;
+
     private GridGenerator gridGenerator;
     private GameManager gameManager;
     private CamController camControler;
 
     private Vector3 previousMousePosition;
-    public float timeClicked = 0;
+    private float timeClicked = 0;
 
     private string state = "";
     private GameObject selectedTile;
     private int selectedUnits;
 
-    public float tmpdist = 0;
+    private float tmpdist = 0;
     private bool skipNextClick = false; // Ce booléen va servir à ignorer le prochain clic
+    private bool seeAllUnitsBool = false;
 
     void Start()
     {
@@ -35,12 +42,56 @@ public class PlayerControler : MonoBehaviour
         camControler = Camera.main.GetComponent<CamController>();
         previousMousePosition = Input.mousePosition;
 
+        seeHQ.onClick.AddListener(seeHQBtnClic);
+        seeAllUnitsBtn.onClick.AddListener(seeAllUnits);
+
+
         movePanel.gameObject.SetActive(false);
         buildPanel.gameObject.SetActive(false);
     }
 
+
+    public void UpdateMoney(string money)
+    {
+        // Mettre à jour l'argent du joueur
+        moneyText.text = "¤ " + money;
+    }
+
+
+    public void seeAllUnits(){
+        seeAllUnitsBool = !seeAllUnitsBool;
+        foreach (Transform child in transform){
+            child.gameObject.GetComponent<Tile>().moreInfo.SetActive(seeAllUnitsBool);
+        }
+    }
+
+
+    public void seeHQBtnClic(){
+        if (selectedTile != null){
+            unselectTile();
+            tileRelativeCanvas.desactivate();
+        }
+        // loop through all children
+        foreach (Transform child in transform){
+            if (child.gameObject.GetComponent<Tile>().type.Split(':')[0] == "hq" && child.gameObject.GetComponent<Tile>().owner == PlayerPrefs.GetString("username")){
+                camControler.lookTile(child.gameObject);
+                return;
+            }
+        }
+    }
+
+
     void Update()
     {
+        if (stateInfoText.text != "")
+        {
+            stateInfoText.gameObject.SetActive(true);
+        }
+        else
+        {
+            stateInfoText.gameObject.SetActive(false);
+        }
+
 
         if (Input.GetMouseButton(0))
         {
@@ -115,6 +166,7 @@ public class PlayerControler : MonoBehaviour
         }
     }
 
+    #region Fonctions de gestion des boutons dans le menu radial
     public void buildBtnClic()
     {
         if (selectedTile != null)
@@ -131,6 +183,7 @@ public class PlayerControler : MonoBehaviour
         }
     }
 
+    
     public void moveUnitsBtnClic()
     {
         if (selectedTile != null && selectedTile.GetComponent<Tile>().units > 0)
@@ -153,8 +206,10 @@ public class PlayerControler : MonoBehaviour
             Debug.Log(msg);
         }
     }
+    #endregion
     
 
+    // Validation du formulaire de nombre d'units à déplacer
     public void getFromMovePanel(int units)
     {
         movePanel.gameObject.SetActive(false);
@@ -164,6 +219,7 @@ public class PlayerControler : MonoBehaviour
         tileRelativeCanvas.desactivate();
     }
 
+    // Validation du formulaire de construction
     public void getFromBuildPanel(string type = "")
     {
         if (type == "")
@@ -176,6 +232,7 @@ public class PlayerControler : MonoBehaviour
         gameManager.buildBtnClic(selectedTile.name.Split(' ')[1], type);
         unselectTile();
     }
+
 
     public void selectTile(GameObject tile)
     {
@@ -211,6 +268,8 @@ public class PlayerControler : MonoBehaviour
             tileRelativeCanvas.desactivate();
         }
     }
+
+
 
 
 }

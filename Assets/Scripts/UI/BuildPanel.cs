@@ -45,6 +45,7 @@ public class BuildPanel : MonoBehaviour
         previous.onClick.AddListener(() => {
             buildings[currentBuilding].SetActive(false);
             currentBuilding = (currentBuilding - 1 + maxBuilding) % maxBuilding;
+
             buildings[currentBuilding].SetActive(true);
             title.text = buildings[currentBuilding].GetComponent<BuildUI>().name;
             description.text = buildings[currentBuilding].GetComponent<BuildUI>().description;
@@ -63,9 +64,10 @@ public class BuildPanel : MonoBehaviour
 
         // Active the first building
         buildings[currentBuilding].SetActive(true);
-
         title.text = buildings[currentBuilding].GetComponent<BuildUI>().name;
+        description.text = buildings[currentBuilding].GetComponent<BuildUI>().description;
         updatePrice();
+
         buildBtn.onClick.AddListener(() => playerControler.getFromBuildPanel(buildings[currentBuilding].GetComponent<BuildUI>().type));
     }
 

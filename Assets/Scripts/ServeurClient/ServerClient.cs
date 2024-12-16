@@ -10,10 +10,8 @@ using System.Threading.Tasks;
 public class ServerClient : MonoBehaviour
 {
     private GameManager gameManager;
-    private float pollInterval = 2.5f; // Interval d'update de la carte en secondes
+    private float pollInterval = 2f; // Interval d'update de la carte en secondes
 
-    private int tmpPrice = -1;
-    private Coroutine getPriceCoroVar;
 
 
     void Start()

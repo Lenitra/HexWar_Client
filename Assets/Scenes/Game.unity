@@ -354,8 +354,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
-  m_fontSizeBase: 10
+  m_fontSize: 13
+  m_fontSizeBase: 13
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -677,10 +677,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad79189e32466ba399939d93e5c24047, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seeAllUnitsBtn: {fileID: 1469279411}
-  seeHQ: {fileID: 246162473}
-  moneyText: {fileID: 33855299}
-  seeAllUnitsBool: 0
   moveUnitsLine: {fileID: 580222695}
 --- !u!114 &137831712
 MonoBehaviour:
@@ -711,8 +707,9 @@ MonoBehaviour:
   buildPanel: {fileID: 295422344}
   upgradePanel: {fileID: 283072381}
   stateInfoText: {fileID: 782628377}
-  timeClicked: 0
-  tmpdist: 0
+  seeAllUnitsBtn: {fileID: 1469279411}
+  seeHQ: {fileID: 246162473}
+  moneyText: {fileID: 33855299}
 --- !u!1 &174146025
 GameObject:
   m_ObjectHideFlags: 0
@@ -3911,7 +3908,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 450, y: 450, z: 0.001}
+  m_Size: {x: 350, y: 350, z: 0.001}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &975150851
 MonoBehaviour:
@@ -3938,7 +3935,7 @@ MonoBehaviour:
   angleOffset: 0
   followOrbitalRotation: 1
   minRange: 0.25
-  maxRange: 1.5
+  maxRange: 0.75
   infiniteMaxRange: 0
   buttonInputAngle: 1
   radialMenuStyle: {fileID: 11400000, guid: 1a779da787f965d42b4fcce85ef5a5ed, type: 2}
@@ -5369,7 +5366,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1343387544}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5382,7 +5379,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.000030517578}
   m_SizeDelta: {x: 500, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1343387547
