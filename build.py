@@ -89,7 +89,7 @@ password = input(
 
 # Chemin du fichier local et chemin sur le VPS
 local_files = os.listdir(OUTPUT_PATH)
-remote_dir = "/root/HexWar_WebServer/builds"
+remote_dir = "/root/HexWar_Builds"
 
 # Création d'un client SSH
 ssh_client = paramiko.SSHClient()
@@ -124,6 +124,14 @@ try:
             print(f"Fichier {local_path} uploadé avec succès dans {remote_dir}.")
         else:
             print(f"'{local_path}' n'est pas un fichier, skipping...")
+
+    # reboot du serveur 
+    tmp = input("Voulez-vous redémarrer le serveur ? [y/n] ")
+    if tmp.lower() == "y":
+        stdin, stdout, stderr = ssh_client.exec_command("reboot")
+        print("Redémarrage du serveur en cours...")
+    else:
+        print("Le serveur n'a pas été redémarré.")
 
     # Fermeture de la session SFTP
     sftp_client.close()
