@@ -78,6 +78,7 @@ public class DataManager : MonoBehaviour
         dataDictionary.Clear();
         dataDictionary.Add("serverIP", "http://217.160.99.153:8080");
         if (lang == "fr"){
+            dataDictionary.Add("", "");
             dataDictionary.Add("build", "Construire");
             dataDictionary.Add("upgrade", "Améliorer");
             dataDictionary.Add("moveUnits", "Déplacer/Attaquer");

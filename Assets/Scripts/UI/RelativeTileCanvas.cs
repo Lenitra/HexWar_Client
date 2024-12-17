@@ -9,6 +9,7 @@ public class RelativeTileCanvas : MonoBehaviour
 
 
     [SerializeField] private GameObject tileInfoPanel;
+    [SerializeField] private TMPro.TextMeshProUGUI tileInfoText;
     private UltimateRadialMenu tileInfoMenu;
     private Tile selectedTile;
 
@@ -22,21 +23,18 @@ public class RelativeTileCanvas : MonoBehaviour
     {
         tileInfoMenu = tileInfoPanel.GetComponent<UltimateRadialMenu>();
 
-        // Button Info
-        tileInfoBtn1 = new UltimateRadialButtonInfo();
-        tileInfoMenu.RegisterButton(infosTileBtnClic, tileInfoBtn1, 0 );
 
         // Button Move
         tileInfoBtn2 = new UltimateRadialButtonInfo();
-        tileInfoMenu.RegisterButton( moveUnitsBtnClic, tileInfoBtn2, 1 );
+        tileInfoMenu.RegisterButton( moveUnitsBtnClic, tileInfoBtn2, 0 );
 
         // Button Close
         tileInfoBtn3 = new UltimateRadialButtonInfo();
-        tileInfoMenu.RegisterButton(playerControler.unselectTile, tileInfoBtn3, 2 );
+        tileInfoMenu.RegisterButton(playerControler.unselectTile, tileInfoBtn3, 1 );
 
         // Button Build
         tileInfoBtn4 = new UltimateRadialButtonInfo();
-        tileInfoMenu.RegisterButton( buildBtnClic, tileInfoBtn4, 3 );
+        tileInfoMenu.RegisterButton( buildBtnClic, tileInfoBtn4, 2 );
     }
 
 
@@ -60,6 +58,8 @@ public class RelativeTileCanvas : MonoBehaviour
             move = true;
         }
         setUpButtons(build, move);
+        tileInfoText.text = "\nUnités : " + selectedTile.units + "\nInfra : " + DataManager.Instance.GetData(selectedTile.type.Split(':')[0]) + "\nNiv. : " + selectedTile.type.Split(':')[1];
+
         // on click to lockPanel, it's the same as clicking on the close button
         lockPanel.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(playerControler.unselectTile);
     }
@@ -82,10 +82,6 @@ public class RelativeTileCanvas : MonoBehaviour
 
 
 
-    private void infosTileBtnClic()
-    {
-        playerControler.infosTileBtnClic();
-    }
 
 
     private void buildBtnClic()
