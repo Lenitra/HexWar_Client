@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class GridGenerator : MonoBehaviour
 {
-
+    private CamController camControler;
     [SerializeField] private GameObject hexPrefab;
     private float hexSize = 0.5f;
     private float animmYOffset = 1.5f; 
     private float gridGap = 0.1f;
+    private bool firstPool = true;
 
+
+    void Start()
+    {
+        camControler = Camera.main.GetComponent<CamController>();
+    }
 
     public GameObject getHex(int x, int z){
         foreach (Transform child in transform){
@@ -69,6 +75,12 @@ public class GridGenerator : MonoBehaviour
 
         yield return new WaitForSeconds(0.1f);
         hex.GetComponent<Tile>().setupTile((int)tileData["units"], (string)tileData["owner"], (string)tileData["type"], (string)tileData["color"]);
+        if (firstPool){
+            if (hex.GetComponent<Tile>().type.Split(':')[0] == "hq" && hex.GetComponent<Tile>().owner == PlayerPrefs.GetString("username")){
+                camControler.lookTile(hex);
+                firstPool = false;
+            }
+        }
 
 
     }

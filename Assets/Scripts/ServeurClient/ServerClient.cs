@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 public class ServerClient : MonoBehaviour
 {
     private GameManager gameManager;
-    private float pollInterval = 2f; // Interval d'update de la carte en secondes
+    private float pollInterval = 0.5f; // Interval d'update de la carte en secondes
 
 
 
@@ -34,7 +34,7 @@ public class ServerClient : MonoBehaviour
     public void updateMap()
     {
         // lancer la coroutine dans 1 seconde
-        Invoke("GetGameState", 0.25f);
+        Invoke("GetGameState", 0.01f);
     }
 
     IEnumerator GetGameState()
