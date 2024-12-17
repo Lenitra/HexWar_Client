@@ -60,6 +60,8 @@ public class RelativeTileCanvas : MonoBehaviour
             move = true;
         }
         setUpButtons(build, move);
+        // on click to lockPanel, it's the same as clicking on the close button
+        lockPanel.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(playerControler.unselectTile);
     }
 
 

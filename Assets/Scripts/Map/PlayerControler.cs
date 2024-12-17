@@ -95,10 +95,6 @@ public class PlayerControler : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-            if (EventSystem.current.IsPointerOverGameObject())
-            {
-                return;
-            }
             timeClicked += Time.deltaTime;
             tmpdist += Vector3.Distance(Input.mousePosition, previousMousePosition);
             previousMousePosition = Input.mousePosition;
