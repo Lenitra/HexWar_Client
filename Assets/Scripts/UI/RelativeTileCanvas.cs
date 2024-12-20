@@ -58,7 +58,13 @@ public class RelativeTileCanvas : MonoBehaviour
             move = true;
         }
         setUpButtons(build, move);
-        tileInfoText.text = "\nUnités : " + selectedTile.units + "\nInfra : " + DataManager.Instance.GetData(selectedTile.type.Split(':')[0]) + "\nNiv. : " + selectedTile.type.Split(':')[1];
+        
+        if (selectedTile.type != ""){
+            tileInfoText.text = "Unités : " + selectedTile.units + "\nInfra : " + DataManager.Instance.GetData(selectedTile.type.Split(':')[0]) + "\nNiv. : " + selectedTile.type.Split(':')[1];
+        }
+        else {
+            tileInfoText.text = "Unités : " + selectedTile.units;
+        }
 
         // on click to lockPanel, it's the same as clicking on the close button
         lockPanel.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(playerControler.unselectTile);
