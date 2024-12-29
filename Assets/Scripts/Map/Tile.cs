@@ -20,7 +20,6 @@ public class Tile : MonoBehaviour
 
     // textmeshpro for info on the tile
     [SerializeField] private GameObject toShowOnSelected;
-    [SerializeField] private GameObject hoverOwner;
     [SerializeField] private GameObject glow;
     public GameObject moreInfo;
 
@@ -92,9 +91,6 @@ public class Tile : MonoBehaviour
 
 
 
-
-
-        hoverOwner.SetActive(false);
 
 
 

@@ -26,6 +26,7 @@ public class MovePanel : MonoBehaviour
         moveSlider.onValueChanged.AddListener(sliderChange);
         moveBtn.onClick.AddListener(() => playerControler.getFromMovePanel(int.Parse(moveSlider.value.ToString())));
         maxBtn.onClick.AddListener(() => selectedUnitsInputField.text = moveSlider.maxValue.ToString());
+        selectedUnitsInputField.text = moveSlider.maxValue.ToString();
     }
 
     public void init(int maxUnits){
