@@ -13,6 +13,7 @@ public class PlayerControler : MonoBehaviour
     [SerializeField] private GameObject buildPanel;
     [SerializeField] private GameObject upgradePanel;
     [SerializeField] private TextMeshProUGUI stateInfoText;
+    [SerializeField] private GameObject stateInfoPanel;
 
         // UI
     [Header("HUD")]
@@ -85,11 +86,13 @@ public class PlayerControler : MonoBehaviour
     {
         if (stateInfoText.text != "")
         {
-            stateInfoText.gameObject.SetActive(true);
+            // stateInfoText.gameObject.SetActive(true);
+            stateInfoPanel.SetActive(true);
         }
         else
         {
-            stateInfoText.gameObject.SetActive(false);
+            stateInfoPanel.SetActive(false);
+            // stateInfoText.gameObject.SetActive(false);
         }
 
 

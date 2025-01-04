@@ -21,6 +21,7 @@ public class Tile : MonoBehaviour
     // textmeshpro for info on the tile
     [SerializeField] private GameObject toShowOnSelected;
     [SerializeField] private GameObject glow;
+    [SerializeField] private GameObject topElement;
     public GameObject moreInfo;
 
     [Header("Prefabs")]
@@ -48,10 +49,10 @@ public class Tile : MonoBehaviour
 
         if (owner != ""){
             originalBaseY = 0.025f;
-            glow.SetActive(true);
+            // glow.SetActive(true);
             // add a material to the hoverOwner
             // set renderinmode to transparent
-            Material material = glow.GetComponent<Renderer>().material;
+            Material material = topElement.GetComponent<Renderer>().material;
             material.SetFloat("_Mode", 2);
             material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
             material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
@@ -61,7 +62,7 @@ public class Tile : MonoBehaviour
             material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
             material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
             material.color = new Color(1,1,1,1); 
-            material.EnableKeyword("_EMISSION");
+            // material.EnableKeyword("_EMISSION");
 
 
             if (color != "")
@@ -70,13 +71,13 @@ public class Tile : MonoBehaviour
                 float g = float.Parse(color.Split('|')[1])/255;
                 float b = float.Parse(color.Split('|')[2])/255;
                 float a = 1;
-                material.SetColor("_EmissionColor", new Color(r,g,b,a));
+                material.SetColor("_EmissionColor", new Color(r,g,b,0.2f));
                 material.color = new Color(r,g,b,a);
                 transform.position = new Vector3(transform.position.x, originalBaseY, transform.position.z);
             }
             else
             {
-                material.SetColor("_EmissionColor", new Color(1,1,1,1));
+                // material.SetColor("_EmissionColor", new Color(1,1,1,1));
             }
             // setup intensity of the emission
             material.SetFloat("_EmissionScaleUI", 2f);
