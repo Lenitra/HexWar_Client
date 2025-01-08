@@ -13,7 +13,7 @@ public class BuildAutomation
         string windowsPath = Path.Combine(basePath, "Windows");
 
         // Générer une version basée sur la date
-        string version = System.DateTime.Now.ToString("yyMMddhhmm");
+        string version = System.DateTime.Now.ToString("yyMMddHHmm");
         PlayerSettings.bundleVersion = version;
 
         // Créer un fichier version dans le dossier de build
