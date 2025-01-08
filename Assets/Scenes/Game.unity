@@ -3929,7 +3929,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35ca0494fbe429540a77f5009e8c3fe3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parallaxParent: {fileID: 0}
+  parallaxParent: {fileID: 171236190}
   parallaxScales:
   - 0
   - 0.05
