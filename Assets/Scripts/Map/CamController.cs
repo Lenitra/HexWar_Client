@@ -3,9 +3,14 @@ using UnityEngine.EventSystems;
 using System.Collections;
 
 public class CamController : MonoBehaviour
-{    
-    private Coroutine moveCoroutine = null;   // Coroutine pour l'animation de translation
-    private float smoothTime = 3; 
+{
+    // Ajout de la variable pour bloquer les déplacements/zoom
+    public bool canMove = true;
+
+    [SerializeField] private float moveSpeed = 10f;  // Vitesse de déplacement clavier
+    private Coroutine moveCoroutine = null;         // Coroutine pour l'animation de translation
+    private float smoothTime = 6;
+
     private Plane groundPlane;
     private bool isDragging = false;
     private Vector3 initialMousePosition;
@@ -14,8 +19,8 @@ public class CamController : MonoBehaviour
 
     // Variables pour le zoom
     private float zoomSpeed = 10f;     // Vitesse du zoom
-    private float minZoom = 9f;        // Zoom minimum (proche)
-    private float maxZoom = 25f;       // Zoom maximum (éloigné)
+    private float minZoom = 5f;        // Zoom minimum (proche)
+    private float maxZoom = 29f;       // Zoom maximum (éloigné)
 
     void Start()
     {
@@ -25,7 +30,19 @@ public class CamController : MonoBehaviour
 
     void Update()
     {
-        // Gestion du zoom avec la molette
+        // -------------------------------------
+        // Si canMove est à false, on bloque tout
+        // -------------------------------------
+        if (!canMove){
+            isDragging = false;
+            initialMousePosition = Input.mousePosition;
+            Cursor.visible = true;
+            return;
+        }
+
+        // --------------------------
+        // 1) GESTION DU ZOOM SOURIS
+        // --------------------------
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (scroll != 0.0f && moveCoroutine == null)
         {
@@ -53,29 +70,31 @@ public class CamController : MonoBehaviour
             transform.position = new Vector3(transform.position.x, newY, newZ);
         }
 
-
-        // Lorsque le bouton gauche de la souris est enfoncé
+        // --------------------------------
+        // 2) GESTION DU CLIQUE-DRAG SOURIS
+        // --------------------------------
         if (Input.GetMouseButtonDown(0))
         {
+            // Vérifie si on clique sur l’UI
             if (EventSystem.current.IsPointerOverGameObject())
             {
                 isDragging = false;
                 initialMousePosition = Input.mousePosition;
                 lastMousePosition = Input.mousePosition;
-                return; 
+                return;
             }
             initialMousePosition = Input.mousePosition;
             lastMousePosition = initialMousePosition;
         }
-        // Lorsque le bouton gauche de la souris est maintenu enfoncé
         else if (Input.GetMouseButton(0))
         {
+            // Vérifie si on clique sur l’UI
             if (EventSystem.current.IsPointerOverGameObject())
             {
                 isDragging = false;
                 initialMousePosition = Input.mousePosition;
                 lastMousePosition = Input.mousePosition;
-                return; 
+                return;
             }
             // Calculer la distance parcourue par la souris depuis le début du clic
             float distance = (Input.mousePosition - initialMousePosition).magnitude;
@@ -104,9 +123,9 @@ public class CamController : MonoBehaviour
                 lastMousePosition = Input.mousePosition;
             }
         }
-        // Lorsque le bouton gauche de la souris est relâché
         else if (Input.GetMouseButtonUp(0))
         {
+            // Vérifie si on clique sur l’UI
             if (EventSystem.current.IsPointerOverGameObject())
             {
                 isDragging = false;
@@ -122,10 +141,33 @@ public class CamController : MonoBehaviour
                 Cursor.visible = true;
             }
         }
+
+        // -----------------------------------------------------
+        // 3) GESTION DU MOUVEMENT AU CLAVIER (ZQSD / FLÈCHES)
+        // -----------------------------------------------------
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
+
+        {
+            Vector3 right = Camera.main.transform.right;
+            Vector3 forward = Vector3.Cross(right, Vector3.up);
+
+            right.y = 0f;
+            forward.y = 0f;
+            right.Normalize();
+            forward.Normalize();
+
+            Vector3 moveDirection = right * horizontalInput + forward * verticalInput;
+            transform.position += moveDirection * moveSpeed * Time.deltaTime;
+        }
     }
 
+    // --------------------------------
+    // 4) FONCTION DE FOCUS SUR UNE TILE
+    // --------------------------------
     public void lookTile(GameObject tile)
     {
+
         Vector3 tilePos = tile.transform.position;
 
         // Arrêter la coroutine en cours si elle existe
@@ -138,7 +180,15 @@ public class CamController : MonoBehaviour
 
     IEnumerator TranslateToTile(Vector3 tilePos)
     {
-        Vector3 targetPos = new Vector3(tilePos.x, transform.position.y, tilePos.z - ((transform.position.y/10)*3));
+    
+        canMove = false;
+
+        Vector3 targetPos = new Vector3(
+            tilePos.x,
+            10,
+            tilePos.z - 3
+        );
+
         float elapsed = 0f;
 
         while (Vector3.Distance(transform.position, targetPos) > 0.01f)
@@ -150,5 +200,7 @@ public class CamController : MonoBehaviour
 
         transform.position = targetPos; // Ajustement final pour une position précise
         moveCoroutine = null;
+        canMove = true;
     }
+
 }

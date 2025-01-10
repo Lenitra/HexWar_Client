@@ -84,6 +84,17 @@ public class PlayerControler : MonoBehaviour
 
     void Update()
     {
+        
+        if (selectedTile != null && camControler.canMove)
+        {
+            camControler.canMove = false;
+        }
+        else if (selectedTile == null && !camControler.canMove)
+        {
+            camControler.canMove = true;
+        }
+
+
         if (stateInfoText.text != "")
         {
             // stateInfoText.gameObject.SetActive(true);
