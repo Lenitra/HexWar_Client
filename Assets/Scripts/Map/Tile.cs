@@ -53,7 +53,7 @@ public class Tile : MonoBehaviour
             // add a material to the hoverOwner
             // set renderinmode to transparent
             Material material = topElement.GetComponent<Renderer>().material;
-            material.SetFloat("_Mode", 2);
+            material.SetFloat("_Mode", 0);
             material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
             material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
             material.SetInt("_ZWrite", 0);

@@ -131,6 +131,7 @@ public class PlayerControler : MonoBehaviour
                     RaycastHit hit;
                     if (Physics.Raycast(ray, out hit))
                     {
+                        
                         if (selectedTile == null)
                         {
                             // Vérifier si la tuile appartient au joueur

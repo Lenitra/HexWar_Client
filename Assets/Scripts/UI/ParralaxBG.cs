@@ -7,7 +7,8 @@ public class ParralaxBG : MonoBehaviour
     [SerializeField] private Transform parallaxParent;
 
     [Tooltip("Facteurs de défilement pour chaque layer (x et z).")]
-    [SerializeField] private float[] parallaxScales;
+    [SerializeField] 
+    private float[] parallaxScales;
 
     private Transform[] layers;
     private Vector3 lastCamPos;
@@ -30,7 +31,7 @@ public class ParralaxBG : MonoBehaviour
         parallaxScales = new float[childCount];
         parallaxScales[0] = 0;
         parallaxScales[1] = 0.05f;
-        parallaxScales[0] = 0.08f;
+        parallaxScales[2] = 0.08f;
     }
 
     private void Start()
