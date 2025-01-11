@@ -27,16 +27,12 @@ public class LoginSys : MonoBehaviour
         yield return new WaitForSeconds(1f);
 #else
 
-        string url = DataManager.Instance.GetData("serverIP") + "/version";
+        string url = DataManager.Instance.GetData("serverIP") + "/get-version";
         string version = Application.version;
 
-        // Construire les données JSON de manière sécurisée
-        string jsonData = JsonUtility.ToJson(new { version });
-        byte[] postData = System.Text.Encoding.UTF8.GetBytes(jsonData);
 
-        using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
+        using (UnityWebRequest request = new UnityWebRequest(url, "GET"))
         {
-            request.uploadHandler = new UploadHandlerRaw(postData);
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
 
@@ -52,12 +48,21 @@ public class LoginSys : MonoBehaviour
                 string responseText = request.downloadHandler.text;
                 Debug.Log("Réponse du serveur: " + responseText);
 
-                if (responseText.Trim() == "NOPE") // .Trim() pour éviter les problèmes d'espaces
+                if (responseText.Split('"')[3] != version)
                 {
-                    Debug.Log("Version non supportée");
+                    Debug.Log("Version NON supportée !");
+
+                    Debug.Log("Version du jeu: " + version);
+                    Debug.Log("Version du serveur: " + responseText.Split('"')[3]);
                     UnityEngine.SceneManagement.SceneManager.LoadScene("VersionError");
                 }
+                else{
+                    Debug.Log("Jeu à jour !");
+                }
             }
+
+
+            
         }
 
 #endif
