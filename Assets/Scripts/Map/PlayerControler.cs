@@ -89,7 +89,7 @@ public class PlayerControler : MonoBehaviour
         {
             camControler.canMove = false;
         }
-        else if (selectedTile == null && !camControler.canMove)
+        else if (selectedTile == null && !camControler.canMove || state == "move")
         {
             camControler.canMove = true;
         }
@@ -161,6 +161,7 @@ public class PlayerControler : MonoBehaviour
                 {
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     RaycastHit hit;
+                    camControler.canMove = true;
                     if (Physics.Raycast(ray, out hit))
                     {
                         if (hit.collider.gameObject.CompareTag("Tile"))
