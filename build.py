@@ -56,6 +56,7 @@ print("Creating build archive...")
 
 linux_build_path = os.path.join(OUTPUT_PATH, "Linux")
 windows_build_path = os.path.join(OUTPUT_PATH, "Windows")
+macos_build_path = os.path.join(OUTPUT_PATH, "MacOS")
 
 if os.path.exists(linux_build_path):
     shutil.make_archive(f"{OUTPUT_PATH}/HexWar_{VERSION}_linux", 'zip', linux_build_path)
@@ -64,6 +65,10 @@ if os.path.exists(linux_build_path):
 if os.path.exists(windows_build_path):
     shutil.make_archive(f"{OUTPUT_PATH}/HexWar_{VERSION}_windows", 'zip', windows_build_path)
     shutil.rmtree(windows_build_path)
+
+if os.path.exists(macos_build_path):
+    shutil.make_archive(f"{OUTPUT_PATH}/HexWar_{VERSION}_macos", 'zip', macos_build_path)
+    shutil.rmtree(macos_build_path)
 
 # Supprimer le fichier version.txt une fois les archives créées
 version_txt_path = os.path.join(OUTPUT_PATH, "version.txt")
@@ -86,6 +91,9 @@ username = "root"
 password = input(
     f"Ctrl + C pour ne pas uploader sur le serveur\nVotre mot de passe pour root {hostname} : "
 )
+
+# clear la console
+os.system('cls' if os.name == 'nt' else 'clear')
 
 # Chemin du fichier local et chemin sur le VPS
 local_files = os.listdir(OUTPUT_PATH)
