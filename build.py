@@ -5,6 +5,7 @@ import subprocess
 import sys
 import paramiko
 import os
+import requests
 
 
 # Définir les variables de base
@@ -130,25 +131,25 @@ try:
         if os.path.isfile(local_path):
             sftp_client.put(local_path, remote_path)
             print(f"Fichier {local_path} uploadé avec succès dans {remote_dir}.")
-        else:
-            print(f"'{local_path}' n'est pas un fichier, skipping...")
 
     # reboot du serveur 
-    tmp = input("Voulez-vous redémarrer le serveur ? [y/n] ")
-    if tmp.lower() == "y":
-        stdin, stdout, stderr = ssh_client.exec_command("reboot")
-        print("Redémarrage du serveur en cours...")
-    else:
-        print("Le serveur n'a pas été redémarré.")
+    stdin, stdout, stderr = ssh_client.exec_command("reboot")
 
-    try:
-        # Fermeture de la session SFTP
-        sftp_client.close()
-    except:
-        pass # Le serveur est déjà fermé car il a été redémarré
 
 except Exception as e:
     print(f"Erreur lors de l'upload : \n{e}")
-finally:
-    # Fermeture de la connexion SSH
-    ssh_client.close()
+
+
+
+# afficher un message dans un webhook discord
+url = "https://discord.com/api/webhooks/1330618232473911399/Yn50shp00cxMEQgW8x3GZb3GNMOZd12UOthMc6TVOnCNvLFfvDh18SToVJ3PW3fQyKKR"
+data = {
+    "content": f"Nouvelle version du jeu : __{VERSION}__ .\nIl faudra la télécharger pour continuer à jouer."
+}
+
+response = requests.post(url, json=data)
+if response.status_code == 204:
+    print("Message sent successfully to Discord.")
+else:
+    print(f"Failed to send message to Discord. Status code: {response.status_code}")
+
