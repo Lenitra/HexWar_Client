@@ -62,14 +62,17 @@ macos_build_path = os.path.join(OUTPUT_PATH, "MacOS")
 if os.path.exists(linux_build_path):
     shutil.make_archive(f"{OUTPUT_PATH}/HexWar_{VERSION}_linux", 'zip', linux_build_path)
     shutil.rmtree(linux_build_path)
+    print(f"Linux archive created successfully.")
 
 if os.path.exists(windows_build_path):
     shutil.make_archive(f"{OUTPUT_PATH}/HexWar_{VERSION}_windows", 'zip', windows_build_path)
     shutil.rmtree(windows_build_path)
+    print(f"Windows archive created successfully.")
 
 if os.path.exists(macos_build_path):
     shutil.make_archive(f"{OUTPUT_PATH}/HexWar_{VERSION}_macos", 'zip', macos_build_path)
     shutil.rmtree(macos_build_path)
+    print(f"MacOS archive created successfully.")
 
 # Supprimer le fichier version.txt une fois les archives créées
 version_txt_path = os.path.join(OUTPUT_PATH, "version.txt")
@@ -80,10 +83,9 @@ print("Build archive created successfully.")
 print(f"Version {VERSION} archived successfully.")
 print("End of build process.")
 
-
-# Étape 4 : Mettre à jour le dépôt du serveur avec ftp
-print("Updating server repository...")
-
+print("")
+print("")
+print("")
 
 # Informations de connexion SSH
 hostname = "217.160.99.153"  # Adresse IP du VPS
@@ -95,6 +97,9 @@ password = input(
 
 # clear la console
 os.system('cls' if os.name == 'nt' else 'clear')
+print("Build OK")
+print("Archives OK")
+print("Updating server repository...")
 
 # Chemin du fichier local et chemin sur le VPS
 local_files = os.listdir(OUTPUT_PATH)
@@ -140,7 +145,6 @@ except Exception as e:
     print(f"Erreur lors de l'upload : \n{e}")
 
 
-
 # afficher un message dans un webhook discord
 url = "https://discord.com/api/webhooks/1330618232473911399/Yn50shp00cxMEQgW8x3GZb3GNMOZd12UOthMc6TVOnCNvLFfvDh18SToVJ3PW3fQyKKR"
 data = {
@@ -152,4 +156,3 @@ if response.status_code == 204:
     print("Message sent successfully to Discord.")
 else:
     print(f"Failed to send message to Discord. Status code: {response.status_code}")
-
