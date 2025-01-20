@@ -42,7 +42,7 @@ public class BuildAutomation
 
         // Construire pour MacOS
         options.target = BuildTarget.StandaloneOSX;
-        options.locationPathName = Path.Combine(basePath, $"HexWar_v{version}.app");
+        options.locationPathName = Path.Combine(macPath, $"HexWar_v{version}.app");
         Directory.CreateDirectory(macPath); // Assurer que le dossier existe    
         BuildPipeline.BuildPlayer(options);
         
