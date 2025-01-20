@@ -69,6 +69,7 @@ if os.path.exists(windows_build_path):
     shutil.rmtree(windows_build_path)
     print(f"Windows archive created successfully.")
 
+input("Press Enter to continue...")
 if os.path.exists(macos_build_path):
     shutil.make_archive(f"{OUTPUT_PATH}/HexWar_{VERSION}_macos", 'zip', macos_build_path)
     shutil.rmtree(macos_build_path)

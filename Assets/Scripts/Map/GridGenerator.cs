@@ -6,37 +6,43 @@ public class GridGenerator : MonoBehaviour
 {
     private CamController camControler;
     [SerializeField] private GameObject hexPrefab;
+
+    // Rayon (en Unity) d'un hex "plat en haut"
     private float hexSize = 0.5f;
-    private float animmYOffset = 1.5f; 
+    private float animmYOffset = 1.5f;
     private float gridGap = 0.1f;
     private bool firstPool = true;
-
 
     void Start()
     {
         camControler = Camera.main.GetComponent<CamController>();
     }
 
-    public GameObject getHex(int x, int z){
-        foreach (Transform child in transform){
-            if (child.name == "Hexagon " + x + ":" + z){
+    public GameObject getHex(int x, int z)
+    {
+        foreach (Transform child in transform)
+        {
+            if (child.name == "Hexagon " + x + ":" + z)
+            {
                 return child.gameObject;
             }
         }
         return null;
     }
 
-
     public void UpdateGrid(List<Dictionary<string, object>> tilesData)
     {
+        // Mise à jour ou instanciation
         foreach (Dictionary<string, object> tileData in tilesData)
         {
+            // Récupère x, z (qui sont en réalité x,y axiaux)
             int x = int.Parse(tileData["key"].ToString().Split(':')[0]);
             int z = int.Parse(tileData["key"].ToString().Split(':')[1]);
-            
+
             GameObject tile = getHex(x, z);
             if (tile != null)
             {
+                // Déjà présent : on met à jour
                 Tile tileComponent = tile.GetComponent<Tile>();
 
                 int units = (int)tileData["units"];
@@ -44,105 +50,130 @@ public class GridGenerator : MonoBehaviour
                 string type = (string)tileData["type"];
                 string color = (string)tileData["color"];
 
-                // Regrouper les mises à jour dans setupTile si nécessaire
-                if (tileComponent.units != units || tileComponent.owner != owner || tileComponent.type != type)
+                // Actualiser seulement si changements
+                if (tileComponent.units != units
+                    || tileComponent.owner != owner
+                    || tileComponent.type != type)
                 {
-                    tileComponent.setupTile(units, owner, type, color); // Appel unique si quelque chose a changé
+                    tileComponent.setupTile(units, owner, type, color);
                 }
-            
             }
             else
             {
+                // Hex à instancier
                 StartCoroutine(InstantiateHexagon(x, z, tileData));
             }
         }
-        
-        // delete the hexagons that are not in the tilesData
-        foreach (Transform child in transform){
-            if (child.name.Contains("Hexagon") && !tilesData.Exists(tile => tile["key"].ToString() == child.name.Split(' ')[1])){
-                Destroy(child.gameObject);
+
+        // Supprimer les hex qui ne sont plus présents
+        foreach (Transform child in transform)
+        {
+            if (child.name.Contains("Hexagon"))
+            {
+                string childKey = child.name.Split(' ')[1]; // "x:z"
+                if (!tilesData.Exists(tile => tile["key"].ToString() == childKey))
+                {
+                    Destroy(child.gameObject);
+                }
             }
         }
     }
 
-    IEnumerator InstantiateHexagon(int x, int z, Dictionary<string, object> tileData){
-        // if the tile is not created, create it
-        GameObject hex = GameObject.Instantiate(hexPrefab);
+    IEnumerator InstantiateHexagon(int x, int z, Dictionary<string, object> tileData)
+    {
+        // Création
+        GameObject hex = Instantiate(hexPrefab);
         hex.name = "Hexagon " + x + ":" + z;
         hex.transform.SetParent(this.transform);
 
-        hex.transform.position = new Vector3(GetHexCoordinates(x, z)[0], 0, GetHexCoordinates(x, z)[1]);
+        // Positionnement en Unity
+        float[] coords = GetHexCoordinates(x, z);
+        hex.transform.position = new Vector3(coords[0], 0, coords[1]);
 
         yield return new WaitForSeconds(0.1f);
-        hex.GetComponent<Tile>().setupTile((int)tileData["units"], (string)tileData["owner"], (string)tileData["type"], (string)tileData["color"]);
-        if (firstPool){
-            if (hex.GetComponent<Tile>().type.Split(':')[0] == "hq" && hex.GetComponent<Tile>().owner == PlayerPrefs.GetString("username")){
+
+        // Setup
+        int units = (int)tileData["units"];
+        string owner = (string)tileData["owner"];
+        string typeId = (string)tileData["type"];
+        string color = (string)tileData["color"];
+
+        hex.GetComponent<Tile>().setupTile(units, owner, typeId, color);
+
+        // Centrer la caméra si c'est le premier HQ
+        if (firstPool)
+        {
+            Tile tileComp = hex.GetComponent<Tile>();
+            if (tileComp.type.Split(':')[0] == "hq"
+                && tileComp.owner == PlayerPrefs.GetString("username"))
+            {
                 camControler.lookTile(hex);
                 firstPool = false;
             }
         }
-
-
     }
-
-
 
     public void GenerateTiles(List<Dictionary<string, object>> tilesData)
     {
+        // Version "en bloc" (si besoin)
         foreach (Dictionary<string, object> tileData in tilesData)
         {
             int x = (int)tileData["x"];
-            int z = (int)tileData["z"];
+            int z = (int)tileData["z"]; // encore une fois, "z" = "y" axial
             string owner = (string)tileData["owner"];
             int units = (int)tileData["units"];
             string type_id = (string)tileData["type"];
             string color = (string)tileData["color"];
 
-            GameObject hex = GameObject.Instantiate(hexPrefab);
-            hex.name = "Hexagon " + x + "" + z;
+            GameObject hex = Instantiate(hexPrefab);
+            hex.name = "Hexagon " + x + ":" + z;
             hex.transform.SetParent(this.transform);
-            hex.transform.position = new Vector3(GetHexCoordinates(x, z)[0], 0, GetHexCoordinates(x, z)[1]);
+
+            float[] coords = GetHexCoordinates(x, z);
+            hex.transform.position = new Vector3(coords[0], 0, coords[1]);
+
             hex.GetComponent<Tile>().setupTile(units, owner, type_id, color);
         }
     }
 
-
-    // Permet de récupérer les coordonnées dans unity à partir de la position dans le tableau
-    public float[] GetHexCoordinates(int x, int z) 
+    /// <summary>
+    /// GetHexCoordinates(x, z) :
+    /// ICI, x et z sont en réalité les coordonnées axiales (q, r)
+    /// pour un "flat top" (base plate).
+    /// 
+    /// Formule standard Red Blob Games :
+    ///   px = 1.5f * hexSize * x
+    ///   pz = sqrt(3) * hexSize * (z + x/2)
+    /// 
+    /// On ajoute (éventuellement) le "gridGap" si vous voulez espacer un peu.
+    /// </summary>
+    public float[] GetHexCoordinates(int x, int z)
     {
-        // Calculer les dimensions d'un hexagone
-        float hexWidth = hexSize * 2f; // Largeur (diamètre) de l'hexagone
-        float hexHeight = Mathf.Sqrt(3) * hexSize; // Hauteur de l'hexagone (sqrt(3) * taille)
-        
-        // Décalage horizontal entre les colonnes avec le gridGap
-        float offsetX = (hexWidth + gridGap) * 0.75f; 
-        
-        // Calcul de la position X et Z en fonction des coordonnées x et z
-        float xPos = x * offsetX;
-        float zPos = z * (hexHeight + gridGap); // Prendre en compte le gridGap dans la position verticale
+        // Axial -> Pixel (flat top)
+        float px = 1.5f * hexSize * x;
+        float pz = Mathf.Sqrt(3f) * hexSize * (z + x / 2f);
 
-        // Décaler les hexagones sur les lignes impaires
-        if (x % 2 == 1) {
-            zPos += (hexHeight + gridGap) / 2f; // Décalage pour les lignes impaires
-        }
+        // Si vous voulez ajouter un "gridGap", vous pouvez
+        // px += x * gridGap;
+        // pz += z * gridGap; 
+        // ... ou toute autre logique
 
-        // Retourner les coordonnées X et Z sous forme de tableau
-        return new float[] { xPos, zPos };
+        return new float[] { px, pz };
     }
 
-
-
-    IEnumerator AnimateHexagon(GameObject hex){
-        for (int i = 0; i < animmYOffset*10+1; i++){
-            hex.transform.position = new Vector3(hex.transform.position.x, hex.transform.position.y + 0.1f, hex.transform.position.z);
+    IEnumerator AnimateHexagon(GameObject hex)
+    {
+        // Montée
+        for (int i = 0; i < animmYOffset * 10 + 1; i++)
+        {
+            hex.transform.position += new Vector3(0, 0.1f, 0);
             yield return new WaitForSeconds(0.0001f);
         }
-        for (int i = 0; i < 5; i++){
-            hex.transform.position = new Vector3(hex.transform.position.x, hex.transform.position.y - 0.2f, hex.transform.position.z);
+        // Redescente
+        for (int i = 0; i < 5; i++)
+        {
+            hex.transform.position -= new Vector3(0, 0.2f, 0);
             yield return new WaitForSeconds(0.0001f);
         }
     }
-
-
-
 }
