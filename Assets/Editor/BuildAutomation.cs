@@ -11,7 +11,6 @@ public class BuildAutomation
         string basePath = "Builds";
         string linuxPath = Path.Combine(basePath, "Linux");
         string windowsPath = Path.Combine(basePath, "Windows");
-        string macPath = Path.Combine(basePath, "MacOS");
 
         // Générer une version basée sur la date
         string version = System.DateTime.Now.ToString("yyMMddHHmm");
@@ -40,11 +39,7 @@ public class BuildAutomation
         Directory.CreateDirectory(windowsPath); // Assurer que le dossier existe
         BuildPipeline.BuildPlayer(options);
 
-        // Construire pour MacOS
-        options.target = BuildTarget.StandaloneOSX;
-        options.locationPathName = Path.Combine(macPath, $"HexWar_v{version}.app");
-        Directory.CreateDirectory(macPath); // Assurer que le dossier existe    
-        BuildPipeline.BuildPlayer(options);
+
         
 
         // Afficher un message une fois terminé
