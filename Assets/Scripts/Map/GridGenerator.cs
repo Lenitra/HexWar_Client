@@ -90,7 +90,7 @@ public class GridGenerator : MonoBehaviour
         float[] coords = GetHexCoordinates(x, z);
         hex.transform.position = new Vector3(coords[0], 0, coords[1]);
 
-        yield return new WaitForSeconds(0.1f);
+        yield return null;
 
         // Setup
         int units = (int)tileData["units"];
@@ -98,14 +98,14 @@ public class GridGenerator : MonoBehaviour
         string typeId = (string)tileData["type"];
         string color = (string)tileData["color"];
 
-        hex.GetComponent<Tile>().setupTile(units, owner, typeId, color);
-
+        Tile hextile = hex.GetComponent<Tile>();
+        hextile.setupTile(units, owner, typeId, color);
+        
         // Centrer la caméra si c'est le premier HQ
         if (firstPool)
         {
-            Tile tileComp = hex.GetComponent<Tile>();
-            if (tileComp.type.Split(':')[0] == "hq"
-                && tileComp.owner == PlayerPrefs.GetString("username"))
+            if (hextile.type.Split(':')[0].ToUpper() == "HQ"
+                && hextile.owner == PlayerPrefs.GetString("username"))
             {
                 camControler.lookTile(hex);
                 firstPool = false;
@@ -113,28 +113,29 @@ public class GridGenerator : MonoBehaviour
         }
     }
 
-    public void GenerateTiles(List<Dictionary<string, object>> tilesData)
-    {
-        // Version "en bloc" (si besoin)
-        foreach (Dictionary<string, object> tileData in tilesData)
-        {
-            int x = (int)tileData["x"];
-            int z = (int)tileData["z"]; // encore une fois, "z" = "y" axial
-            string owner = (string)tileData["owner"];
-            int units = (int)tileData["units"];
-            string type_id = (string)tileData["type"];
-            string color = (string)tileData["color"];
 
-            GameObject hex = Instantiate(hexPrefab);
-            hex.name = "Hexagon " + x + ":" + z;
-            hex.transform.SetParent(this.transform);
+    // TODO: delete -> Not used
+    // public void GenerateTiles(List<Dictionary<string, object>> tilesData)
+    // {
+    //     foreach (Dictionary<string, object> tileData in tilesData)
+    //     {
+    //         int x = (int)tileData["x"];
+    //         int z = (int)tileData["z"]; // encore une fois, "z" = "y" axial
+    //         string owner = (string)tileData["owner"];
+    //         int units = (int)tileData["units"];
+    //         string type_id = (string)tileData["type"];
+    //         string color = (string)tileData["color"];
 
-            float[] coords = GetHexCoordinates(x, z);
-            hex.transform.position = new Vector3(coords[0], 0, coords[1]);
+    //         GameObject hex = Instantiate(hexPrefab);
+    //         hex.name = "Hexagon " + x + ":" + z;
+    //         hex.transform.SetParent(this.transform);
 
-            hex.GetComponent<Tile>().setupTile(units, owner, type_id, color);
-        }
-    }
+    //         float[] coords = GetHexCoordinates(x, z);
+    //         hex.transform.position = new Vector3(coords[0], 0, coords[1]);
+
+    //         hex.GetComponent<Tile>().setupTile(units, owner, type_id, color);
+    //     }
+    // }
 
     /// <summary>
     /// GetHexCoordinates(x, z) :

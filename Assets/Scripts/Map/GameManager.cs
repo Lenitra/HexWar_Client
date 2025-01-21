@@ -25,6 +25,10 @@ public class GameManager : MonoBehaviour
         gridGenerator = GetComponent<GridGenerator>();
         camControler = Camera.main.GetComponent<CamController>();
         playerControler = GetComponent<PlayerControler>();
+
+        // faire le premier pool de la map
+        serverClient.updateMap(); 
+
     }
 
 

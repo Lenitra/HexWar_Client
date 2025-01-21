@@ -74,7 +74,7 @@ public class PlayerControler : MonoBehaviour
         }
         // loop through all children
         foreach (Transform child in transform){
-            if (child.gameObject.GetComponent<Tile>().type.Split(':')[0] == "hq" && child.gameObject.GetComponent<Tile>().owner == PlayerPrefs.GetString("username")){
+            if (child.gameObject.GetComponent<Tile>().type.Split(':')[0].ToUpper() == "HQ" && child.gameObject.GetComponent<Tile>().owner == PlayerPrefs.GetString("username")){
                 camControler.lookTile(child.gameObject);
                 return;
             }
