@@ -10,7 +10,7 @@ public class GridGenerator : MonoBehaviour
     // Rayon (en Unity) d'un hex "plat en haut"
     private float hexSize = 0.5f;
     private float animmYOffset = 1.5f;
-    private float gridGap = 0.1f;
+    private float gridGap = 0.05f;
     private bool firstPool = true;
 
     void Start()
@@ -114,53 +114,15 @@ public class GridGenerator : MonoBehaviour
     }
 
 
-    // TODO: delete -> Not used
-    // public void GenerateTiles(List<Dictionary<string, object>> tilesData)
-    // {
-    //     foreach (Dictionary<string, object> tileData in tilesData)
-    //     {
-    //         int x = (int)tileData["x"];
-    //         int z = (int)tileData["z"]; // encore une fois, "z" = "y" axial
-    //         string owner = (string)tileData["owner"];
-    //         int units = (int)tileData["units"];
-    //         string type_id = (string)tileData["type"];
-    //         string color = (string)tileData["color"];
-
-    //         GameObject hex = Instantiate(hexPrefab);
-    //         hex.name = "Hexagon " + x + ":" + z;
-    //         hex.transform.SetParent(this.transform);
-
-    //         float[] coords = GetHexCoordinates(x, z);
-    //         hex.transform.position = new Vector3(coords[0], 0, coords[1]);
-
-    //         hex.GetComponent<Tile>().setupTile(units, owner, type_id, color);
-    //     }
-    // }
-
-    /// <summary>
-    /// GetHexCoordinates(x, z) :
-    /// ICI, x et z sont en réalité les coordonnées axiales (q, r)
-    /// pour un "flat top" (base plate).
-    /// 
-    /// Formule standard Red Blob Games :
-    ///   px = 1.5f * hexSize * x
-    ///   pz = sqrt(3) * hexSize * (z + x/2)
-    /// 
-    /// On ajoute (éventuellement) le "gridGap" si vous voulez espacer un peu.
-    /// </summary>
     public float[] GetHexCoordinates(int x, int z)
     {
         // Axial -> Pixel (flat top)
-        float px = 1.5f * hexSize * x;
-        float pz = Mathf.Sqrt(3f) * hexSize * (z + x / 2f);
-
-        // Si vous voulez ajouter un "gridGap", vous pouvez
-        // px += x * gridGap;
-        // pz += z * gridGap; 
-        // ... ou toute autre logique
+        float px = (1.5f * hexSize + gridGap) * x;
+        float pz = (Mathf.Sqrt(3f) * hexSize + gridGap) * (z + x / 2f);
 
         return new float[] { px, pz };
     }
+
 
     IEnumerator AnimateHexagon(GameObject hex)
     {
