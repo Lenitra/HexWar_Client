@@ -139,14 +139,3 @@ except Exception as e:
     print(f"Erreur lors de l'upload : \n{e}")
 
 
-# afficher un message dans un webhook discord
-url = "https://discord.com/api/webhooks/1330618232473911399/Yn50shp00cxMEQgW8x3GZb3GNMOZd12UOthMc6TVOnCNvLFfvDh18SToVJ3PW3fQyKKR"
-data = {
-    "content": f"Nouvelle version du jeu : __{VERSION}__ .\nIl faudra la télécharger pour continuer à jouer."
-}
-
-response = requests.post(url, json=data)
-if response.status_code == 204:
-    print("Message sent successfully to Discord.")
-else:
-    print(f"Failed to send message to Discord. Status code: {response.status_code}")
