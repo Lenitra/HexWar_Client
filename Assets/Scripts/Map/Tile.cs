@@ -35,6 +35,8 @@ public class Tile : MonoBehaviour
 
     private GameObject infrastrucutre;
 
+    public bool colorsActive = true;
+
 
 
     void Start()
@@ -61,26 +63,39 @@ public class Tile : MonoBehaviour
             material.EnableKeyword("_ALPHABLEND_ON");
             material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
             material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
-            material.color = new Color(1,1,1,1); 
+            material.color = new Color(1,1,1,1);
             // material.EnableKeyword("_EMISSION");
 
 
-            if (color != "")
+            if (colorsActive)
             {
-                float r = float.Parse(color.Split('|')[0])/255;
-                float g = float.Parse(color.Split('|')[1])/255;
-                float b = float.Parse(color.Split('|')[2])/255;
-                float a = 1;
-                material.SetColor("_EmissionColor", new Color(r,g,b,0.2f));
-                material.color = new Color(r,g,b,a);
-                transform.position = new Vector3(transform.position.x, originalBaseY, transform.position.z);
+                float r = float.Parse(color.Split('|')[0]) / 255f;
+                float g = float.Parse(color.Split('|')[1]) / 255f;
+                float b = float.Parse(color.Split('|')[2]) / 255f;
+                float a = 1f;
+
+                material.SetColor("_EmissionColor", new Color(r, g, b, 0.2f));
+                material.color = new Color(r, g, b, a);
             }
             else
             {
-                // material.SetColor("_EmissionColor", new Color(1,1,1,1));
+                if (owner == PlayerPrefs.GetString("username"))
+                {
+                    float r = float.Parse(color.Split('|')[0]) / 255f;
+                    float g = float.Parse(color.Split('|')[1]) / 255f;
+                    float b = float.Parse(color.Split('|')[2]) / 255f;
+
+                    material.SetColor("_EmissionColor", new Color(r, g, b, 0.2f));
+                    material.color = new Color(r, g, b, 1f);
+                }
+                else
+                {
+                    material.color = new Color(0.6f, 0.6f, 0.6f, 1f);
+                }
             }
+
             // setup intensity of the emission
-            material.SetFloat("_EmissionScaleUI", 2f);
+            material.SetFloat("_EmissionScaleUI", 5f);
         } else {
             glow.SetActive(false);
             transform.position = new Vector3(transform.position.x, originalBaseY, transform.position.z);

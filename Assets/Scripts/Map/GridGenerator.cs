@@ -10,8 +10,17 @@ public class GridGenerator : MonoBehaviour
     // Rayon (en Unity) d'un hex "plat en haut"
     private float hexSize = 0.5f;
     private float animmYOffset = 1.5f;
-    private float gridGap = 0.05f;
     private bool firstPool = true;
+
+    // Géré en option
+    public float gridGap = 0.05f; 
+    public bool hexesColor = true;
+
+    
+
+
+
+
 
     void Start()
     {
@@ -50,6 +59,8 @@ public class GridGenerator : MonoBehaviour
                 string type = (string)tileData["type"];
                 string color = (string)tileData["color"];
 
+                tileComponent.colorsActive = hexesColor;
+
                 // Actualiser seulement si changements
                 if (tileComponent.units != units
                     || tileComponent.owner != owner
@@ -79,6 +90,17 @@ public class GridGenerator : MonoBehaviour
         }
     }
 
+    public void destroyGrid()
+    {
+        foreach (Transform child in transform)
+        {
+            if (child.name.Contains("Hexagon"))
+            {
+                Destroy(child.gameObject);
+            }
+        }
+    }
+
     IEnumerator InstantiateHexagon(int x, int z, Dictionary<string, object> tileData)
     {
         // Création
@@ -99,6 +121,7 @@ public class GridGenerator : MonoBehaviour
         string color = (string)tileData["color"];
 
         Tile hextile = hex.GetComponent<Tile>();
+        hextile.colorsActive = hexesColor;
         hextile.setupTile(units, owner, typeId, color);
         
         // Centrer la caméra si c'est le premier HQ

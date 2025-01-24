@@ -5,10 +5,13 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
 using System;
+using UnityEngine.Rendering.PostProcessing;
 
 public class PlayerControler : MonoBehaviour
 {
     [SerializeField] private RelativeTileCanvas tileRelativeCanvas;
+    
+    [SerializeField] private GameObject optionPanel;
     [SerializeField] private GameObject movePanel;
     [SerializeField] private GameObject buildPanel;
     [SerializeField] private GameObject upgradePanel;
@@ -19,6 +22,7 @@ public class PlayerControler : MonoBehaviour
     [Header("HUD")]
     [SerializeField] private Button seeAllUnitsBtn;
     [SerializeField] private Button seeHQ;
+    [SerializeField] private Button showOptionBtn;
     [SerializeField] private TMP_Text moneyText;
 
     private GridGenerator gridGenerator;
@@ -45,12 +49,47 @@ public class PlayerControler : MonoBehaviour
 
         seeHQ.onClick.AddListener(seeHQBtnClic);
         seeAllUnitsBtn.onClick.AddListener(seeAllUnits);
-
+        showOptionBtn.onClick.AddListener(showOptionPanel);
 
         movePanel.gameObject.SetActive(false);
         buildPanel.gameObject.SetActive(false);
+        upgradePanel.gameObject.SetActive(false);
+        stateInfoPanel.SetActive(false);
+        optionPanel.SetActive(false);
+
+        setupOptions();
     }
 
+
+    public void setupOptions()
+    {
+        if (PlayerPrefs.HasKey("opt_gridGap")) // Distance entre les tuiles
+        {
+            gridGenerator.gridGap = PlayerPrefs.GetFloat("opt_gridGap");
+        }
+
+        if (PlayerPrefs.HasKey("opt_hexesColor")) // Couleur des tuiles
+        {
+            gridGenerator.hexesColor = PlayerPrefs.GetInt("opt_hexesColor") == 1;
+        }
+
+        if (PlayerPrefs.HasKey("opt_bloom")) // Flou lumineux
+        {
+            // Change the bloom intensity from the post process volume
+            
+            // get the post process volume
+            PostProcessVolume volume = Camera.main.GetComponent<PostProcessVolume>();
+            if (volume.profile.TryGetSettings(out Bloom bloom))
+            {
+                // Récupérez la valeur et appliquez-la
+                bloom.intensity.value = PlayerPrefs.GetFloat("opt_bloom", 1.0f); // 1.0f est la valeur par défaut
+            }
+        }
+
+
+
+        gridGenerator.destroyGrid();
+    }
 
     public void UpdateMoney(string money)
     {
@@ -58,6 +97,11 @@ public class PlayerControler : MonoBehaviour
         moneyText.text = "¤ " + money;
     }
 
+
+    public void showOptionPanel()
+    {
+        optionPanel.SetActive(true);
+    }
 
     public void seeAllUnits(){
         seeAllUnitsBool = !seeAllUnitsBool;
