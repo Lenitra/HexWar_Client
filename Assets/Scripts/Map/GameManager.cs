@@ -12,6 +12,11 @@ public class GameManager : MonoBehaviour
     private CamController camControler;
     private ServerClient serverClient;
     private PlayerControler playerControler;
+    // coroutine du pooling régulier
+    private Coroutine poolingCoroutine;
+    private bool isPooling = true;
+
+
 
 
     // EFFECTS
@@ -28,7 +33,32 @@ public class GameManager : MonoBehaviour
 
         // faire le premier pool de la map
         serverClient.updateMap(); 
+        // lancer le pooling régulier
+        poolingCoroutine = StartCoroutine(pooling());
 
+    }
+
+    public void togglePooling (bool state)
+    {
+        if (state && !isPooling)
+        {
+            poolingCoroutine = StartCoroutine(pooling());
+        }
+        if (!state && isPooling)
+        {
+            StopCoroutine(poolingCoroutine);
+        }
+    }
+
+    // Coroutine de pooling régulier
+    private IEnumerator pooling()
+    {
+        while (true)
+        {
+            // Pooling de la map et de l'argent
+            serverClient.updateMap();
+            yield return new WaitForSeconds(1f);
+        }
     }
 
 

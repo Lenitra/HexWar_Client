@@ -17,24 +17,14 @@ public class ServerClient : MonoBehaviour
     void Start()
     {
         gameManager = GetComponent<GameManager>();
-        StartCoroutine(PollGameState());
     }
 
-    // Boucle de call au serveur pour récupérer l'état du jeu
-    IEnumerator PollGameState()
-    {
-        while (true)
-        {
-            StartCoroutine(GetGameState());
-            yield return new WaitForSeconds(pollInterval);
-        }
-    }
 
 
     public void updateMap()
     {
-        // lancer la coroutine dans 1 seconde
-        Invoke("GetGameState", 0.01f);
+        // lancer la coroutine 
+        StartCoroutine(GetGameState());
     }
 
     IEnumerator GetGameState()

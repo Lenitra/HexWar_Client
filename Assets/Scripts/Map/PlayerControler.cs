@@ -39,6 +39,10 @@ public class PlayerControler : MonoBehaviour
     private float tmpdist = 0;
     private bool skipNextClick = false; // Ce booléen va servir à ignorer le prochain clic
     private bool seeAllUnitsBool = false;
+    private float afkFrom = 0; // in seconds
+    private float afkMax = 2.5f*60; // in seconds
+    private float afkDisconect = 20*60; // in seconds
+    private bool isafk = false;
 
     void Start()
     {
@@ -128,6 +132,36 @@ public class PlayerControler : MonoBehaviour
 
     void Update()
     {
+        
+
+        gameManager.togglePooling(!isafk);
+
+        afkFrom += Time.deltaTime;
+        if (Input.anyKey)
+        {
+            Debug.Log("No longer AFK");
+            afkFrom = 0;
+            isafk = false;
+        }
+        else
+        {
+            
+            if (afkFrom > afkMax)
+            {
+                Debug.Log("AFK");
+                isafk = true;
+            } 
+            if (afkFrom > afkDisconect)
+            {
+                Debug.Log("AFK for too long");
+                // go to scene Home
+                UnityEngine.SceneManagement.SceneManager.LoadScene("Home");
+            }
+        }
+
+
+        
+
         
         if (selectedTile != null && camControler.canMove)
         {
