@@ -69,6 +69,10 @@ public class PlayerControler : MonoBehaviour
     {
         if (PlayerPrefs.HasKey("opt_gridGap")) // Distance entre les tuiles
         {
+            if (PlayerPrefs.GetFloat("opt_gridGap") < 0.1f || PlayerPrefs.GetFloat("opt_gridGap") > 1.0f)
+            {
+                PlayerPrefs.SetFloat("opt_gridGap", 0.1f);
+            }
             gridGenerator.gridGap = PlayerPrefs.GetFloat("opt_gridGap");
         }
 
@@ -80,7 +84,10 @@ public class PlayerControler : MonoBehaviour
         if (PlayerPrefs.HasKey("opt_bloom")) // Flou lumineux
         {
             // Change the bloom intensity from the post process volume
-            
+            if (PlayerPrefs.GetFloat("opt_bloom") < 0.0f || PlayerPrefs.GetFloat("opt_bloom") > 2.0f)
+            {
+                PlayerPrefs.SetFloat("opt_bloom", 1.0f);
+            }
             // get the post process volume
             PostProcessVolume volume = Camera.main.GetComponent<PostProcessVolume>();
             if (volume.profile.TryGetSettings(out Bloom bloom))
