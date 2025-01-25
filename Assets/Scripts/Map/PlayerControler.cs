@@ -285,17 +285,17 @@ public class PlayerControler : MonoBehaviour
 
 
     // TODO: Créer un panel d'infos pour les tuiles et appliquer le texte ici
-    public void infosTileBtnClic()
-    {
-        if (selectedTile != null)
-        {
-            string msg = "Infos de la tuile " + selectedTile.name + "\n";
-            msg += "Owner : " + selectedTile.GetComponent<Tile>().owner + "\n";
-            msg += "Units : " + selectedTile.GetComponent<Tile>().units + "\n";
-            msg += "Type : " + selectedTile.GetComponent<Tile>().type ;
-            Debug.Log(msg);
-        }
-    }
+    // public void infosTileBtnClic()
+    // {
+    //     if (selectedTile != null)
+    //     {
+    //         string msg = "Infos de la tuile " + selectedTile.name + "\n";
+    //         msg += "Owner : " + selectedTile.GetComponent<Tile>().owner + "\n";
+    //         msg += "Units : " + selectedTile.GetComponent<Tile>().units + "\n";
+    //         msg += "Type : " + selectedTile.GetComponent<Tile>().type ;
+    //         Debug.Log(msg);
+    //     }
+    // }
     #endregion
     
 

@@ -60,10 +60,10 @@ public class RelativeTileCanvas : MonoBehaviour
         setUpButtons(build, move);
         
         if (selectedTile.type != ""){
-            tileInfoText.text = "Unités : " + selectedTile.units + "\nInfra : " + DataManager.Instance.GetData(selectedTile.type.Split(':')[0]) + "\nNiv. : " + selectedTile.type.Split(':')[1];
+            tileInfoText.text = "<sprite=0> " + selectedTile.units + "\n<sprite=2> : " + DataManager.Instance.GetData(selectedTile.type.Split(':')[0].ToLower()) + "\n<sprite=1> " + selectedTile.type.Split(':')[1];
         }
         else {
-            tileInfoText.text = "Unités : " + selectedTile.units;
+            tileInfoText.text = "<sprite=0> " + selectedTile.units;
         }
 
         // on click to lockPanel, it's the same as clicking on the close button
