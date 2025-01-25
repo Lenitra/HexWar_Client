@@ -654,7 +654,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LOGINusernameInput: {fileID: 0}
   LOGINpasswordInput: {fileID: 0}
-  LOGINloading: {fileID: 0}
+  LOGINrememberToggle: {fileID: 0}
   LOGINbutton: {fileID: 0}
 --- !u!114 &354603648
 MonoBehaviour:

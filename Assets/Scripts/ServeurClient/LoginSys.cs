@@ -3,19 +3,22 @@ using UnityEngine.Networking;
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using TMPro;
 
 public class LoginSys : MonoBehaviour
 {
 
-    [SerializeField] private InputField LOGINusernameInput;
-    [SerializeField] private InputField LOGINpasswordInput;
-    [SerializeField] private GameObject LOGINloading;
+    [SerializeField] private TMP_InputField LOGINusernameInput;
+    [SerializeField] private TMP_InputField LOGINpasswordInput;
+    [SerializeField] private Toggle LOGINrememberToggle;
     [SerializeField] private Button LOGINbutton;
 
 
     void Start()
     {
         LOGINbutton.onClick.AddListener(() => StartLogin(LOGINusernameInput.text, LOGINpasswordInput.text));
+        LOGINusernameInput.text = PlayerPrefs.GetString("username");
+        LOGINpasswordInput.text = PlayerPrefs.GetString("password");
         StartCoroutine(checkVersion());
     }
 
@@ -75,7 +78,7 @@ public class LoginSys : MonoBehaviour
     // Méthode pour démarrer le processus de connexion
     public void StartLogin(string username, string password)
     {
-        LOGINloading.gameObject.SetActive(true);
+        // LOGINloading.gameObject.SetActive(true);
         StartCoroutine(Login(username, password));
     }
 
@@ -107,7 +110,7 @@ public class LoginSys : MonoBehaviour
             // Traitement de la réponse du serveur
             string responseText = request.downloadHandler.text;
             Debug.Log("Réponse du serveur: " + responseText);
-            LOGINloading.gameObject.SetActive(false);
+            // LOGINloading.gameObject.SetActive(false);
 
             if (responseText == "NOPE")
             {
@@ -146,9 +149,14 @@ public class LoginSys : MonoBehaviour
                 Debug.Log(tmp);
 
 
+                if (LOGINrememberToggle.isOn)
+                {
+                    PlayerPrefs.SetString("username", LOGINusernameInput.text);
+                    PlayerPrefs.SetString("password", LOGINpasswordInput.text);
+                }
 
 
-                // ajouter le username dans les PlayerPrefs
+                // ajouter le données du serveur dans les PlayerPrefs
                 PlayerPrefs.SetString("username", responseJson["username"]);
                 PlayerPrefs.SetString("color", responseJson["color"]);
                 PlayerPrefs.SetInt("money", int.Parse(responseJson["money"]));

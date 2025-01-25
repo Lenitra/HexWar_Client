@@ -1,0 +1,29 @@
+fileFormatVersion: 2
+guid: 80d61d74031ec854ca83b158b1e0aa0e
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Titillium
+  fontNames:
+  - Titillium
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 51525
+  packageName: Sentinel FPS GUI
+  packageVersion: 1.1
+  assetPath: Assets/Sentinel FPS GUI/Fonts/Titillium-Light.otf
+  uploadId: 397536

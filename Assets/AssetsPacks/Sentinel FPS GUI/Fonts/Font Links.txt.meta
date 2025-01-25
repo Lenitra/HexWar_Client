@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a537a58c92cf0ba4c90c3489245b2c32
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 51525
+  packageName: Sentinel FPS GUI
+  packageVersion: 1.1
+  assetPath: Assets/Sentinel FPS GUI/Fonts/Font Links.txt
+  uploadId: 397536

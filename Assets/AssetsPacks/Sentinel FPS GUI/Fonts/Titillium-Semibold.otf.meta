@@ -1,0 +1,38 @@
+fileFormatVersion: 2
+guid: 2792e4aaa303d734a8307306a98ec77b
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Titillium
+  fontNames:
+  - Titillium
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 86ca85f0f3b449a4ba609c0631411ca3, type: 3}
+  - {fileID: 12800000, guid: c48200b1a8124194786a7343eae158bf, type: 3}
+  - {fileID: 12800000, guid: 415a641489dd47647bfacc5120b35f71, type: 3}
+  - {fileID: 12800000, guid: 80d61d74031ec854ca83b158b1e0aa0e, type: 3}
+  - {fileID: 12800000, guid: 5189adb61e5bbde439808364f2141200, type: 3}
+  - {fileID: 12800000, guid: 949560f6b2c5dd04ca63826fb83fb762, type: 3}
+  - {fileID: 12800000, guid: 11f35d77c867c67458c88710af210d7c, type: 3}
+  - {fileID: 12800000, guid: 66544a8a06c8273479339d4d6d2d6679, type: 3}
+  - {fileID: 12800000, guid: 23f66dfaaa08daf47a04ae816c0b136c, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 51525
+  packageName: Sentinel FPS GUI
+  packageVersion: 1.1
+  assetPath: Assets/Sentinel FPS GUI/Fonts/Titillium-Semibold.otf
+  uploadId: 397536

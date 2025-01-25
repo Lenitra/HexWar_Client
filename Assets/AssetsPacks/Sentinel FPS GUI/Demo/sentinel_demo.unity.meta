@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 66e0dad37a7ec0a4ea7973eda3878b41
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 51525
+  packageName: Sentinel FPS GUI
+  packageVersion: 1.1
+  assetPath: Assets/Sentinel FPS GUI/Demo/sentinel_demo.unity
+  uploadId: 397536
