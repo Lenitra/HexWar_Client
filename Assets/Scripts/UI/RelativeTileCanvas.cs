@@ -13,10 +13,10 @@ public class RelativeTileCanvas : MonoBehaviour
     private UltimateRadialMenu tileInfoMenu;
     private Tile selectedTile;
 
-    private UltimateRadialButtonInfo tileInfoBtn1;
-    private UltimateRadialButtonInfo tileInfoBtn2;
-    private UltimateRadialButtonInfo tileInfoBtn3;
-    private UltimateRadialButtonInfo tileInfoBtn4;
+    private UltimateRadialButtonInfo tileInfoBtn1; // Attaque
+    private UltimateRadialButtonInfo tileInfoBtn2; // Déplacement
+    private UltimateRadialButtonInfo tileInfoBtn3; // Fermer
+    private UltimateRadialButtonInfo tileInfoBtn4; // Construction
 
 
     void Start()
@@ -24,17 +24,21 @@ public class RelativeTileCanvas : MonoBehaviour
         tileInfoMenu = tileInfoPanel.GetComponent<UltimateRadialMenu>();
 
 
+        // Attk Move
+        tileInfoBtn1 = new UltimateRadialButtonInfo();
+        tileInfoMenu.RegisterButton( moveUnitsBtnClic, tileInfoBtn1, buttonIndex: 0 );
+
         // Button Move
         tileInfoBtn2 = new UltimateRadialButtonInfo();
-        tileInfoMenu.RegisterButton( moveUnitsBtnClic, tileInfoBtn2, 0 );
+        tileInfoMenu.RegisterButton( moveUnitsBtnClic, tileInfoBtn2, buttonIndex: 1 );
 
         // Button Close
         tileInfoBtn3 = new UltimateRadialButtonInfo();
-        tileInfoMenu.RegisterButton(playerControler.unselectTile, tileInfoBtn3, 1 );
+        tileInfoMenu.RegisterButton(playerControler.unselectTile, tileInfoBtn3, buttonIndex: 2);
 
         // Button Build
         tileInfoBtn4 = new UltimateRadialButtonInfo();
-        tileInfoMenu.RegisterButton( buildBtnClic, tileInfoBtn4, 2 );
+        tileInfoMenu.RegisterButton( buildBtnClic, tileInfoBtn4, buttonIndex: 3 );
     }
 
 
@@ -60,7 +64,7 @@ public class RelativeTileCanvas : MonoBehaviour
         setUpButtons(build, move);
         
         if (selectedTile.type != ""){
-            tileInfoText.text = "<sprite=0> " + selectedTile.units + "\n<sprite=2> : " + DataManager.Instance.GetData(selectedTile.type.Split(':')[0].ToLower()) + "\n<sprite=1> " + selectedTile.type.Split(':')[1];
+            tileInfoText.text = "<sprite=0> " + selectedTile.units + "\n<sprite=2> " + DataManager.Instance.GetData(selectedTile.type.Split(':')[0].ToLower()) + "\n<sprite=1> " + selectedTile.type.Split(':')[1];
         }
         else {
             tileInfoText.text = "<sprite=0> " + selectedTile.units;
@@ -73,11 +77,16 @@ public class RelativeTileCanvas : MonoBehaviour
 
 
     // Permet de désactiver les boutons de construction et de déplacement si besoin
-    private void setUpButtons(bool build = true, bool move = true){
+    private void setUpButtons(bool build = true, bool attk = true, bool move = false){
         if (!build){
             tileInfoBtn4.DisableButton();
         } else {
             tileInfoBtn4.EnableButton();
+        }
+        if (!attk){
+            tileInfoBtn1.DisableButton();
+        } else {
+            tileInfoBtn1.EnableButton();
         }
         if (!move){
             tileInfoBtn2.DisableButton();
