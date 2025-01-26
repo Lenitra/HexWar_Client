@@ -13,6 +13,9 @@ public class LoginSys : MonoBehaviour
     [SerializeField] private Toggle LOGINrememberToggle;
     [SerializeField] private Button LOGINbutton;
 
+    [SerializeField] private Button registerButton;
+    [SerializeField] private Button exitButton;
+
 
     void Start()
     {
@@ -20,6 +23,9 @@ public class LoginSys : MonoBehaviour
         LOGINusernameInput.text = PlayerPrefs.GetString("username");
         LOGINpasswordInput.text = PlayerPrefs.GetString("password");
         StartCoroutine(checkVersion());
+        // redirect to http://217.160.99.153:8080/login
+        registerButton.onClick.AddListener(() => Application.OpenURL(DataManager.Instance.GetData("serverIP") + "/login"));
+        exitButton.onClick.AddListener(() => Application.Quit());
     }
 
     IEnumerator checkVersion()
