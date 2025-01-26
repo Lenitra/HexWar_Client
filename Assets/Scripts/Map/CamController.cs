@@ -175,7 +175,16 @@ public class CamController : MonoBehaviour
         {
             StopCoroutine(moveCoroutine);
         }
+        canMove = false;
         moveCoroutine = StartCoroutine(TranslateToTile(tilePos));
+    }
+
+    public void setCanMove(bool state){
+        if (state == true && moveCoroutine != null)
+        {
+            return;
+        }
+        canMove = state;
     }
 
     IEnumerator TranslateToTile(Vector3 tilePos)

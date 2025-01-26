@@ -169,14 +169,23 @@ public class PlayerControler : MonoBehaviour
 
         
 
-        
+        // quand une tuile est selectionnée
         if (selectedTile != null && camControler.canMove)
         {
-            camControler.canMove = false;
+            camControler.setCanMove(false);
         }
-        else if (selectedTile == null && !camControler.canMove || state == "move")
+
+        // quand une tuile est selectionnée etqu'on est en state move (déplacement d'unités)
+        // on autorise le déplacement de la caméra
+        else if (selectedTile != null && state == "move")
         {
-            camControler.canMove = true;
+            camControler.setCanMove(true);
+        }
+
+        // Quand on déselectionne une tuile
+        else if (selectedTile == null)
+        {
+            camControler.setCanMove(true);
         }
 
 
@@ -191,7 +200,7 @@ public class PlayerControler : MonoBehaviour
             // stateInfoText.gameObject.SetActive(false);
         }
 
-
+        #region Gestion des events de la souris et du clavier
         if (Input.GetMouseButton(0))
         {
             timeClicked += Time.deltaTime;
@@ -200,8 +209,59 @@ public class PlayerControler : MonoBehaviour
         }
 
 
+        // Quand on appuie sur A
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if (state == "move" && selectedTile != null)
+            {
+                unselectTile();
+            }
+            else if (state == "" && selectedTile == null)
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit))
+                {
 
-        if (Input.GetMouseButtonUp(0))
+                    // Vérifier si la tuile appartient au joueur
+                    if (PlayerPrefs.GetString("username") == hit.collider.gameObject.GetComponent<Tile>().owner && hit.collider.gameObject.GetComponent<Tile>().units > 0)
+                    {
+                        selectTile(hit.collider.gameObject);
+                        // comme si on avait cliqué sur le bouton move
+                        moveUnitsBtnClic();
+                        // comme si on avait cliqué sur le bouton de validation du formulaire
+                        getFromMovePanel(hit.collider.gameObject.GetComponent<Tile>().units);
+                    }
+                }
+            }
+        }
+
+        // Quand on appuie sur B
+        else if (Input.GetKeyDown(KeyCode.B))
+        {
+            if (state == "" && selectedTile == null)
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit))
+                {
+
+                    // Vérifier si la tuile appartient au joueur
+                    if (PlayerPrefs.GetString("username") == hit.collider.gameObject.GetComponent<Tile>().owner)
+                    {
+                        selectTile(hit.collider.gameObject);
+                        tileRelativeCanvas.desactivate();
+                        // comme si on avait cliqué sur le bouton build
+                        buildBtnClic();
+                    }
+                }
+            }
+        }
+
+
+
+        // gestion du clic 
+        else if (Input.GetMouseButtonUp(0))
         {
             // Si on a marqué que le prochain clic doit être ignoré
             if (skipNextClick)
@@ -261,9 +321,12 @@ public class PlayerControler : MonoBehaviour
             timeClicked = 0;
             tmpdist = 0;
         }
+        #endregion
     }
 
+
     #region Fonctions de gestion des boutons dans le menu radial
+
     public void buildBtnClic()
     {
         if (selectedTile != null)
@@ -291,18 +354,6 @@ public class PlayerControler : MonoBehaviour
     }
 
 
-    // TODO: Créer un panel d'infos pour les tuiles et appliquer le texte ici
-    // public void infosTileBtnClic()
-    // {
-    //     if (selectedTile != null)
-    //     {
-    //         string msg = "Infos de la tuile " + selectedTile.name + "\n";
-    //         msg += "Owner : " + selectedTile.GetComponent<Tile>().owner + "\n";
-    //         msg += "Units : " + selectedTile.GetComponent<Tile>().units + "\n";
-    //         msg += "Type : " + selectedTile.GetComponent<Tile>().type ;
-    //         Debug.Log(msg);
-    //     }
-    // }
     #endregion
     
 
