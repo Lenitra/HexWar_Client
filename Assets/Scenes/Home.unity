@@ -1839,6 +1839,8 @@ MonoBehaviour:
   LOGINpasswordInput: {fileID: 1951427933}
   LOGINrememberToggle: {fileID: 1248615544}
   LOGINbutton: {fileID: 2098313300}
+  registerButton: {fileID: 1986837859}
+  exitButton: {fileID: 2130538520}
 --- !u!1 &1139169638
 GameObject:
   m_ObjectHideFlags: 0
@@ -4661,7 +4663,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 165}
+  m_AnchoredPosition: {x: 0, y: 95}
   m_SizeDelta: {x: 150, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1986837859
@@ -5230,7 +5232,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2127034338
 RectTransform:
   m_ObjectHideFlags: 0

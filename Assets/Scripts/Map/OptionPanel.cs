@@ -6,17 +6,48 @@ public class OptionPanel : MonoBehaviour
 {
     [SerializeField] private PlayerControler playerControler;
     [SerializeField] private Button cancelBtn;
-    [SerializeField] private Button confirmBtn;
+    [Header("Navigation dans les menus")]
+    [SerializeField] private Button generalOptionsBtn;
+    [SerializeField] private GameObject generalOptionsPanel;
+
+    [SerializeField] private Button keybindsBtn;
+    [SerializeField] private GameObject keybindsPanel;
+
+
+    [Header("Options générales")]
+    
+    [SerializeField] private Button confirmBtnGeneralOptions;
     [SerializeField] private Slider gapSlider;
     [SerializeField] private Slider bloomSlider;
     [SerializeField] private Toggle hexesColorToggle;
+    [SerializeField] private Button accountBtn;
 
+    [Header("Raccourcis clavier")]
+    [SerializeField] private Button confirmBtnKeybinds;
 
     void Start(){
         
-        // add event listener to cancelBtn
+
+
+        #region Event listeners
+        // gestion de la navigation entre les menus
+        generalOptionsBtn.onClick.AddListener(() => {
+            hideAllPanels();
+            generalOptionsPanel.SetActive(true);
+        });
+
+        keybindsBtn.onClick.AddListener(() => {
+            hideAllPanels();
+            keybindsPanel.SetActive(true);
+        });
+
+
+        // add event listener to accountBtn, ouvre le dashboard sur le navigateur
+        accountBtn.onClick.AddListener(() => Application.OpenURL(DataManager.Instance.GetData("serverIP") + "/dashboard"));
+        
+        // add event listener to cancel && confirm buttons
         cancelBtn.onClick.AddListener(cancelBtnClic);
-        confirmBtn.onClick.AddListener(cancelBtnClic);
+        confirmBtnGeneralOptions.onClick.AddListener(confirmBtnClic);
 
         // Slider du gap entre les tiles
         gapSlider.onValueChanged.AddListener(value => PlayerPrefs.SetFloat("opt_gridGap", value));
@@ -25,6 +56,7 @@ public class OptionPanel : MonoBehaviour
         // Flou lumineux
         bloomSlider.onValueChanged.AddListener(value => PlayerPrefs.SetFloat("opt_bloom", value));
 
+        #endregion
 
         // Set les valeurs des inputs depuis les playerPrefs
         gapSlider.value = PlayerPrefs.GetFloat("opt_gridGap");
@@ -32,12 +64,19 @@ public class OptionPanel : MonoBehaviour
         bloomSlider.value = PlayerPrefs.GetFloat("opt_bloom");
     }
 
+    private void hideAllPanels(){
+        generalOptionsPanel.SetActive(false);
+        keybindsPanel.SetActive(false);
+    }
 
     public void cancelBtnClic(){
         gameObject.SetActive(false);
-        playerControler.setupOptions();
     }
 
+    public void confirmBtnClic(){
+        gameObject.SetActive(false);
+        playerControler.setupOptions();
+    }
 
 
 
