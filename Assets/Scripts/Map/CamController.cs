@@ -33,41 +33,60 @@ public class CamController : MonoBehaviour
         // -------------------------------------
         // Si canMove est à false, on bloque tout
         // -------------------------------------
-        if (!canMove){
+        if (!canMove)
+        {
             isDragging = false;
             initialMousePosition = Input.mousePosition;
             Cursor.visible = true;
             return;
         }
 
-        // --------------------------
-        // 1) GESTION DU ZOOM SOURIS
-        // --------------------------
+        // -----------------------------
+        // 1) GESTION DU ZOOM À LA SOURIS
+        // -----------------------------
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (scroll != 0.0f && moveCoroutine == null)
         {
             float zoomAmount = scroll * zoomSpeed;
+            ApplyZoom(zoomAmount);
+        }
 
-            // Sauvegarder l'ancienne position Y
-            float oldY = transform.position.y;
-            // Calculer la cible (avant clamp)
-            float targetY = oldY - zoomAmount;
+        // -------------------------------------
+        // 1.1) GESTION DU ZOOM TACTILE (PINCH)
+        // -------------------------------------
+        if (Input.touchCount == 2 && moveCoroutine == null)
+        {
+            Touch touch0 = Input.GetTouch(0);
+            Touch touch1 = Input.GetTouch(1);
 
-            // Limiter Y entre minZoom et maxZoom
-            float newY = Mathf.Clamp(targetY, minZoom, maxZoom);
+            // Vérifie si les deux touches sont sur l'UI
+            // (EventSystem.current.IsPointerOverGameObject(touch.fingerId) est utile pour ignorer le pinch si on zoome sur l'UI)
+            if (EventSystem.current != null)
+            {
+                if (EventSystem.current.IsPointerOverGameObject(touch0.fingerId) ||
+                    EventSystem.current.IsPointerOverGameObject(touch1.fingerId))
+                {
+                    return;
+                }
+            }
 
-            // Calculer le delta Y effectif après clamp
-            float actualDeltaY = newY - oldY;
+            // Position des doigts à l'image précédente
+            Vector2 touch0PrevPos = touch0.position - touch0.deltaPosition;
+            Vector2 touch1PrevPos = touch1.position - touch1.deltaPosition;
 
-            // Calcul du ratio en fonction de l'angle de 70°
-            float angleInRadians = 70f * Mathf.Deg2Rad;
-            float ratioZtoY = Mathf.Cos(angleInRadians) / Mathf.Sin(angleInRadians);
+            // Distances entre les doigts (actuelle et précédente)
+            float prevTouchDelta = (touch0PrevPos - touch1PrevPos).magnitude;
+            float currTouchDelta = (touch0.position - touch1.position).magnitude;
 
-            // Calcul du nouveau Z en tenant compte du delta Y effectif
-            float newZ = transform.position.z - (actualDeltaY * ratioZtoY);
+            // Différence de distance (détermine le sens du pinch)
+            float deltaMagnitudeDiff = prevTouchDelta - currTouchDelta;
 
-            // Mettre à jour la position
-            transform.position = new Vector3(transform.position.x, newY, newZ);
+            // On peut ajuster ce facteur pour obtenir un zoom plus ou moins rapide
+            float pinchSpeedFactor = 0.02f; // Valeur indicative, à adapter selon votre sensibilité
+            float zoomAmount = deltaMagnitudeDiff * pinchSpeedFactor * zoomSpeed;
+
+            // On applique le zoom comme avec la molette
+            ApplyZoom(-zoomAmount);
         }
 
         // --------------------------------
@@ -96,6 +115,7 @@ public class CamController : MonoBehaviour
                 lastMousePosition = Input.mousePosition;
                 return;
             }
+
             // Calculer la distance parcourue par la souris depuis le début du clic
             float distance = (Input.mousePosition - initialMousePosition).magnitude;
 
@@ -147,7 +167,6 @@ public class CamController : MonoBehaviour
         // -----------------------------------------------------
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
-
         {
             Vector3 right = Camera.main.transform.right;
             Vector3 forward = Vector3.Cross(right, Vector3.up);
@@ -162,12 +181,38 @@ public class CamController : MonoBehaviour
         }
     }
 
+    // --------------------------------------------------
+    // Fonction utilitaire : applique un zoom "zoomAmount"
+    // --------------------------------------------------
+    private void ApplyZoom(float zoomAmount)
+    {
+        // Sauvegarder l'ancienne position Y
+        float oldY = transform.position.y;
+        // Calculer la cible (avant clamp)
+        float targetY = oldY - zoomAmount;
+
+        // Limiter Y entre minZoom et maxZoom
+        float newY = Mathf.Clamp(targetY, minZoom, maxZoom);
+
+        // Calculer le delta Y effectif après clamp
+        float actualDeltaY = newY - oldY;
+
+        // Calcul du ratio en fonction de l'angle de 70°
+        float angleInRadians = 70f * Mathf.Deg2Rad;
+        float ratioZtoY = Mathf.Cos(angleInRadians) / Mathf.Sin(angleInRadians);
+
+        // Calcul du nouveau Z en tenant compte du delta Y effectif
+        float newZ = transform.position.z - (actualDeltaY * ratioZtoY);
+
+        // Mettre à jour la position
+        transform.position = new Vector3(transform.position.x, newY, newZ);
+    }
+
     // --------------------------------
     // 4) FONCTION DE FOCUS SUR UNE TILE
     // --------------------------------
     public void lookTile(GameObject tile)
     {
-
         Vector3 tilePos = tile.transform.position;
 
         // Arrêter la coroutine en cours si elle existe
@@ -179,7 +224,8 @@ public class CamController : MonoBehaviour
         moveCoroutine = StartCoroutine(TranslateToTile(tilePos));
     }
 
-    public void setCanMove(bool state){
+    public void setCanMove(bool state)
+    {
         if (state == true && moveCoroutine != null)
         {
             return;
@@ -189,7 +235,6 @@ public class CamController : MonoBehaviour
 
     IEnumerator TranslateToTile(Vector3 tilePos)
     {
-    
         canMove = false;
 
         Vector3 targetPos = new Vector3(
@@ -211,5 +256,4 @@ public class CamController : MonoBehaviour
         moveCoroutine = null;
         canMove = true;
     }
-
 }
