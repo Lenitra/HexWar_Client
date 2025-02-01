@@ -10,7 +10,9 @@ public class Tile : MonoBehaviour
     // private with getters and setters
     public int units = 0;
     public string owner = "";
-    public int[] position = new int[2];
+    public int x;
+    public int y;
+    public int lvl;
     public string type = "";
     public TextMeshPro tileInfos;
     public string color;
@@ -43,17 +45,15 @@ public class Tile : MonoBehaviour
     {
 
         // name of the object is "Hexagon x, z"
-        position[0] = int.Parse(gameObject.name.Split("Hexagon ")[1].Split(":")[0]);
-        position[1] = int.Parse(gameObject.name.Split("Hexagon ")[1].Split(":")[1]);
+        x = int.Parse(name.Split(' ')[1].Split(':')[0]);
+        y = int.Parse(name.Split(' ')[1].Split(':')[1]);
 
         
         toShowOnSelected.gameObject.SetActive(false);
 
         if (owner != ""){
+            // SETUP le material de l'objet
             originalBaseY = 0.025f;
-            // glow.SetActive(true);
-            // add a material to the hoverOwner
-            // set renderinmode to transparent
             Material material = topElement.GetComponent<Renderer>().material;
             material.SetFloat("_Mode", 0);
             material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
@@ -64,9 +64,9 @@ public class Tile : MonoBehaviour
             material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
             material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
             material.color = new Color(1,1,1,1);
-            // material.EnableKeyword("_EMISSION");
+            material.EnableKeyword("_EMISSION");
 
-
+            // On set toutes les couleurs
             if (colorsActive)
             {
                 float r = float.Parse(color.Split('|')[0]) / 255f;
@@ -77,8 +77,11 @@ public class Tile : MonoBehaviour
                 material.SetColor("_EmissionColor", new Color(r, g, b, 0.2f));
                 material.color = new Color(r, g, b, a);
             }
+
+            // Les couleurs sont pas activées donc on affiche que celle du joueur
             else
             {
+
                 if (owner == PlayerPrefs.GetString("username"))
                 {
                     float r = float.Parse(color.Split('|')[0]) / 255f;
@@ -101,6 +104,7 @@ public class Tile : MonoBehaviour
             transform.position = new Vector3(transform.position.x, originalBaseY, transform.position.z);
         }
 
+        
 
         
         
@@ -114,7 +118,7 @@ public class Tile : MonoBehaviour
         Destroy(infrastrucutre);
         infrastrucutre = null;
 
-        switch (type.ToLower().Split(":")[0])
+        switch (type.ToLower())
         {
             case "hq":
                 infrastrucutre = Instantiate(hqPrefab, Vector3.zero, Quaternion.identity, transform);
@@ -158,11 +162,12 @@ public class Tile : MonoBehaviour
 
 
 
-    public void setupTile(int units, string owner, string type, string color) {
+    public void setupTile(int units, string owner, string type, string color, int lvl) {
         this.units = units;
         this.owner = owner;
         this.type = type;
         this.color = color;
+        this.lvl = lvl;
         tileInfos.text = "";
         if (owner != ""){
             tileInfos.text += "<sprite=112>" + owner;

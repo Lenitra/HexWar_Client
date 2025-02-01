@@ -45,8 +45,8 @@ public class GridGenerator : MonoBehaviour
         foreach (Dictionary<string, object> tileData in tilesData)
         {
             // Récupère x, z (qui sont en réalité x,y axiaux)
-            int x = int.Parse(tileData["key"].ToString().Split(':')[0]);
-            int z = int.Parse(tileData["key"].ToString().Split(':')[1]);
+            int x = (int)tileData["x"];
+            int z = (int)tileData["y"];
 
             GameObject tile = getHex(x, z);
             if (tile != null)
@@ -58,6 +58,7 @@ public class GridGenerator : MonoBehaviour
                 string owner = (string)tileData["owner"];
                 string type = (string)tileData["type"];
                 string color = (string)tileData["color"];
+                int lvl = (int)tileData["lvl"];
 
                 tileComponent.colorsActive = hexesColor;
 
@@ -66,7 +67,7 @@ public class GridGenerator : MonoBehaviour
                     || tileComponent.owner != owner
                     || tileComponent.type != type)
                 {
-                    tileComponent.setupTile(units, owner, type, color);
+                    tileComponent.setupTile(units, owner, type, color, lvl);
                 }
             }
             else
@@ -81,8 +82,10 @@ public class GridGenerator : MonoBehaviour
         {
             if (child.name.Contains("Hexagon"))
             {
-                string childKey = child.name.Split(' ')[1]; // "x:z"
-                if (!tilesData.Exists(tile => tile["key"].ToString() == childKey))
+                string[] coordinates = child.name.Split(' ')[1].Split(':'); // "x:z"
+                int childX = int.Parse(coordinates[0]);
+                int childZ = int.Parse(coordinates[1]);
+                if (!tilesData.Exists(tile => (int)tile["x"] == childX && (int)tile["y"] == childZ))
                 {
                     Destroy(child.gameObject);
                 }
@@ -119,10 +122,11 @@ public class GridGenerator : MonoBehaviour
         string owner = (string)tileData["owner"];
         string typeId = (string)tileData["type"];
         string color = (string)tileData["color"];
+        int lvl = (int)tileData["lvl"];
 
         Tile hextile = hex.GetComponent<Tile>();
         hextile.colorsActive = hexesColor;
-        hextile.setupTile(units, owner, typeId, color);
+        hextile.setupTile(units, owner, typeId, color, lvl);
         
         // Centrer la caméra si c'est le premier HQ
         if (firstPool)

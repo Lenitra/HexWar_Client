@@ -17,6 +17,7 @@ public class ServerClient : MonoBehaviour
     void Start()
     {
         gameManager = GetComponent<GameManager>();
+        updateMap();
     }
 
 
@@ -51,8 +52,11 @@ public class ServerClient : MonoBehaviour
                 string hexes = request.downloadHandler.text;
                 // delete characters jusqu'à la première virgule
                 hexes = hexes.Substring(hexes.IndexOf(",") + 1);
-                // supprimer les derniers caractères jusqu'à la dernière parenthèse fermante
-                hexes = hexes.Substring(0, hexes.LastIndexOf("}") + 1);
+                // supprimer le dernier caractère
+                hexes = hexes.Remove(hexes.Length - 1, 1);
+                hexes = hexes.Remove(hexes.Length - 1, 1);
+                Debug.Log("hexes: " + hexes);
+
 
 
                 string money = request.downloadHandler.text;
@@ -124,14 +128,14 @@ public class ServerClient : MonoBehaviour
     
 
 
-    public void build(string tile, string type)
+    public void build(string tile, string type, int lvl)
     {
-        StartCoroutine(BuildCoro(tile, type));
+        StartCoroutine(BuildCoro(tile, type, lvl));
     }
 
     IEnumerator BuildCoro(string tile, string type)
     {
-        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/buildbat/" + tile + "/" + type);
+        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/buildbat/" + tile + "/" + type + "/" + lvl);
         yield return request.SendWebRequest();
         // debug the response
         if (request.result != UnityWebRequest.Result.Success)

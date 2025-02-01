@@ -16,29 +16,24 @@ public class GameManager : MonoBehaviour
     private Coroutine poolingCoroutine;
     private bool isPooling = true;
 
-
-
-
     // EFFECTS
     [Header("Effects")]
     [SerializeField] private LineRenderer moveUnitsLine;
 
-
-    void Start(){
-
+    void Start()
+    {
         serverClient = GetComponent<ServerClient>();
         gridGenerator = GetComponent<GridGenerator>();
         camControler = Camera.main.GetComponent<CamController>();
         playerControler = GetComponent<PlayerControler>();
 
         // faire le premier pool de la map
-        serverClient.updateMap(); 
+        serverClient.updateMap();
         // lancer le pooling régulier
         poolingCoroutine = StartCoroutine(pooling());
-
     }
 
-    public void togglePooling (bool state)
+    public void togglePooling(bool state)
     {
         if (state && !isPooling)
         {
@@ -61,60 +56,52 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
-    // Depuis le régulier pool du serveur, actualise la valeur de l'argent du joueur et call le playerController qui mets à jour dans le view
+    // Depuis le régulier pool du serveur, actualise la valeur de l'argent du joueur et appelle le PlayerControler pour mettre à jour la vue
     public void UpdateMoney(string money)
     {
         PlayerPrefs.SetInt("money", int.Parse(money));
         playerControler.UpdateMoney(money);
     }
 
-    // Met à jour la grille de jeu
+    // Met à jour la grille de jeu en recevant les données JSON des hexagones
     public void SetupTiles(string jsonData)
     {
-        // Désérialiser le JSON dans une structure adaptée à JsonUtility
-        GameData gameData = JsonUtility.FromJson<GameData>(jsonData);
+        // JsonUtility ne supporte pas les tableaux en racine.
+        // On enveloppe donc le JSON dans un objet avec une propriété "hexes".
+        string wrappedJson = "{\"hexes\":" + jsonData + "}";
+        GameData gameData = JsonUtility.FromJson<GameData>(wrappedJson);
 
-        // Vérification que les données de jeu ne soient pas nulles
+        // Vérifier que les données de jeu ne soient pas nulles
         if (gameData == null || gameData.hexes == null || gameData.hexes.Length == 0)
         {
             return;
         }
 
-        // Créer un dictionnaire à partir des hexes pour faciliter la manipulation
+        // Créer un dictionnaire à partir des hexagones, avec comme clé "x:y"
         Dictionary<string, HexData> hexDictionary = gameData.hexes
-            .ToDictionary(hex => hex.key, hex => (HexData)hex);
-
-        // Créer une liste des données d'hexagones
-        List<Dictionary<string, object>> tilesData = hexDictionary.Values
             .Where(hex => hex != null) // S'assurer que hex n'est pas null
+            .ToDictionary(hex => hex.x + ":" + hex.y, hex => hex);
+
+        // Créer une liste des données d'hexagones pour mettre à jour la grille
+        List<Dictionary<string, object>> tilesData = hexDictionary.Values
             .Select(hex => hex.ToDictionary())
             .ToList();
 
-        // Vérification de la taille de la liste
-        if (tilesData.Count == 0)
-        {
-        }
-
-        // Mettre à jour la grille
+        // Mettre à jour la grille via le générateur
         gridGenerator.UpdateGrid(tilesData);
     }
 
-
-    public void buildBtnClic(string tile, string type)
+    public void buildBtnClic(string tile, string type, int lvl)
     {
         // send a http request to the server
-        serverClient.build(tile, type);
+        serverClient.build(tile, type, lvl);
     }
 
-    public void moveUnitsBtnClic(string origin , string destination, int units)
+    public void moveUnitsBtnClic(string origin, string destination, int units)
     {
         // send a http request to the server
         serverClient.moveUnits(origin, destination, units);
     }
-
-
-
 
     // Animation de déplacement des unités
     public IEnumerator moveUnitsAnimation(string[] moves, float animationDuration = 0.1f, float retractDuration = 0.01f)
@@ -148,92 +135,75 @@ public class GameManager : MonoBehaviour
             while (elapsedTime < animationDuration)
             {
                 elapsedTime += Time.deltaTime;
-                float t = Mathf.Clamp01(elapsedTime / animationDuration); // Ensure t is between 0 and 1
+                float t = Mathf.Clamp01(elapsedTime / animationDuration);
                 Vector3 currentPosition = Vector3.Lerp(startPosition, endPosition, t);
-                
-                // Set the line renderer positions dynamically
-                moveUnitsLine.positionCount = i + 2; // Update position count for smooth transition
-                moveUnitsLine.SetPosition(i, startPosition); // Set the initial position
-                moveUnitsLine.SetPosition(i + 1, currentPosition); // Update the current position
 
-                yield return null; // Wait for the next frame
+                // Set the line renderer positions dynamically
+                moveUnitsLine.positionCount = i + 2;
+                moveUnitsLine.SetPosition(i, startPosition);
+                moveUnitsLine.SetPosition(i + 1, currentPosition);
+
+                yield return null;
             }
 
             // Once the interpolation is complete, set the end position of the current segment
             moveUnitsLine.SetPosition(i + 1, endPosition);
         }
 
-        yield return new WaitForSeconds(0.5f); // Optional delay after the line is fully drawn
+        yield return new WaitForSeconds(0.5f);
 
         // Animate the retraction of the line (from origin to destination)
-        for (int i = 1; i < positions.Length; i++) // Start from 1 to retract from origin
+        for (int i = 1; i < positions.Length; i++)
         {
             float elapsedTime = 0f;
-
-            // Interpolate the retraction between the first and the next point
             while (elapsedTime < retractDuration)
             {
                 elapsedTime += Time.deltaTime;
-                float t = Mathf.Clamp01(elapsedTime / retractDuration); // Ensure t is between 0 and 1
-                
-                // Gradually move the first point to the second point
+                float t = Mathf.Clamp01(elapsedTime / retractDuration);
                 Vector3 currentPosition = Vector3.Lerp(positions[i - 1], positions[i], t);
-
-                // Update the first segment to retract the line from the origin
-                moveUnitsLine.SetPosition(0, currentPosition); 
-
-                // Keep the remaining part of the line as it is
+                moveUnitsLine.SetPosition(0, currentPosition);
                 for (int j = 1; j < positions.Length - i; j++)
                 {
                     moveUnitsLine.SetPosition(j, positions[j + i]);
                 }
-
-                yield return null; // Wait for the next frame
+                yield return null;
             }
-
-            // After the retraction, reduce the position count to remove the retracted point
             moveUnitsLine.positionCount -= 1;
         }
 
-        // Finally, clear the line renderer completely
         moveUnitsLine.positionCount = 0;
     }
-
-
-
-
 }
-
-
-
-
-
 
 // Classe GameData pour contenir le tableau des hexagones
 [Serializable]
 public class GameData
 {
-    public HexData[] hexes;  // Tableau d'hexagones
+    public HexData[] hexes;  // Cette propriété recevra le tableau d'hexagones enveloppé.
 }
 
 [Serializable]
 public class HexData
 {
-    public string key;
+    public int x;
+    public int y;
+    public int lvl;  // Utilisation d'un int nullable pour accepter null
     public int units;
     public string type;
     public string owner;
     public string color;
 
-    // La conversion en dictionnaire
+    // Conversion en dictionnaire (le champ _id n'étant pas présent, il n'est pas inclus)
     public Dictionary<string, object> ToDictionary()
     {
         var dict = new Dictionary<string, object>
         {
+            {"x", x},
+            {"y", y},
+            {"lvl", lvl},
+            {"units", units},
             {"type", type},
             {"owner", owner},
-            {"units", units},
-            {"key", key},
             {"color", color}
         };
         return dict;

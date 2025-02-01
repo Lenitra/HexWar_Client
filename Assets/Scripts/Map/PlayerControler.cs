@@ -129,7 +129,7 @@ public class PlayerControler : MonoBehaviour
         }
         // loop through all children
         foreach (Transform child in transform){
-            if (child.gameObject.GetComponent<Tile>().type.Split(':')[0].ToUpper() == "HQ" && child.gameObject.GetComponent<Tile>().owner == PlayerPrefs.GetString("username")){
+            if (child.gameObject.GetComponent<Tile>().type.ToUpper() == "HQ" && child.gameObject.GetComponent<Tile>().owner == PlayerPrefs.GetString("username")){
                 camControler.lookTile(child.gameObject);
                 return;
             }
@@ -335,7 +335,7 @@ public class PlayerControler : MonoBehaviour
             {
                 buildPanel.gameObject.SetActive(true);
             }
-            else if (!selectedTile.GetComponent<Tile>().type.EndsWith("5"))
+            else if (!selectedTile.GetComponent<Tile>().lvl == 5)
             {
                 upgradePanel.gameObject.GetComponent<UpgradePanel>().Initialise(selectedTile.GetComponent<Tile>());
                 upgradePanel.gameObject.SetActive(true);
@@ -372,12 +372,14 @@ public class PlayerControler : MonoBehaviour
     {
         if (type == "")
         {
-            type = selectedTile.GetComponent<Tile>().type.Split(":")[0];
+            type = selectedTile.GetComponent<Tile>().type;
         }
+        int lvl = selectedTile.GetComponent<Tile>().lvl;
+        
 
         buildPanel.gameObject.SetActive(false);
         upgradePanel.gameObject.SetActive(false);
-        gameManager.buildBtnClic(selectedTile.name.Split(' ')[1], type);
+        gameManager.buildBtnClic(selectedTile.name.Split(' ')[1], type, lvl);
         unselectTile();
     }
 
