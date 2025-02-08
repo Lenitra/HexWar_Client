@@ -77,10 +77,9 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // Créer un dictionnaire à partir des hexagones, avec comme clé "x:y"
-        Dictionary<string, HexData> hexDictionary = gameData.hexes
-            .Where(hex => hex != null) // S'assurer que hex n'est pas null
-            .ToDictionary(hex => hex.x + ":" + hex.y, hex => hex);
+        // Créer un dictionnaire pour stocker les données des hexagones
+        Dictionary<string, HexData> hexDictionary = gameData.hexes.ToDictionary(hex => $"{hex.x}:{hex.y}");
+        
 
         // Créer une liste des données d'hexagones pour mettre à jour la grille
         List<Dictionary<string, object>> tilesData = hexDictionary.Values
@@ -94,7 +93,7 @@ public class GameManager : MonoBehaviour
     public void buildBtnClic(string tile, string type, int lvl)
     {
         // send a http request to the server
-        serverClient.build(tile, type, lvl);
+        serverClient.build(tile, type);
     }
 
     public void moveUnitsBtnClic(string origin, string destination, int units)

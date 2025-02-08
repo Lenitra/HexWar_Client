@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 public class ServerClient : MonoBehaviour
 {
     private GameManager gameManager;
-    private float pollInterval = 0.5f; // Interval d'update de la carte en secondes
+    // private float pollInterval = 0.5f; // Interval d'update de la carte en secondes
 
 
 
@@ -70,7 +70,7 @@ public class ServerClient : MonoBehaviour
                 gameManager.SetupTiles(hexes);
             }
         }
-        // Debug.Log("PollGameState took: " + (Time.time - startTime) + " seconds");
+        Debug.Log("PollGameState took: " + (Time.time - startTime) + " seconds");
 
     }
 
@@ -83,7 +83,16 @@ public class ServerClient : MonoBehaviour
     
     IEnumerator MoveUnitsCoro(string from, string to, int units)
     {
-        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP")+"/move_units/" + from + "/" + to + "/" + units);
+        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP")+"/move_units");
+        // origin = request.form.get("origin") # format "x:y"
+        // destination = request.form.get("destination") # format "x:y"
+        // units = int(request.form.get("units"))
+        // faire une méthode post
+        request.method = "POST";
+        request.SetRequestHeader("Content-Type", "application/json");
+        request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{\"origin\":\"" + from + "\",\"destination\":\"" + to + "\",\"units\":" + units + "}"));
+        request.downloadHandler = new DownloadHandlerBuffer();
+
         yield return request.SendWebRequest();
         // debug the response
         if (request.result != UnityWebRequest.Result.Success)
@@ -128,14 +137,22 @@ public class ServerClient : MonoBehaviour
     
 
 
-    public void build(string tile, string type, int lvl)
+    public void build(string tile, string type)
     {
-        StartCoroutine(BuildCoro(tile, type, lvl));
+        StartCoroutine(BuildCoro(tile, type));
     }
 
     IEnumerator BuildCoro(string tile, string type)
     {
-        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/buildbat/" + tile + "/" + type + "/" + lvl);
+        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/buildbat");
+        // hex_x = int(request.form.get("x"))
+        // hex_z = int(request.form.get("y"))
+        // bat_type = request.form.get("type").lower()
+        // faire une méthode post
+        request.method = "POST";
+        request.SetRequestHeader("Content-Type", "application/json");
+        request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{\"x\":" + tile.Split(':')[0] + ",\"y\":" + tile.Split(':')[1] + ",\"type\":\"" + type + "\""));
+        request.downloadHandler = new DownloadHandlerBuffer();
         yield return request.SendWebRequest();
         // debug the response
         if (request.result != UnityWebRequest.Result.Success)

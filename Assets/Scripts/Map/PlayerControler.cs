@@ -335,7 +335,7 @@ public class PlayerControler : MonoBehaviour
             {
                 buildPanel.gameObject.SetActive(true);
             }
-            else if (!selectedTile.GetComponent<Tile>().lvl == 5)
+            else if (selectedTile.GetComponent<Tile>().lvl != 5)
             {
                 upgradePanel.gameObject.GetComponent<UpgradePanel>().Initialise(selectedTile.GetComponent<Tile>());
                 upgradePanel.gameObject.SetActive(true);
