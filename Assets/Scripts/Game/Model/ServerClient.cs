@@ -65,7 +65,6 @@ public class ServerClient : MonoBehaviour
                 // garder uniquement les chiffres
                 money = new string(money.Where(char.IsDigit).ToArray());
 
-
                 gameManager.UpdateMoney(money);
                 gameManager.SetupTiles(hexes);
             }
