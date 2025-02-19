@@ -71,7 +71,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f80866c147735114db217a512e457f9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  typePrefabs: []
+  typesPrefabs:
+  - {fileID: 1520387732827577120, guid: 8a305b827acabc249abcb098c740869d, type: 3}
+  - {fileID: 3659580844162061774, guid: faa7af72f7e6794438a936beff41f2d8, type: 3}
+  - {fileID: 2408869270638452992, guid: 81f399630328bbb4fbca01d7dfafaa9d, type: 3}
+  - {fileID: 8674176847597691436, guid: 0dd93b810dd981a478a1014ba9454cd1, type: 3}
+  - {fileID: 6453594895777736009, guid: 3c41ed8e44d316046926749301428b99, type: 3}
   meshDeRendu: {fileID: 23333496205084640}
 --- !u!1 &1920513786959524
 GameObject:

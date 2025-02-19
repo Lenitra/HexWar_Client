@@ -84,6 +84,7 @@ public class GridVue : MonoBehaviour
     // Détruit un hexagone avec une animation de pop
     private IEnumerator DestroyTileAnim(GameObject tile)
     {
+        if (tile == null){yield break;}
         float duration = 0.5f;
         float t = 0;
         Vector3 startPos = tile.transform.position;

@@ -4,11 +4,18 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
-    // Le presenteurCarte
-    private PresenteurCarte presenteurCarte;
 
-    // Tableau des hexagones
-    [SerializeField] private List<Hex> hexMap;
+    private PresenteurCarte presenteurCarte; // Le presenteurCarte
+    private List<Hex> hexMap = new List<Hex>(); // Tableau des hexagones
+    private int money; // Argent du joueur
+
+    // Getter et setter pour money
+    public int Money
+    {
+        get { return money; }
+        set { money = value; }
+    }
+
 
     void Start()
     {
@@ -36,7 +43,7 @@ public class GameManager : MonoBehaviour
 
         // ATTENTION : La comparaison directe entre data.hexMap et this.hexMap ne fonctionnera pas comme prévu.
         // Tu pourrais implémenter une comparaison sur les coordonnées ou un autre critère si nécessaire.
-        // if (data.hexMap == this.hexMap) { return; }
+        // if (data.hexMap == this.hexMap){return;}
 
         AjustHexesCount(data.hexMap);
         UpdateHexesAttributes(data.hexMap);
@@ -76,10 +83,11 @@ public class GameManager : MonoBehaviour
         // Supprimer les hexagones excédentaires
         foreach (Hex hex in hexagonesASupprimer)
         {
-            // TODO: Appeler le presenteurCarte pour supprimer l'hexagone visuellement
+            presenteurCarte.SupprimerTile(hex);
             this.hexMap.Remove(hex);
         }
     }
+
 
     // Ajoute les hexagones qui sont présents dans newMap mais absents dans this.hexMap.
     private void CheckAjoutHexes(Hex[] newMap)
@@ -95,6 +103,7 @@ public class GameManager : MonoBehaviour
                     break;
                 }
             }
+
             if (!found)
             {
                 // Debug.Log($"Ajout de l'hexagone ({newMap[i].x}, {newMap[i].y})");
@@ -117,30 +126,11 @@ public class GameManager : MonoBehaviour
             {
                 if (newMap[i].x == this.hexMap[j].x && newMap[i].y == this.hexMap[j].y)
                 {
-                    if (newMap[i].lvl != this.hexMap[j].lvl)
+                    if (newMap[i] != this.hexMap[j])
                     {
-                        Debug.Log($"Lvl de l'hexagone ({newMap[i].x}, {newMap[i].y}) a changé de {this.hexMap[j].lvl} à {newMap[i].lvl}");
-                        this.hexMap[j].lvl = newMap[i].lvl;
-                    }
-                    if (newMap[i].units != this.hexMap[j].units)
-                    {
-                        Debug.Log($"Units de l'hexagone ({newMap[i].x}, {newMap[i].y}) a changé de {this.hexMap[j].units} à {newMap[i].units}");
-                        this.hexMap[j].units = newMap[i].units;
-                    }
-                    if (newMap[i].type != this.hexMap[j].type)
-                    {
-                        Debug.Log($"Type de l'hexagone ({newMap[i].x}, {newMap[i].y}) a changé de {this.hexMap[j].type} à {newMap[i].type}");
-                        this.hexMap[j].type = newMap[i].type;
-                    }
-                    if (newMap[i].owner != this.hexMap[j].owner)
-                    {
-                        Debug.Log($"Owner de l'hexagone ({newMap[i].x}, {newMap[i].y}) a changé de {this.hexMap[j].owner} à {newMap[i].owner}");
-                        this.hexMap[j].owner = newMap[i].owner;
-                    }
-                    if (newMap[i].color != this.hexMap[j].color)
-                    {
-                        Debug.Log($"Color de l'hexagone ({newMap[i].x}, {newMap[i].y}) a changé de {this.hexMap[j].color} à {newMap[i].color}");
-                        this.hexMap[j].color = newMap[i].color;
+                        // Debug.Log($"Mise à jour de l'hexagone ({newMap[i].x}, {newMap[i].y})");
+                        this.hexMap[j] = newMap[i];
+                        presenteurCarte.ModifierTile(this.hexMap[j]);
                     }
                 }
             }

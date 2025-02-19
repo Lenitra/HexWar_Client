@@ -17,7 +17,7 @@ public class Tile : MonoBehaviour
     private string color = "0|0|0";
 
     [Header("Prefabs des types de tiles")]
-    [SerializeField] private GameObject[] typePrefabs;
+    [SerializeField] private GameObject[] typesPrefabs;
 
 
     [Header("Elements enfants")]
@@ -59,7 +59,11 @@ public class Tile : MonoBehaviour
     public string Type
     {
         get { return type; }
-        set { type = value; }
+        set
+        {
+            type = value;
+            SetupType();
+        }
     }
 
     public string Color
@@ -126,7 +130,7 @@ public class Tile : MonoBehaviour
     private void SetupColor()
     {
         string[] rgb = this.Color.Split('|');
-        Color color = new Color(float.Parse(rgb[0])/255, float.Parse(rgb[1])/255, float.Parse(rgb[2])/255);
+        Color color = new Color(float.Parse(rgb[0]) / 255, float.Parse(rgb[1]) / 255, float.Parse(rgb[2]) / 255);
         meshDeRendu.material.SetColor("_Color", color);
         meshDeRendu.material.SetColor("_EmissionColor", color);
         // intencité de l'émission
@@ -140,6 +144,35 @@ public class Tile : MonoBehaviour
     // TODO: Faire spawn le batiment correspondant au type de tile
     private void SetupType()
     {
+        int index = -1;
+        switch (this.type.ToLower())
+        {
+            case "hq":
+                index = 0;
+                break;
+            case "miner":
+                index = 1;
+                break;
+            case "barrack":
+                index = 2;
+                break;
+            case "radar":
+                index = 3;
+                break;
+            case "node":
+                index = 4;
+                break;
+            default:
+                return;
+        }
+
+        // instancier le prefab avec l'index
+        if (index != -1)
+        {
+            GameObject typePrefab = Instantiate(typesPrefabs[index], this.transform);
+            typePrefab.transform.position = this.transform.position;
+        }
+
     }
 
 
