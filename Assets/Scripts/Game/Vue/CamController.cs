@@ -4,102 +4,110 @@ using System.Collections;
 
 public class CamController : MonoBehaviour
 {
-    // Ajout de la variable pour bloquer les déplacements/zoom
-    public bool canMove = true;
+    [Header("Paramètres de déplacement")]
+    [SerializeField] private bool canMove = true;
+    [SerializeField] private float moveSpeed = 10f;
+    [SerializeField] private float dragThreshold = 50f; // Seuil de déclenchement du drag
 
-    [SerializeField] private float moveSpeed = 10f;  // Vitesse de déplacement clavier
-    private Coroutine moveCoroutine = null;         // Coroutine pour l'animation de translation
-    private float smoothTime = 6;
+    [Header("Paramètres de zoom")]
+    [SerializeField] private float zoomSpeed = 10f;
+    [SerializeField] private float minZoom = 5f;
+    [SerializeField] private float maxZoom = 29f;
 
-    private Plane groundPlane;
-    private bool isDragging = false;
+    public bool isDragging = false;
     private Vector3 initialMousePosition;
     private Vector3 lastMousePosition;
-    private float dragThreshold = 5f; // Seuil en pixels pour détecter un glissement
 
-    // Variables pour le zoom
-    private float zoomSpeed = 10f;     // Vitesse du zoom
-    private float minZoom = 5f;        // Zoom minimum (proche)
-    private float maxZoom = 29f;       // Zoom maximum (éloigné)
+    private Plane groundPlane;
+    private Camera mainCam;
 
-    void Start()
+    private void Start()
     {
-        // Définir un plan au niveau de y = 0 pour le mouvement sur XZ
+        // Plan de référence pour les mouvements sur le plan XZ (y = 0)
         groundPlane = new Plane(Vector3.up, Vector3.zero);
+        mainCam = Camera.main;
     }
 
-    void Update()
+    private void Update()
     {
-        // -------------------------------------
-        // Si canMove est à false, on bloque tout
-        // -------------------------------------
+        // Si le déplacement est désactivé, réinitialiser le drag et afficher le curseur
         if (!canMove)
         {
-            isDragging = false;
-            initialMousePosition = Input.mousePosition;
-            Cursor.visible = true;
+            ResetDrag();
             return;
         }
 
-        // -----------------------------
-        // 1) GESTION DU ZOOM À LA SOURIS
-        // -----------------------------
+        HandleZoom();
+        HandleMouseDrag();
+        HandleKeyboardMovement();
+    }
+
+    #region Gestion du Zoom
+
+    private void HandleZoom()
+    {
+        // Zoom via molette de souris
         float scroll = Input.GetAxis("Mouse ScrollWheel");
-        if (scroll != 0.0f && moveCoroutine == null)
+        if (scroll != 0f)
         {
-            float zoomAmount = scroll * zoomSpeed;
-            ApplyZoom(zoomAmount);
+            ApplyZoom(scroll * zoomSpeed);
         }
 
-        // -------------------------------------
-        // 1.1) GESTION DU ZOOM TACTILE (PINCH)
-        // -------------------------------------
-        if (Input.touchCount == 2 && moveCoroutine == null)
+        // Zoom tactile (pinch)
+        if (Input.touchCount == 2)
         {
             Touch touch0 = Input.GetTouch(0);
             Touch touch1 = Input.GetTouch(1);
 
-            // Vérifie si les deux touches sont sur l'UI
-            // (EventSystem.current.IsPointerOverGameObject(touch.fingerId) est utile pour ignorer le pinch si on zoome sur l'UI)
-            if (EventSystem.current != null)
-            {
-                if (EventSystem.current.IsPointerOverGameObject(touch0.fingerId) ||
-                    EventSystem.current.IsPointerOverGameObject(touch1.fingerId))
-                {
-                    return;
-                }
-            }
+            // Ignorer le zoom si l'une des touches est sur l'UI
+            if (IsTouchOverUI(touch0) || IsTouchOverUI(touch1))
+                return;
 
-            // Position des doigts à l'image précédente
             Vector2 touch0PrevPos = touch0.position - touch0.deltaPosition;
             Vector2 touch1PrevPos = touch1.position - touch1.deltaPosition;
 
-            // Distances entre les doigts (actuelle et précédente)
             float prevTouchDelta = (touch0PrevPos - touch1PrevPos).magnitude;
             float currTouchDelta = (touch0.position - touch1.position).magnitude;
-
-            // Différence de distance (détermine le sens du pinch)
             float deltaMagnitudeDiff = prevTouchDelta - currTouchDelta;
 
-            // On peut ajuster ce facteur pour obtenir un zoom plus ou moins rapide
-            float pinchSpeedFactor = 0.02f; // Valeur indicative, à adapter selon votre sensibilité
+            // Facteur de sensibilité (à ajuster selon vos besoins)
+            float pinchSpeedFactor = 0.02f;
             float zoomAmount = deltaMagnitudeDiff * pinchSpeedFactor * zoomSpeed;
-
-            // On applique le zoom comme avec la molette
+            // L'inversion du signe permet d'harmoniser avec le comportement de la molette
             ApplyZoom(-zoomAmount);
         }
+    }
 
-        // --------------------------------
-        // 2) GESTION DU CLIQUE-DRAG SOURIS
-        // --------------------------------
+    private void ApplyZoom(float zoomAmount)
+    {
+        float oldY = transform.position.y;
+        float targetY = oldY - zoomAmount;
+        float newY = Mathf.Clamp(targetY, minZoom, maxZoom);
+        float actualDeltaY = newY - oldY;
+
+        // Calcul du déplacement sur l'axe Z en fonction d'un angle de 70°
+        float angleInRadians = 70f * Mathf.Deg2Rad;
+        float ratioZtoY = Mathf.Cos(angleInRadians) / Mathf.Sin(angleInRadians);
+        float newZ = transform.position.z - (actualDeltaY * ratioZtoY);
+
+        transform.position = new Vector3(transform.position.x, newY, newZ);
+    }
+
+    #endregion
+
+    #region Gestion du Drag Souris
+
+    private void HandleMouseDrag()
+    {
+        // Pour éviter de gérer le drag souris quand il y a des touches tactiles actives
+        if (Input.touchCount > 0)
+            return;
+
         if (Input.GetMouseButtonDown(0))
         {
-            // Vérifie si on clique sur l’UI
-            if (EventSystem.current.IsPointerOverGameObject())
+            if (IsPointerOverUI())
             {
-                isDragging = false;
-                initialMousePosition = Input.mousePosition;
-                lastMousePosition = Input.mousePosition;
+                ResetDrag();
                 return;
             }
             initialMousePosition = Input.mousePosition;
@@ -107,153 +115,105 @@ public class CamController : MonoBehaviour
         }
         else if (Input.GetMouseButton(0))
         {
-            // Vérifie si on clique sur l’UI
-            if (EventSystem.current.IsPointerOverGameObject())
-            {
-                isDragging = false;
-                initialMousePosition = Input.mousePosition;
-                lastMousePosition = Input.mousePosition;
-                return;
-            }
 
-            // Calculer la distance parcourue par la souris depuis le début du clic
-            float distance = (Input.mousePosition - initialMousePosition).magnitude;
-
-            if (!isDragging && distance > dragThreshold)
+            // Si le drag n'est pas encore lancé, vérifier le seuil
+            if (!isDragging && Vector3.Distance(Input.mousePosition, initialMousePosition) > dragThreshold)
             {
-                // Commencer le glissement
                 isDragging = true;
                 Cursor.visible = false;
             }
 
             if (isDragging)
             {
-                // Obtenir le déplacement de la souris
                 Vector3 mouseDelta = Input.mousePosition - lastMousePosition;
-
-                // Convertir le déplacement de la souris en déplacement dans le monde
-                Vector3 right = Camera.main.transform.right;
+                // Calculer les directions droite et avant en se basant sur la caméra
+                Vector3 right = mainCam.transform.right;
                 Vector3 forward = Vector3.Cross(right, Vector3.up);
 
-                Vector3 deltaPosition = right * mouseDelta.x + forward * mouseDelta.y;
-
-                // Déplacer la caméra en fonction du déplacement de la souris
-                transform.position -= new Vector3(deltaPosition.x, 0, deltaPosition.z) * 0.01f;
+                // Conversion du déplacement de la souris en déplacement dans le monde
+                Vector3 deltaPosition = (right * mouseDelta.x + forward * mouseDelta.y) * 0.01f;
+                transform.position -= new Vector3(deltaPosition.x, 0, deltaPosition.z);
 
                 lastMousePosition = Input.mousePosition;
             }
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            // Vérifie si on clique sur l’UI
-            if (EventSystem.current.IsPointerOverGameObject())
-            {
-                isDragging = false;
-                initialMousePosition = Input.mousePosition;
-                lastMousePosition = Input.mousePosition;
-                return;
-            }
-
             if (isDragging)
             {
-                // Fin du glissement
-                isDragging = false;
-                Cursor.visible = true;
+                ResetDrag();
+                
             }
         }
-
-        // -----------------------------------------------------
-        // 3) GESTION DU MOUVEMENT AU CLAVIER (ZQSD / FLÈCHES)
-        // -----------------------------------------------------
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
-        {
-            Vector3 right = Camera.main.transform.right;
-            Vector3 forward = Vector3.Cross(right, Vector3.up);
-
-            right.y = 0f;
-            forward.y = 0f;
-            right.Normalize();
-            forward.Normalize();
-
-            Vector3 moveDirection = right * horizontalInput + forward * verticalInput;
-            transform.position += moveDirection * moveSpeed * Time.deltaTime;
-        }
     }
 
-    // --------------------------------------------------
-    // Fonction utilitaire : applique un zoom "zoomAmount"
-    // --------------------------------------------------
-    private void ApplyZoom(float zoomAmount)
+
+    private void ResetDrag()
     {
-        // Sauvegarder l'ancienne position Y
-        float oldY = transform.position.y;
-        // Calculer la cible (avant clamp)
-        float targetY = oldY - zoomAmount;
-
-        // Limiter Y entre minZoom et maxZoom
-        float newY = Mathf.Clamp(targetY, minZoom, maxZoom);
-
-        // Calculer le delta Y effectif après clamp
-        float actualDeltaY = newY - oldY;
-
-        // Calcul du ratio en fonction de l'angle de 70°
-        float angleInRadians = 70f * Mathf.Deg2Rad;
-        float ratioZtoY = Mathf.Cos(angleInRadians) / Mathf.Sin(angleInRadians);
-
-        // Calcul du nouveau Z en tenant compte du delta Y effectif
-        float newZ = transform.position.z - (actualDeltaY * ratioZtoY);
-
-        // Mettre à jour la position
-        transform.position = new Vector3(transform.position.x, newY, newZ);
+        StartCoroutine(DelayedCursorActivation());
     }
-
-    // --------------------------------
-    // 4) FONCTION DE FOCUS SUR UNE TILE
-    // --------------------------------
-    public void lookTile(GameObject tile)
+    // coroutine pour ajouter un délai de 5 frames avant de réactiver le curseur
+    private IEnumerator DelayedCursorActivation()
     {
-        Vector3 tilePos = tile.transform.position;
-
-        // Arrêter la coroutine en cours si elle existe
-        if (moveCoroutine != null)
+        for (int i = 0; i < 5; i++)
         {
-            StopCoroutine(moveCoroutine);
-        }
-        canMove = false;
-        moveCoroutine = StartCoroutine(TranslateToTile(tilePos));
-    }
-
-    public void setCanMove(bool state)
-    {
-        if (state == true && moveCoroutine != null)
-        {
-            return;
-        }
-        canMove = state;
-    }
-
-    IEnumerator TranslateToTile(Vector3 tilePos)
-    {
-        canMove = false;
-
-        Vector3 targetPos = new Vector3(
-            tilePos.x,
-            10,
-            tilePos.z - 3
-        );
-
-        float elapsed = 0f;
-
-        while (Vector3.Distance(transform.position, targetPos) > 0.01f)
-        {
-            transform.position = Vector3.Lerp(transform.position, targetPos, elapsed / smoothTime);
-            elapsed += Time.deltaTime;
             yield return null;
         }
-
-        transform.position = targetPos; // Ajustement final pour une position précise
-        moveCoroutine = null;
-        canMove = true;
+        Cursor.visible = true;
+        isDragging = false;
+        initialMousePosition = Input.mousePosition;
+        lastMousePosition = Input.mousePosition;
     }
+
+    #endregion
+
+    #region Déplacement Clavier
+
+    private void HandleKeyboardMovement()
+    {
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
+
+        if (Mathf.Approximately(horizontalInput, 0f) && Mathf.Approximately(verticalInput, 0f))
+            return;
+
+        Vector3 right = mainCam.transform.right;
+        Vector3 forward = Vector3.Cross(right, Vector3.up);
+
+        // S'assurer que le mouvement reste sur le plan horizontal
+        right.y = 0f;
+        forward.y = 0f;
+        right.Normalize();
+        forward.Normalize();
+
+        Vector3 moveDirection = right * horizontalInput + forward * verticalInput;
+        transform.position += moveDirection * moveSpeed * Time.deltaTime;
+    }
+
+    #endregion
+
+    #region Vérifications UI
+
+    /// <summary>
+    /// Vérifie si la position de la souris est sur l'UI.
+    /// </summary>
+    /// <returns>True si la souris sur l'UI, sinon false.</returns>
+    private bool IsPointerOverUI()
+    {
+        return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+    }
+
+    /// <summary>
+    /// Vérifie si un touch donné est sur l'UI.
+    /// </summary>
+    /// <param name="touch">Le touch à vérifier.</param>
+    /// <returns>True si le touch est sur l'UI, sinon false.</returns>
+    private bool IsTouchOverUI(Touch touch)
+    {
+        return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(touch.fingerId);
+    }
+
+    #endregion
+
+
 }

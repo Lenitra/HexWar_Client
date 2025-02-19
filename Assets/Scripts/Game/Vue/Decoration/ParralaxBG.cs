@@ -64,8 +64,8 @@ public class ParralaxBG : MonoBehaviour
 
             // On ne déplace que sur les axes X et Z
             Vector3 newPos = layers[i].position;
-            newPos.x += deltaMovement.x * scale;
-            newPos.z += deltaMovement.z * scale;
+            newPos.x -= deltaMovement.x * scale;
+            newPos.z -= deltaMovement.z * scale;
 
             layers[i].position = newPos;
         }

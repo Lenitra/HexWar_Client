@@ -1,192 +1,184 @@
-using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
-using System.Linq;
 using System;
-using TMPro;
-using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
-    private GridGenerator gridGenerator;
-    private CamController camControler;
-    private ServerClient serverClient;
-    private PlayerControler playerControler;
-    // coroutine du pooling régulier
-    private Coroutine poolingCoroutine;
-    private bool isPooling = true;
+    // Le presenteurCarte
+    private PresenteurCarte presenteurCarte;
 
-    // EFFECTS
-    [Header("Effects")]
-    [SerializeField] private LineRenderer moveUnitsLine;
+    // Tableau des hexagones
+    [SerializeField] private List<Hex> hexMap;
 
     void Start()
     {
-        serverClient = GetComponent<ServerClient>();
-        gridGenerator = GetComponent<GridGenerator>();
-        camControler = Camera.main.GetComponent<CamController>();
-        playerControler = GetComponent<PlayerControler>();
-
-        // faire le premier pool de la map
-        serverClient.updateMap();
-        // lancer le pooling régulier
-        poolingCoroutine = StartCoroutine(pooling());
+        presenteurCarte = GetComponent<PresenteurCarte>();
     }
 
-    public void togglePooling(bool state)
-    {
-        if (state && !isPooling)
-        {
-            poolingCoroutine = StartCoroutine(pooling());
-        }
-        if (!state && isPooling)
-        {
-            StopCoroutine(poolingCoroutine);
-        }
-    }
 
-    // Coroutine de pooling régulier
-    private IEnumerator pooling()
+
+    #region Gestion de la carte
+
+    // Appelée par le polling pour mettre à jour la carte.
+    // Format la réponse du serveur en tableau d'hexagones.
+    public void SetupTiles(string tiles)
     {
-        while (true)
+        // Exemple de tiles :
+        // [{"x":0,"y":0,"lvl":1,"units":1,"type":"plain","owner":"player1","color":"#ff0000"}, ...]
+
+        // Désérialisation du JSON en GameData
+        GameData data = JsonUtility.FromJson<GameData>("{\"hexMap\":" + tiles + "}");
+        if (data == null)
         {
-            // Pooling de la map et de l'argent
-            serverClient.updateMap();
-            yield return new WaitForSeconds(1f);
-        }
-    }
-
-    // Depuis le régulier pool du serveur, actualise la valeur de l'argent du joueur et appelle le PlayerControler pour mettre à jour la vue
-    public void UpdateMoney(string money)
-    {
-        PlayerPrefs.SetInt("money", int.Parse(money));
-        playerControler.UpdateMoney(money);
-    }
-
-    // Met à jour la grille de jeu en recevant les données JSON des hexagones
-    public void SetupTiles(string jsonData)
-    {
-        // JsonUtility ne supporte pas les tableaux en racine.
-        // On enveloppe donc le JSON dans un objet avec une propriété "hexes".
-        string wrappedJson = "{\"hexes\":" + jsonData + "}";
-        GameData gameData = JsonUtility.FromJson<GameData>(wrappedJson);
-
-        // Vérifier que les données de jeu ne soient pas nulles
-        if (gameData == null || gameData.hexes == null || gameData.hexes.Length == 0)
-        {
+            Debug.LogError("Erreur de désérialisation du JSON");
             return;
         }
 
-        // Créer un dictionnaire pour stocker les données des hexagones
-        Dictionary<string, HexData> hexDictionary = gameData.hexes.ToDictionary(hex => $"{hex.x}:{hex.y}");
-        
+        // ATTENTION : La comparaison directe entre data.hexMap et this.hexMap ne fonctionnera pas comme prévu.
+        // Tu pourrais implémenter une comparaison sur les coordonnées ou un autre critère si nécessaire.
+        // if (data.hexMap == this.hexMap) { return; }
 
-        // Créer une liste des données d'hexagones pour mettre à jour la grille
-        List<Dictionary<string, object>> tilesData = hexDictionary.Values
-            .Select(hex => hex.ToDictionary())
-            .ToList();
-
-        // Mettre à jour la grille via le générateur
-        gridGenerator.UpdateGrid(tilesData);
+        AjustHexesCount(data.hexMap);
+        UpdateHexesAttributes(data.hexMap);
     }
 
-    public void buildBtnClic(string tile, string type, int lvl)
+    // Ajuste la liste des hexagones en ajoutant ceux manquants et en supprimant ceux qui ne sont plus présents.
+    private void AjustHexesCount(Hex[] newHexes)
     {
-        // send a http request to the server
-        serverClient.build(tile, type);
+        // Ajouter les hexagones qui sont dans la nouvelle carte mais absents de la map actuelle.
+        CheckAjoutHexes(newHexes);
+        // Supprimer les hexagones présents dans la map actuelle mais absents de la nouvelle carte.
+        CheckSuppressionHexes(newHexes);
     }
 
-    public void moveUnitsBtnClic(string origin, string destination, int units)
+    // Supprime les hexagones de this.hexMap qui ne sont plus présents dans newHexes.
+    private void CheckSuppressionHexes(Hex[] newMap)
     {
-        // send a http request to the server
-        serverClient.moveUnits(origin, destination, units);
-    }
+        List<Hex> hexagonesASupprimer = new List<Hex>();
 
-    // Animation de déplacement des unités
-    public IEnumerator moveUnitsAnimation(string[] moves, float animationDuration = 0.1f, float retractDuration = 0.01f)
-    {
-        // moves is an array of strings with the format ["x:z","x:z","x:z",...]
-        moveUnitsLine.positionCount = moves.Length;
-
-        Vector3[] positions = new Vector3[moves.Length];
-
-        // Get the positions of the tiles based on grid coordinates
-        for (int i = 0; i < moves.Length; i++)
+        for (int i = 0; i < this.hexMap.Count; i++)
         {
-            string[] coords = moves[i].Split(':');
-
-            int x = int.Parse(coords[0]);
-            int z = int.Parse(coords[1]);
-            float x1 = gridGenerator.GetHexCoordinates(x, z)[0];
-            float z1 = gridGenerator.GetHexCoordinates(x, z)[1];
-
-            positions[i] = new Vector3(x1, 0.5f, z1); // Store each position
-        }
-
-        // Animate the drawing of the line
-        for (int i = 0; i < positions.Length - 1; i++)
-        {
-            Vector3 startPosition = positions[i];
-            Vector3 endPosition = positions[i + 1];
-            float elapsedTime = 0f;
-
-            // Interpolate between startPosition and endPosition over time
-            while (elapsedTime < animationDuration)
+            bool found = false;
+            for (int j = 0; j < newMap.Length; j++)
             {
-                elapsedTime += Time.deltaTime;
-                float t = Mathf.Clamp01(elapsedTime / animationDuration);
-                Vector3 currentPosition = Vector3.Lerp(startPosition, endPosition, t);
-
-                // Set the line renderer positions dynamically
-                moveUnitsLine.positionCount = i + 2;
-                moveUnitsLine.SetPosition(i, startPosition);
-                moveUnitsLine.SetPosition(i + 1, currentPosition);
-
-                yield return null;
-            }
-
-            // Once the interpolation is complete, set the end position of the current segment
-            moveUnitsLine.SetPosition(i + 1, endPosition);
-        }
-
-        yield return new WaitForSeconds(0.5f);
-
-        // Animate the retraction of the line (from origin to destination)
-        for (int i = 1; i < positions.Length; i++)
-        {
-            float elapsedTime = 0f;
-            while (elapsedTime < retractDuration)
-            {
-                elapsedTime += Time.deltaTime;
-                float t = Mathf.Clamp01(elapsedTime / retractDuration);
-                Vector3 currentPosition = Vector3.Lerp(positions[i - 1], positions[i], t);
-                moveUnitsLine.SetPosition(0, currentPosition);
-                for (int j = 1; j < positions.Length - i; j++)
+                if (this.hexMap[i].x == newMap[j].x && this.hexMap[i].y == newMap[j].y)
                 {
-                    moveUnitsLine.SetPosition(j, positions[j + i]);
+                    found = true;
+                    break;
                 }
-                yield return null;
             }
-            moveUnitsLine.positionCount -= 1;
+            if (!found)
+            {
+                // Noter l'hexagone à supprimer
+                hexagonesASupprimer.Add(this.hexMap[i]);
+            }
         }
+        // Supprimer les hexagones excédentaires
+        foreach (Hex hex in hexagonesASupprimer)
+        {
+            // TODO: Appeler le presenteurCarte pour supprimer l'hexagone visuellement
+            this.hexMap.Remove(hex);
+        }
+    }
 
-        moveUnitsLine.positionCount = 0;
+    // Ajoute les hexagones qui sont présents dans newMap mais absents dans this.hexMap.
+    private void CheckAjoutHexes(Hex[] newMap)
+    {
+        for (int i = 0; i < newMap.Length; i++)
+        {
+            bool found = false;
+            for (int j = 0; j < this.hexMap.Count; j++)
+            {
+                if (newMap[i].x == this.hexMap[j].x && newMap[i].y == this.hexMap[j].y)
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+            {
+                // Debug.Log($"Ajout de l'hexagone ({newMap[i].x}, {newMap[i].y})");
+
+                // Ajouter la tuile aux données du modèle
+                this.hexMap.Add(newMap[i]);
+                // Créer la tuile visuellement
+                presenteurCarte.CreerTile(newMap[i]);
+            }
+        }
+    }
+
+    // Met à jour les attributs des hexagones déjà présents.
+    // TODO: Appels au presenteurCarte pour mettre à jour visuellement les hexagones.
+    private void UpdateHexesAttributes(Hex[] newMap)
+    {
+        for (int i = 0; i < newMap.Length; i++)
+        {
+            for (int j = 0; j < this.hexMap.Count; j++)
+            {
+                if (newMap[i].x == this.hexMap[j].x && newMap[i].y == this.hexMap[j].y)
+                {
+                    if (newMap[i].lvl != this.hexMap[j].lvl)
+                    {
+                        Debug.Log($"Lvl de l'hexagone ({newMap[i].x}, {newMap[i].y}) a changé de {this.hexMap[j].lvl} à {newMap[i].lvl}");
+                        this.hexMap[j].lvl = newMap[i].lvl;
+                    }
+                    if (newMap[i].units != this.hexMap[j].units)
+                    {
+                        Debug.Log($"Units de l'hexagone ({newMap[i].x}, {newMap[i].y}) a changé de {this.hexMap[j].units} à {newMap[i].units}");
+                        this.hexMap[j].units = newMap[i].units;
+                    }
+                    if (newMap[i].type != this.hexMap[j].type)
+                    {
+                        Debug.Log($"Type de l'hexagone ({newMap[i].x}, {newMap[i].y}) a changé de {this.hexMap[j].type} à {newMap[i].type}");
+                        this.hexMap[j].type = newMap[i].type;
+                    }
+                    if (newMap[i].owner != this.hexMap[j].owner)
+                    {
+                        Debug.Log($"Owner de l'hexagone ({newMap[i].x}, {newMap[i].y}) a changé de {this.hexMap[j].owner} à {newMap[i].owner}");
+                        this.hexMap[j].owner = newMap[i].owner;
+                    }
+                    if (newMap[i].color != this.hexMap[j].color)
+                    {
+                        Debug.Log($"Color de l'hexagone ({newMap[i].x}, {newMap[i].y}) a changé de {this.hexMap[j].color} à {newMap[i].color}");
+                        this.hexMap[j].color = newMap[i].color;
+                    }
+                }
+            }
+        }
+    }
+
+    #endregion
+
+
+
+
+    // Appelée par le polling pour mettre à jour l'argent
+    public void UpdateMoney(string money)
+    {
+        // TODO: Implémenter la mise à jour de l'argent
+    }
+
+    public string moveUnitsAnimation(string[] move)
+    {
+        // TODO: Implémenter l'animation du déplacement d'unités
+        return "";
     }
 }
 
-// Classe GameData pour contenir le tableau des hexagones
+#region Classes de données
+
 [Serializable]
 public class GameData
 {
-    public HexData[] hexes;  // Cette propriété recevra le tableau d'hexagones enveloppé.
+    public Hex[] hexMap;
 }
 
 [Serializable]
-public class HexData
+public class Hex
 {
     public int x;
     public int y;
-    public int lvl;  // Utilisation d'un int nullable pour accepter null
+    public int lvl;
     public int units;
     public string type;
     public string owner;
@@ -208,3 +200,5 @@ public class HexData
         return dict;
     }
 }
+
+#endregion

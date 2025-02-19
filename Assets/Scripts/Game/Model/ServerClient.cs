@@ -10,23 +10,53 @@ using System.Threading.Tasks;
 public class ServerClient : MonoBehaviour
 {
     private GameManager gameManager;
-    // private float pollInterval = 0.5f; // Interval d'update de la carte en secondes
+
+    // Interval d'update de la carte en secondes
+    private float pollInterval = 0.5f; 
+
+    // Coroutine continue du polling
+    private Coroutine pollingCoroutine;
 
 
 
     void Start()
     {
         gameManager = GetComponent<GameManager>();
-        updateMap();
+        setPooling();
     }
 
 
 
+    public void setPooling(float pollInterval = 0.5f)
+    {
+        this.pollInterval = pollInterval;
+        if (pollingCoroutine != null)
+        {
+            StopCoroutine(pollingCoroutine);
+        }
+        pollingCoroutine = StartCoroutine(PollGameState());
+    }
+
+
+
+    // Coroutine pour le polling
+    IEnumerator PollGameState()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(pollInterval);
+            updateMap();
+        }
+    }
+
+
+
+    // Lance la récupération des données de la carte
     public void updateMap()
     {
-        // lancer la coroutine 
         StartCoroutine(GetGameState());
     }
+
 
     IEnumerator GetGameState()
     {
@@ -55,7 +85,6 @@ public class ServerClient : MonoBehaviour
                 // supprimer le dernier caractère
                 hexes = hexes.Remove(hexes.Length - 1, 1);
                 hexes = hexes.Remove(hexes.Length - 1, 1);
-                Debug.Log("hexes: " + hexes);
 
 
 
@@ -69,7 +98,7 @@ public class ServerClient : MonoBehaviour
                 gameManager.SetupTiles(hexes);
             }
         }
-        Debug.Log("PollGameState took: " + (Time.time - startTime) + " seconds");
+        // Debug.Log("PollGameState took: " + (Time.time - startTime) + " seconds");
 
     }
 

@@ -19,12 +19,20 @@ public class LoginSys : MonoBehaviour
 
     void Start()
     {
+        // Ajouter un listener au bouton de connexion pour démarrer le processus de connexion avec les entrées utilisateur
         LOGINbutton.onClick.AddListener(() => StartLogin(LOGINusernameInput.text, LOGINpasswordInput.text));
+        
+        // Charger les informations de connexion sauvegardées (si elles existent)
         LOGINusernameInput.text = PlayerPrefs.GetString("username");
         LOGINpasswordInput.text = PlayerPrefs.GetString("password");
+        
+        // Démarrer la vérification de la version du jeu
         StartCoroutine(checkVersion());
-        // redirect to http://217.160.99.153:8080/login
+        
+        // Ajouter un listener au bouton d'inscription pour ouvrir l'URL d'inscription dans le navigateur par défaut
         registerButton.onClick.AddListener(() => Application.OpenURL(DataManager.Instance.GetData("serverIP") + "/login"));
+        
+        // Ajouter un listener au bouton de sortie pour quitter l'application
         exitButton.onClick.AddListener(() => Application.Quit());
     }
 
@@ -59,19 +67,12 @@ public class LoginSys : MonoBehaviour
 
                 if (responseText.Split('"')[3] != version)
                 {
-                    Debug.Log("Version NON supportée !");
-
-                    Debug.Log("Version du jeu: " + version);
-                    Debug.Log("Version du serveur: " + responseText.Split('"')[3]);
                     UnityEngine.SceneManagement.SceneManager.LoadScene("VersionError");
-                }
-                else{
-                    Debug.Log("Jeu à jour !");
                 }
             }
 
 
-            
+
         }
 
 #endif
@@ -87,6 +88,7 @@ public class LoginSys : MonoBehaviour
         // LOGINloading.gameObject.SetActive(true);
         StartCoroutine(Login(username, password));
     }
+
 
     // Coroutine pour envoyer la requête POST au serveur Flask
     IEnumerator Login(string username, string password)
@@ -174,6 +176,7 @@ public class LoginSys : MonoBehaviour
         }
     }
 
+    // Coroutine pour l'effet de shake sur le bouton de connexion en cas d'échec de connexion
     IEnumerator shakeUI()
     {
         LOGINpasswordInput.text = "";
