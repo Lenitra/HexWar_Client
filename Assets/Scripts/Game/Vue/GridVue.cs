@@ -15,9 +15,24 @@ public class GridVue : MonoBehaviour
     // Prefab de l'hexagone
     [SerializeField] private GameObject tilePrefab;
 
-    // [Header("UI")]
-    // Panel d'information sur les hexagones
     [SerializeField] private TilePanel tilePanel;
+
+    [Space(10)]
+    [Header("UI Tiles")]
+
+    [SerializeField] private Button buildBtn;
+    [SerializeField] private Button moveBtn;
+    [SerializeField] private Button rallyBtn;
+    [SerializeField] private Button configBuildBtn;
+
+    // [Space(10)]
+    // [Header("Panels Tiles")]
+    // [SerializeField] private BuildPanel buildPanel;
+    // [SerializeField] private MovePanel movePanel;
+    // [SerializeField] private RallyPanel rallyPanel;
+    // [SerializeField] private ConfigBuildPanel configBuildPanel;
+    
+    // [SerializeField] private ModalPanel modalPanel;
 
 
 
@@ -26,8 +41,14 @@ public class GridVue : MonoBehaviour
     {
         presenteurCarte = GetComponent<PresenteurCarte>();
         camController = Camera.main.GetComponent<CamController>();
-    }
 
+        // Listeners des boutons de tiles
+        
+        // buildBtn.onClick.AddListener(() => EnableGameObject(buildPanel.gameObject));
+        // moveBtn.onClick.AddListener(() => EnableGameObject(movePanel.gameObject));
+        // rallyBtn.onClick.AddListener(() => EnableGameObject(rallyPanel.gameObject));
+        // configBuildBtn.onClick.AddListener(() => EnableGameObject(configBuildPanel.gameObject));
+    }
 
 
 
@@ -104,8 +125,61 @@ public class GridVue : MonoBehaviour
 
 
 
+    #region Gestion de l'affichage des différents panels
+
+    // TODO: Uncoment when panels are implemented
+    private void DisableAllPanels()
+    {
+        DisableGameObject(tilePanel.gameObject);
+        // DisableGameObject(buildPanel.gameObject);
+        // DisableGameObject(upgradePanel.gameObject);
+        // DisableGameObject(movePanel.gameObject);
+        // DisableGameObject(rallyPanel.gameObject);
+    }
+    
+    
+    private void DisableGameObject(GameObject go)
+    {
+        go.SetActive(false);
+    }
+
+    private void EnableGameObject(GameObject go)
+    {
+        DisableAllPanels();
+        go.SetActive(true);
+    }
+
+    #endregion
 
 
+
+    #region Gestion des retours des différents panels
+    public void BuildPanelRetour(string type)
+    {
+        DisableAllPanels();
+        // TODO: Gérer l'envoi au presenteur
+    }
+
+    public void UpgradePanelRetour()
+    {
+        DisableAllPanels();
+        // TODO: Gérer l'envoi au presenteur
+    }
+
+    public void MovePanelRetour()
+    {
+        DisableAllPanels();
+        // TODO: Gérer l'envoi au presenteur
+    }
+
+
+    public void RallyPanelRetour()
+    {
+        DisableAllPanels();
+        // TODO: Gérer l'envoi au presenteur
+    }
+
+    #endregion
 
 
 

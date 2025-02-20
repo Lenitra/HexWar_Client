@@ -4,14 +4,6 @@ using TMPro;
 
 public class TilePanel : MonoBehaviour
 {
-    
-    // Boutons du panel
-    [Header("Buttons")]
-    [SerializeField] private Button buildBtn;
-    [SerializeField] private Button moveBtn;
-    [SerializeField] private Button rallyBtn;
-    [SerializeField] private Button configBtn;
-
     [Header("Texts")]
     // Panel de texte informatif sur un hex
     [SerializeField] private TextMeshProUGUI titleText;
