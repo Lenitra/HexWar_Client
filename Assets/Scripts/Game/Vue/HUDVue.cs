@@ -11,5 +11,21 @@ public class HUDVue : MonoBehaviour
     }
 
 
+    private IEnumerator UpdateMoneyAnimation(int newMoney)
+    {
+        int oldMoney = int.Parse(moneyText.text.Substring(2));
+        int diff = newMoney - oldMoney;
+        int step = diff / 10;
+        int currentMoney = oldMoney;
+
+        for (int i = 0; i < 10; i++)
+        {
+            currentMoney += step;
+            moneyText.text = "¤ " + currentMoney.ToString();
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        moneyText.text = "¤ " + newMoney.ToString();
+    }
 
 }
