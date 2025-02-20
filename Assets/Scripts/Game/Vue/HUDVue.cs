@@ -7,25 +7,22 @@ public class HUDVue : MonoBehaviour
 
     public void UpdateMoney(int money)
     {
-        moneyText.text = "¤ " + money.ToString();
+        StartCoroutine(UpdateMoneyAnimation(money));
     }
 
 
     private IEnumerator UpdateMoneyAnimation(int newMoney)
     {
         int oldMoney = int.Parse(moneyText.text.Substring(2));
-        int diff = newMoney - oldMoney;
-        int step = diff / 10;
-        int currentMoney = oldMoney;
-
-        for (int i = 0; i < 10; i++)
+        float duration = 0.5f;
+        float t = 0;
+        while (t < duration)
         {
-            currentMoney += step;
-            moneyText.text = "¤ " + currentMoney.ToString();
-            yield return new WaitForSeconds(0.1f);
+            t += Time.deltaTime;
+            moneyText.text = $"¤ {Mathf.RoundToInt(Mathf.Lerp(oldMoney, newMoney, t / duration))}";
+            yield return null;
         }
-
-        moneyText.text = "¤ " + newMoney.ToString();
+        moneyText.text = $"¤ {newMoney}";
     }
 
 }
