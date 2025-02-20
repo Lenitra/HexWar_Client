@@ -1,12 +1,13 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.EventSystems;
 
 public class GridVue : MonoBehaviour
 {
 
     private const float gridGap = 0.1f;
     private const float hexSize = 0.5f;
-    private PresenteurInputs presenteurInputs;
+    private PresenteurCarte presenteurCarte;
     private CamController camController;
 
 
@@ -24,7 +25,7 @@ public class GridVue : MonoBehaviour
 
     private void Start()
     {
-        presenteurInputs = GetComponent<PresenteurInputs>();
+        presenteurCarte = GetComponent<PresenteurCarte>();
         camController = Camera.main.GetComponent<CamController>();
     }
 
@@ -42,7 +43,7 @@ public class GridVue : MonoBehaviour
         )
         {
 
-            presenteurInputs.TraiterClick(Input.mousePosition);
+            presenteurCarte.TraiterClick(Input.mousePosition);
         }
     }
 
