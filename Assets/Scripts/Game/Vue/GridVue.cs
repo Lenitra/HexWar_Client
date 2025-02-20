@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class GridVue : MonoBehaviour
 {
@@ -14,11 +15,9 @@ public class GridVue : MonoBehaviour
     // Prefab de l'hexagone
     [SerializeField] private GameObject tilePrefab;
 
-
+    // [Header("UI")]
     // Panel d'information sur les hexagones
     [SerializeField] private TilePanel tilePanel;
-
-
 
 
 
