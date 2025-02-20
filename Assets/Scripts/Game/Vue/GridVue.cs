@@ -25,13 +25,13 @@ public class GridVue : MonoBehaviour
     [SerializeField] private Button rallyBtn;
     [SerializeField] private Button configBuildBtn;
 
-    // [Space(10)]
-    // [Header("Panels Tiles")]
-    // [SerializeField] private BuildPanel buildPanel;
+    [Space(2)]
+    [Header("Panels Tiles")]
+    [SerializeField] private BuildPanel buildPanel;
     // [SerializeField] private MovePanel movePanel;
     // [SerializeField] private RallyPanel rallyPanel;
     // [SerializeField] private ConfigBuildPanel configBuildPanel;
-    
+
     // [SerializeField] private ModalPanel modalPanel;
 
 
@@ -44,7 +44,7 @@ public class GridVue : MonoBehaviour
 
         // Listeners des boutons de tiles
         
-        // buildBtn.onClick.AddListener(() => EnableGameObject(buildPanel.gameObject));
+        buildBtn.onClick.AddListener(() => EnableGameObject(buildPanel.gameObject));
         // moveBtn.onClick.AddListener(() => EnableGameObject(movePanel.gameObject));
         // rallyBtn.onClick.AddListener(() => EnableGameObject(rallyPanel.gameObject));
         // configBuildBtn.onClick.AddListener(() => EnableGameObject(configBuildPanel.gameObject));
@@ -131,7 +131,7 @@ public class GridVue : MonoBehaviour
     private void DisableAllPanels()
     {
         DisableGameObject(tilePanel.gameObject);
-        // DisableGameObject(buildPanel.gameObject);
+        DisableGameObject(buildPanel.gameObject);
         // DisableGameObject(upgradePanel.gameObject);
         // DisableGameObject(movePanel.gameObject);
         // DisableGameObject(rallyPanel.gameObject);
@@ -147,6 +147,27 @@ public class GridVue : MonoBehaviour
     {
         DisableAllPanels();
         go.SetActive(true);
+        string name = go.name;
+
+        Tile tile = presenteurCarte.SelectTile;
+        Debug.Log(tile.X + " " + tile.Y + " " + tile.Type);
+    
+        switch (name)
+        {
+            case "Build Panel":
+                buildPanel.SetupPanel(tile);
+                break;
+            case "Move Panel":
+                // movePanel.SetupPanel(tile);
+                break;
+            case "Rally Panel":
+                // rallyPanel.SetupPanel(tile);
+                break;
+            case "Config BuildPanel":
+                // configBuildPanel.SetupPanel(tile);
+                break;
+        }
+
     }
 
     #endregion
@@ -243,7 +264,7 @@ public class GridVue : MonoBehaviour
     {
         tilePanel.gameObject.SetActive(true);
 
-        tilePanel.transform.position = new Vector3(tile.transform.position.x, 1.15f, tile.transform.position.z - 0.1f);
+        tilePanel.transform.position = new Vector3(tile.transform.position.x, 2f, tile.transform.position.z - 0.6f);
 
         string title = $"{tile.Owner}";
         string coords = $"({tile.X}, {tile.Y})";

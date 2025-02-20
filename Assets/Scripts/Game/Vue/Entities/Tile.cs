@@ -10,11 +10,11 @@ public class Tile : MonoBehaviour
     [Header("Tile Attributes")]
     private int x = int.MaxValue;
     private int y = int.MaxValue;
-    private int units = 0;
-    private string owner = "";
-    private int lvl = 0;
-    private string type = "";
-    private string color = "0|0|0";
+    [SerializeField] private int units = 0;
+    [SerializeField] private string owner = "";
+    [SerializeField] private int lvl = 0;
+    [SerializeField] private string type = "";
+    [SerializeField] private string color = "0|0|0";
 
     [Header("Prefabs des types de tiles")]
     [SerializeField] private GameObject[] typesPrefabs;

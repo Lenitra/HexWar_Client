@@ -6,7 +6,7 @@ public class PresenteurCarte : MonoBehaviour
     private GridVue gridVue;
 
     private string state = "";
-    private Tile selectTile1 = null;
+    private Tile selectTile = null;
 
 
 
@@ -14,19 +14,19 @@ public class PresenteurCarte : MonoBehaviour
 
     public Tile SelectTile
     {
-        get { return selectTile1; }
+        get { return selectTile; }
         set
         {
-            if (selectTile1 != null)
+            if (selectTile != null)
             {
-                gridVue.DeselectTile(selectTile1);
+                gridVue.DeselectTile(selectTile);
             }
 
-            selectTile1 = value;
+            selectTile = value;
 
-            if (selectTile1 != null)
+            if (selectTile != null)
             {
-                gridVue.SelectTile(selectTile1);
+                gridVue.SelectTile(selectTile);
             }
         }
     }
@@ -132,7 +132,7 @@ public class PresenteurCarte : MonoBehaviour
 
     #region Gestion des actions de tile(s)
 
-    
+
 
 
 
