@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
 {
 
     private PresenteurCarte presenteurCarte; // Le presenteurCarte
+    private PresenteurHUD presenteurHUD; // Le presenteurCarte
     private List<Hex> hexMap = new List<Hex>(); // Tableau des hexagones
     private int money; // Argent du joueur
 
@@ -13,13 +14,17 @@ public class GameManager : MonoBehaviour
     public int Money
     {
         get { return money; }
-        set { money = value; }
+        set { 
+            money = value; 
+            presenteurHUD.UpdateMoney(money);
+        }
     }
 
 
     void Start()
     {
         presenteurCarte = GetComponent<PresenteurCarte>();
+        presenteurHUD = GetComponent<PresenteurHUD>();
     }
 
 
@@ -49,6 +54,7 @@ public class GameManager : MonoBehaviour
         UpdateHexesAttributes(data.hexMap);
     }
 
+
     // Ajuste la liste des hexagones en ajoutant ceux manquants et en supprimant ceux qui ne sont plus présents.
     private void AjustHexesCount(Hex[] newHexes)
     {
@@ -57,6 +63,7 @@ public class GameManager : MonoBehaviour
         // Supprimer les hexagones présents dans la map actuelle mais absents de la nouvelle carte.
         CheckSuppressionHexes(newHexes);
     }
+
 
     // Supprime les hexagones de this.hexMap qui ne sont plus présents dans newHexes.
     private void CheckSuppressionHexes(Hex[] newMap)
@@ -117,7 +124,6 @@ public class GameManager : MonoBehaviour
     }
 
     // Met à jour les attributs des hexagones déjà présents.
-    // TODO: Appels au presenteurCarte pour mettre à jour visuellement les hexagones.
     private void UpdateHexesAttributes(Hex[] newMap)
     {
         for (int i = 0; i < newMap.Length; i++)
@@ -145,8 +151,14 @@ public class GameManager : MonoBehaviour
     // Appelée par le polling pour mettre à jour l'argent
     public void UpdateMoney(string money)
     {
-        // TODO: Implémenter la mise à jour de l'argent
+        int newMoney = int.Parse(money);
+        if (newMoney != this.money)
+        {
+            Money = newMoney;
+        }
     }
+
+
 
     public string moveUnitsAnimation(string[] move)
     {

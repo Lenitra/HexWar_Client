@@ -6,8 +6,46 @@ public class GridVue : MonoBehaviour
 
     private const float gridGap = 0.1f;
     private const float hexSize = 0.5f;
+    private PresenteurInputs presenteurInputs;
+    private CamController camController;
 
+
+    // Prefab de l'hexagone
     [SerializeField] private GameObject tilePrefab;
+
+
+    // Panel d'information sur les hexagones
+    [SerializeField] private TilePanel tilePanel;
+
+
+
+
+
+
+    private void Start()
+    {
+        presenteurInputs = GetComponent<PresenteurInputs>();
+        camController = Camera.main.GetComponent<CamController>();
+    }
+
+
+
+
+    // Gestions des clicks sur la grille
+    private void Update()
+    {
+        // Vérification supplémentaire pour éviter les conflits avec le drag de la caméra
+        if (
+            Input.GetMouseButtonUp(0) // Si on clique
+            && camController.isDragging == false // Si on est pas en train de bouger la caméra
+            && !EventSystem.current.IsPointerOverGameObject()
+        )
+        {
+
+            presenteurInputs.TraiterClick(Input.mousePosition);
+        }
+    }
+
 
 
     #region Génération de la grille
@@ -17,10 +55,19 @@ public class GridVue : MonoBehaviour
     {
         float[] coords = GetHexCoordinates(hexData.x, hexData.y);
         GameObject tile = Instantiate(tilePrefab, new Vector3(coords[0], -5, coords[1]), Quaternion.identity);
+        // set the parent of this tile to the grid
+        tile.transform.SetParent(transform);
         // set le nom de l'objet
         tile.name = $"HexObj {hexData.x}:{hexData.y}";
         tile.GetComponent<Tile>().SetupTile(hexData);
         StartCoroutine(CreerTileAnim(tile));
+
+        // Si le hex est le hq du joueur, bouger la caméra vers lui
+        if (hexData.owner == PlayerPrefs.GetString("username")
+            && hexData.type.ToLower() == "hq")
+        {
+            Camera.main.GetComponent<CamController>().moveCamToTile(coords[0], coords[1], false);
+        }
     }
 
 
@@ -84,7 +131,7 @@ public class GridVue : MonoBehaviour
     // Détruit un hexagone avec une animation de pop
     private IEnumerator DestroyTileAnim(GameObject tile)
     {
-        if (tile == null){yield break;}
+        if (tile == null) { yield break; }
         float duration = 0.5f;
         float t = 0;
         Vector3 startPos = tile.transform.position;
@@ -103,15 +150,51 @@ public class GridVue : MonoBehaviour
 
 
 
+    #region Selection de tiles
+    public void SelectTile(Tile tile)
+    {
+        ShowTilePanel(tile);
+        StartCoroutine(SelectTileAnim(tile));
+    }
+
+    public void DeselectTile(Tile tile)
+    {
+        HideTilePanel();
+        StartCoroutine(DeselectTileAnim(tile));
+    }
+
+
+    // Placement et affichage du panel relatif à la tuile selectionée
+    private void ShowTilePanel(Tile tile)
+    {
+        tilePanel.gameObject.SetActive(true);
+
+        tilePanel.transform.position = new Vector3(tile.transform.position.x, 1.15f, tile.transform.position.z - 0.1f);
+
+        string title = $"{tile.Owner}";
+        string coords = $"({tile.X}, {tile.Y})";
+        string desc = $"Type: {tile.Type}\nLvl: {tile.Lvl}\nUnits: {tile.Units}";
+        tilePanel.SetInfoTilePanel(title, coords, desc);
+    }
+
+    private void HideTilePanel()
+    {
+        tilePanel.gameObject.SetActive(false);
+    }
+
+    #endregion
+
+
 
     #region Coroutine d'animations de selection
-    
-    public IEnumerator SelectTileAnim(Tile tile)
+
+    private IEnumerator SelectTileAnim(Tile tile)
     {
+        if (tile == null) { yield break; }
         float duration = 0.25f;
         float t = 0;
         Vector3 startPos = tile.transform.position;
-        Vector3 endPos = new Vector3(tile.transform.position.x, 0.5f, tile.transform.position.z);
+        Vector3 endPos = new Vector3(tile.transform.position.x, 0.75f, tile.transform.position.z);
         while (t < duration)
         {
             t += Time.deltaTime;
@@ -120,10 +203,11 @@ public class GridVue : MonoBehaviour
         }
         tile.transform.position = endPos;
     }
-    
-    
-    public IEnumerator DeselectTileAnim(Tile tile)
+
+
+    private IEnumerator DeselectTileAnim(Tile tile)
     {
+        if (tile == null) { yield break; }
         float duration = 0.25f;
         float t = 0;
         Vector3 startPos = tile.transform.position;
@@ -136,8 +220,8 @@ public class GridVue : MonoBehaviour
         }
         tile.transform.position = endPos;
     }
-    
-    
+
+
     #endregion
 
 

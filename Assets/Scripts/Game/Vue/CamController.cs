@@ -21,6 +21,7 @@ public class CamController : MonoBehaviour
     private Plane groundPlane;
     private Camera mainCam;
 
+
     private void Start()
     {
         // Plan de référence pour les mouvements sur le plan XZ (y = 0)
@@ -107,7 +108,10 @@ public class CamController : MonoBehaviour
         {
             if (IsPointerOverUI())
             {
-                ResetDrag();
+                Cursor.visible = true;
+                isDragging = false;
+                initialMousePosition = Input.mousePosition;
+                lastMousePosition = Input.mousePosition;
                 return;
             }
             initialMousePosition = Input.mousePosition;
@@ -115,7 +119,15 @@ public class CamController : MonoBehaviour
         }
         else if (Input.GetMouseButton(0))
         {
-
+            if (IsPointerOverUI() && !isDragging)
+            {
+                Cursor.visible = true;
+                isDragging = false;
+                initialMousePosition = Input.mousePosition;
+                lastMousePosition = Input.mousePosition;
+                return;
+            }
+            
             // Si le drag n'est pas encore lancé, vérifier le seuil
             if (!isDragging && Vector3.Distance(Input.mousePosition, initialMousePosition) > dragThreshold)
             {
@@ -142,7 +154,7 @@ public class CamController : MonoBehaviour
             if (isDragging)
             {
                 ResetDrag();
-                
+
             }
         }
     }
@@ -155,7 +167,7 @@ public class CamController : MonoBehaviour
     // coroutine pour ajouter un délai de 5 frames avant de réactiver le curseur
     private IEnumerator DelayedCursorActivation()
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 2; i++)
         {
             yield return null;
         }
@@ -215,5 +227,39 @@ public class CamController : MonoBehaviour
 
     #endregion
 
+
+    #region Fonctions de déplacement vers quelque chose
+    public void moveCamToTile(float x, float z, bool delay = true)
+    {
+        Vector3 offset = new Vector3(0, 0, -4);
+
+        Vector3 targetPos = new Vector3(x, 10, z) + offset;
+
+        if (delay)
+        {
+            StartCoroutine(MoveCamAnim(targetPos));
+        }
+        else
+        {
+            transform.position = targetPos;
+        }
+    }
+
+
+    // animation du déplacement de la caméra
+    private IEnumerator MoveCamAnim(Vector3 targetPos)
+    {
+        float duration = 0.5f;
+        float t = 0;
+        Vector3 startPos = transform.position;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            transform.position = Vector3.Lerp(startPos, targetPos, t / duration);
+            yield return null;
+        }
+    }
+
+    #endregion
 
 }

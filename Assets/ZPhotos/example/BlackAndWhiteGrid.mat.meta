@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: b10b436e2f584924294dc762cc135637
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 509
+  packageName: Transparency Capture
+  packageVersion: 1.06
+  assetPath: Assets/TransparencyCapture/example/BlackAndWhiteGrid.mat
+  uploadId: 88460
