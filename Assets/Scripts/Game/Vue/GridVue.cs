@@ -240,7 +240,7 @@ public class GridVue : MonoBehaviour
         }
     }
     
-    private void UnHighlightTiles()
+    public void UnHighlightTiles()
     {
         Tile[] tiles = FindObjectsOfType<Tile>();
         foreach (Tile tile in tiles)
@@ -249,7 +249,7 @@ public class GridVue : MonoBehaviour
         }
     }
 
-    private void HighlightTiles(Tile[] tiles)
+    public void HighlightTiles(Tile[] tiles)
     {   
         foreach (Tile tile in tiles)
         {

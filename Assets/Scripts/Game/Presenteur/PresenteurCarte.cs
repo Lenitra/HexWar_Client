@@ -129,16 +129,26 @@ public class PresenteurCarte : MonoBehaviour
         else if (state == "move" && SelectTile != null)
         {
 
+            // Si on clique sur une case autre que la case selectionnée
             if (clickedTile != null && clickedTile != SelectTile)
             {
-                // TODO: Vérifier si la case est accessible
-                SelectTile2 = clickedTile;
-
-                // Dans le vue, on va afficher le panel de déplacement
-                gridVue.DisplayMovePanel(SelectTile, SelectTile2);
-                State = "";
+                // Si la case cliquée est une case de destination possible
+                if (GetTilesToMove().Contains(clickedTile))
+                {
+                    SelectTile2 = clickedTile;
+                    gridVue.DisplayMovePanel(SelectTile, SelectTile2);
+                    State = "";
+                    return;
+                }
             }
-
+            else
+            {
+                SelectTile = null;
+                SelectTile2 = null;
+                State = "";
+                gridVue.UnHighlightTiles();
+                return;
+            }
         }
     }
 
