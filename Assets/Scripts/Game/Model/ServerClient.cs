@@ -22,12 +22,12 @@ public class ServerClient : MonoBehaviour
     void Start()
     {
         gameManager = GetComponent<GameManager>();
-        setPooling();
+        SetPooling();
     }
 
 
 
-    public void setPooling(float pollInterval = 0.5f)
+    public void SetPooling(float pollInterval = 0.5f)
     {
         this.pollInterval = pollInterval;
         if (pollingCoroutine != null)
@@ -40,7 +40,7 @@ public class ServerClient : MonoBehaviour
 
 
     // Coroutine pour le polling
-    IEnumerator PollGameState()
+    private IEnumerator PollGameState()
     {
         while (true)
         {
@@ -104,7 +104,7 @@ public class ServerClient : MonoBehaviour
 
     
     
-    public void moveUnits(string from, string to, int units)
+    public void MoveUnits(string from, string to, int units)
     {
         StartCoroutine(MoveUnitsCoro(from, to, units));
     }
@@ -164,22 +164,19 @@ public class ServerClient : MonoBehaviour
     }
     
 
-
-    public void build(string tile, string type)
+    
+    public void Build(string[] tileCoords, string type)
     {
-        StartCoroutine(BuildCoro(tile, type));
+        StartCoroutine(BuildCoro(tileCoords, type));
     }
 
-    IEnumerator BuildCoro(string tile, string type)
+    IEnumerator BuildCoro(string[] tileCoords, string type)
     {
+        Debug.Log("Building " + type + " at " + tileCoords[0] + ":" + tileCoords[1]);
         UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/buildbat");
-        // hex_x = int(request.form.get("x"))
-        // hex_z = int(request.form.get("y"))
-        // bat_type = request.form.get("type").lower()
-        // faire une méthode post
         request.method = "POST";
         request.SetRequestHeader("Content-Type", "application/json");
-        request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{\"x\":" + tile.Split(':')[0] + ",\"y\":" + tile.Split(':')[1] + ",\"type\":\"" + type + "\""));
+        request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{\"x\":" + tileCoords[0] + ",\"y\":" + tileCoords[1] + ",\"type\":\"" + type + "\"}"));
         request.downloadHandler = new DownloadHandlerBuffer();
         yield return request.SendWebRequest();
         // debug the response

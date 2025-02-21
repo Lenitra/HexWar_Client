@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class GameManager : MonoBehaviour
 {
 
+    private ServerClient serverClient; // Le service de communication avec le serveur
     private PresenteurCarte presenteurCarte; // Le presenteurCarte
     private PresenteurHUD presenteurHUD; // Le presenteurCarte
     private List<Hex> hexMap = new List<Hex>(); // Tableau des hexagones
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour
     {
         presenteurCarte = GetComponent<PresenteurCarte>();
         presenteurHUD = GetComponent<PresenteurHUD>();
+        serverClient = GetComponent<ServerClient>();
     }
 
 
@@ -157,6 +159,23 @@ public class GameManager : MonoBehaviour
             Money = newMoney;
         }
     }
+
+
+
+
+    #region Gestion des actions des tiles
+
+    public void BuildTile(string[] tileCoords, string type)
+    {
+        serverClient.Build(tileCoords, type);
+    }
+
+
+    #endregion
+
+
+
+
 
 
 

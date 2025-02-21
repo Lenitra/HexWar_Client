@@ -43,7 +43,7 @@ public class GridVue : MonoBehaviour
         camController = Camera.main.GetComponent<CamController>();
 
         // Listeners des boutons de tiles
-        
+
         buildBtn.onClick.AddListener(() => EnableGameObject(buildPanel.gameObject));
         // moveBtn.onClick.AddListener(() => EnableGameObject(movePanel.gameObject));
         // rallyBtn.onClick.AddListener(() => EnableGameObject(rallyPanel.gameObject));
@@ -135,9 +135,10 @@ public class GridVue : MonoBehaviour
         // DisableGameObject(upgradePanel.gameObject);
         // DisableGameObject(movePanel.gameObject);
         // DisableGameObject(rallyPanel.gameObject);
+        // Déselectionner la tile
     }
-    
-    
+
+
     private void DisableGameObject(GameObject go)
     {
         go.SetActive(false);
@@ -150,8 +151,7 @@ public class GridVue : MonoBehaviour
         string name = go.name;
 
         Tile tile = presenteurCarte.SelectTile;
-        Debug.Log(tile.X + " " + tile.Y + " " + tile.Type);
-    
+
         switch (name)
         {
             case "Build Panel":
@@ -170,22 +170,32 @@ public class GridVue : MonoBehaviour
 
     }
 
+
+    // Quand un panneau se ferme, on désactive tous les autres et on désélectionne la tile
+    public void ClosedPanel()
+    {
+        DisableAllPanels();
+        presenteurCarte.SelectTile = null;
+    }
+
     #endregion
 
 
 
     #region Gestion des retours des différents panels
-    public void BuildPanelRetour(string type)
+    public void BuildPanelRetour(string type = "")
     {
+        presenteurCarte.BuildTile(type);
         DisableAllPanels();
-        // TODO: Gérer l'envoi au presenteur
     }
+
 
     public void UpgradePanelRetour()
     {
         DisableAllPanels();
         // TODO: Gérer l'envoi au presenteur
     }
+
 
     public void MovePanelRetour()
     {

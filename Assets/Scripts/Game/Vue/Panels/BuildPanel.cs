@@ -4,9 +4,17 @@ using TMPro;
 
 public class BuildPanel : MonoBehaviour
 {
+    [Header("Elements communs")]
+    [SerializeField] private GridVue gridVue;
+    [SerializeField] private Button closeBtn;
+
     [Header("Bodies")]
     [SerializeField] private GameObject buildBody;
     [SerializeField] private GameObject upgradeBody;
+
+
+
+
 
 
     [Header("Build Body")]
@@ -20,27 +28,49 @@ public class BuildPanel : MonoBehaviour
 
     [Header("Build Body - Buildings")]
     [SerializeField] private Sprite[] buildSprite;
-    private string[] buildTitles = new string[] { "Excavateur", "Usine de drones", "Radar"};
-    private string[] buildDescriptions = new string[] { 
-        "Génère des nanites", 
-        "Construit des drones", 
+    private string[] buildTitles = new string[] { "Excavateur", "Usine de drones", "Radar" };
+    private string[] buildType = new string[] { "Miner", "Barrack", "Radar" };
+    private string[] buildDescriptions = new string[] {
+        "Génère des nanites",
+        "Construit des drones",
         "Augmente portée de vision de l'hexagone"
     };
+    private string[] buildPrices = new string[] { "75", "150", "100" };
+
+
+
+
+
 
     [Space(10)]
     [Header("Upgrade Body")]
     [SerializeField] private Button upgradeBtnDestroy;
     [SerializeField] private Button upgradeBtnValidate;
+    [SerializeField] private TextMeshProUGUI upgradeTextTitle;
+    [SerializeField] private TextMeshProUGUI upgradeTextDescription;
 
+    [Header("Upgrade Body - Buildings")]
+    private string[] upgradeType = new string[] { "QG", "Excavateur", "Usine de drones", "Radar" };
+    private string[,] upgradePrices = new string[,] { { "500", "1500", "3000", "5000" }, { "300", "500", "800", "1500" }, { "300", "500", "800", "1500" }, { "300", "500", "800", "1500" } };
 
 
 
 
     private void Start()
     {
+        // TODO: Récupération des prix des bâtiments depuis le serveur pour la construction et l'upgrade
+
+        // Setup des boutons généraux
+        closeBtn.onClick.AddListener(gridVue.ClosedPanel);
+
+        // Setup des boutons de build 
         buildBtnNext.onClick.AddListener(() => NextBuild());
         buildBtnPrevious.onClick.AddListener(() => PreviousBuild());
         buildBtnValidate.onClick.AddListener(() => ValidateBuild());
+
+        // Setup des boutons d'upgrade
+        // upgradeBtnDestroy.onClick.AddListener(() => gridVue.DestroyTile());
+        upgradeBtnValidate.onClick.AddListener(() => ValidateUpgrade());
     }
 
 
@@ -56,8 +86,9 @@ public class BuildPanel : MonoBehaviour
         }
         else
         {
-            buildBody.SetActive(false);
             upgradeBody.SetActive(true);
+            buildBody.SetActive(false);
+            SetupUpgradeBody(tile.Type, tile.Lvl);
         }
     }
 
@@ -69,6 +100,7 @@ public class BuildPanel : MonoBehaviour
         buildTextTitle.text = buildTitles[buildIndex];
         buildTextDescription.text = buildDescriptions[buildIndex];
         buildSpriteRenderer.sprite = buildSprite[buildIndex];
+        buildBtnValidate.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "¤ " + buildPrices[buildIndex];
     }
 
 
@@ -97,10 +129,92 @@ public class BuildPanel : MonoBehaviour
 
     private void ValidateBuild()
     {
-
+        gridVue.BuildPanelRetour(buildType[buildIndex]);
     }
 
     #endregion
+
+
+
+
+    #region Upgrade Body
+    private void SetupUpgradeBody(string type, int lvl)
+    {
+        int index = -1;
+        string descr = "";
+        bool lvlMax = false;
+        if (lvl >= 5)
+        {
+            lvlMax = true;
+        }
+
+        switch (type.ToLower())
+        {
+            case "hq":
+                index = 0;
+                descr = "Augmente les le niveau maximum des améliorations";
+                if (!lvlMax)
+                {
+                    descr += "\nNiv. " + lvl + " -> " + (lvl + 1);
+                }
+                break;
+            case "miner":
+                index = 1;
+                descr = "Augmente la production de nanites";
+                if (!lvlMax)
+                {
+                    descr += "\nNiv. " + lvl + " -> " + (lvl + 1);
+                    descr += "\nProd. " + lvl + "/h -> " + (lvl + 1) + "/h";
+                    break;
+                }
+            case "barrack":
+                index = 2;
+                descr = "Augmente la vitesse de production des drones";
+                if (!lvlMax)
+                {
+                    descr += "\nNiv. " + lvl + " -> " + (lvl + 1);
+                    descr += "\nProd. " + lvl + "/h -> " + (lvl + 1) + "/h";
+                }
+                break;
+            case "radar":
+                index = 3;
+                descr = "Augmente la portée de vision";
+                if (!lvlMax)
+                {
+                    descr += "\nNiv. " + lvl + " -> " + (lvl + 1);
+                    descr += "\nPortée " + (2 + lvl) + " -> " + (3 + lvl);
+                }
+                break;
+        }
+
+        if ((!lvlMax))
+        {
+            upgradeBtnValidate.interactable = false;
+            upgradeBtnValidate.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "MAX";
+        }
+        else
+        {
+            upgradeBtnValidate.interactable = true;
+            upgradeBtnValidate.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "¤ " + upgradePrices[index, lvl];
+        }
+
+
+        upgradeTextTitle.text = "Amélioration\n" + upgradeType[index];
+        upgradeTextDescription.text = descr;
+        
+    }
+
+
+
+    private void ValidateUpgrade()
+    {
+        gridVue.BuildPanelRetour();
+    }
+
+
+
+    #endregion
+
 
 
 }

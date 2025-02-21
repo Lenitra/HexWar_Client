@@ -4,6 +4,7 @@ public class PresenteurCarte : MonoBehaviour
 {
 
     private GridVue gridVue;
+    private GameManager gameManager;
 
     private string state = "";
     private Tile selectTile = null;
@@ -45,6 +46,7 @@ public class PresenteurCarte : MonoBehaviour
     private void Start()
     {
         gridVue = GetComponent<GridVue>();
+        gameManager = GetComponent<GameManager>();
     }
 
 
@@ -132,6 +134,12 @@ public class PresenteurCarte : MonoBehaviour
 
     #region Gestion des actions de tile(s)
 
+    public void BuildTile(string type)
+    {
+        string[] tileCoords = { SelectTile.X.ToString(), SelectTile.Y.ToString() };
+        gameManager.BuildTile(tileCoords, type);
+        SelectTile = null;
+    }
 
 
 
