@@ -785,6 +785,7 @@ MonoBehaviour:
   tilePrefab: {fileID: 1388657164994780, guid: f798d42433bbbd2dfb90b9a894c12e1a, type: 3}
   tilePanel: {fileID: 1613494891}
   stateInfos: {fileID: 1762635596}
+  moveUnitsLine: {fileID: 580222695}
   buildBtn: {fileID: 1247708097}
   moveBtn: {fileID: 739537340}
   rallyBtn: {fileID: 1557875152}
@@ -2134,7 +2135,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8676335329677024164, guid: 5974099986474794f92bd8e2c9196d16, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3988,7 +3989,7 @@ GameObject:
   - component: {fileID: 580222694}
   - component: {fileID: 580222695}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Units Move line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6273,7 +6274,7 @@ RectTransform:
   m_Father: {fileID: 1449180612}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -9941,7 +9942,7 @@ RectTransform:
   m_Father: {fileID: 793336146}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

@@ -138,6 +138,7 @@ public class PresenteurCarte : MonoBehaviour
                     SelectTile2 = clickedTile;
                     gridVue.DisplayMovePanel(SelectTile, SelectTile2);
                     State = "";
+                    gridVue.UnHighlightTiles();
                     return;
                 }
             }
@@ -190,6 +191,11 @@ public class PresenteurCarte : MonoBehaviour
         gameManager.AskServerMoveUnitsTiles(new string[] { SelectTile.X.ToString(), SelectTile.Y.ToString() }, new string[] { SelectTile2.X.ToString(), SelectTile2.Y.ToString() }, units);
     }
 
+    // Appel de l'animation de déplacement d'unités avec argument le tableau de tiles à traverser # format : ["x1:y1", "x2:y2", ...]
+    public void CallAnimationMoveUnits(string[] move)
+    {
+        gridVue.MoveUnitsAnim(move);
+    }
 
     #endregion
 

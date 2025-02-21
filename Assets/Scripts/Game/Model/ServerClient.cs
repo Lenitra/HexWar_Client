@@ -149,14 +149,7 @@ public class ServerClient : MonoBehaviour
 
                     string[] moves = tmp.Split(',');
 
-                    tmp = "";
-                    // debug inside the array
-                    foreach (string move in moves)
-                    {
-                        tmp += move + " ";
-                    }
-
-                    StartCoroutine(gameManager.MoveUnitsServerResponse(moves));
+                    gameManager.MoveUnitsServerResponse(moves);
                     updateMap();
                 }
             }

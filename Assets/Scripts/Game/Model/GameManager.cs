@@ -186,11 +186,12 @@ public class GameManager : MonoBehaviour
 
 
 
-    public string MoveUnitsServerResponse(string[] move)
+    public void MoveUnitsServerResponse(string[] move)
     {
-        // TODO: Implémenter l'animation du déplacement d'unités
-        return "";
+        presenteurCarte.CallAnimationMoveUnits(move);
     }
+
+    
 }
 
 #region Classes de données

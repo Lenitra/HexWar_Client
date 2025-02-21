@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class GridVue : MonoBehaviour
 {
@@ -16,9 +17,14 @@ public class GridVue : MonoBehaviour
     // Prefab de l'hexagone
     [SerializeField] private GameObject tilePrefab;
 
+    // Panel d'infos sur la tile
     [SerializeField] private TilePanel tilePanel;
+    // Panel d'infos sur l'état des inputs
     [SerializeField] private GameObject stateInfos;
 
+    [Space(10)]
+    [Header("Elements d'effets temporaires")]
+    [SerializeField] private LineRenderer moveUnitsLine;
 
     [Space(10)]
     [Header("UI Tiles")]
@@ -222,7 +228,7 @@ public class GridVue : MonoBehaviour
 
 
 
-    #region Gestion de l'affichage de l'état du controle de clics sur la grille
+    #region Gestion de l'affichage de l'état/State des inputs sur la grille
     public void SetupStateInfos(string state)
     {
         switch (state)
@@ -240,29 +246,11 @@ public class GridVue : MonoBehaviour
         }
     }
     
-    public void UnHighlightTiles()
-    {
-        Tile[] tiles = FindObjectsOfType<Tile>();
-        foreach (Tile tile in tiles)
-        {
-            tile.UnHighlightTile();
-        }
-    }
 
-    public void HighlightTiles(Tile[] tiles)
-    {   
-        foreach (Tile tile in tiles)
-        {
-            tile.HighlightTile();
-        }
-    }
-
-
-    
     #endregion
 
 
-    #region Coroutine d'animations de tiles
+    #region Coroutines d'animations de tiles
     // Créé un nouvel hexagone avec une animation de pop
     private IEnumerator CreerTileAnim(GameObject tile)
     {
@@ -377,8 +365,162 @@ public class GridVue : MonoBehaviour
     #endregion
 
 
+    #region Highlight des tiles
+
+    public void UnHighlightTiles()
+    {
+        Tile[] tiles = FindObjectsOfType<Tile>();
+        foreach (Tile tile in tiles)
+        {
+            tile.UnHighlightTile();
+        }
+    }
+
+    public void HighlightTiles(Tile[] tiles)
+    {
+        foreach (Tile tile in tiles)
+        {
+            tile.HighlightTile();
+        }
+    }
+
+    #endregion
+
+
+    #region Coroutine d'animation d'un déplacement d'unités
+
+    public void MoveUnitsAnim(string[] move)
+    {
+
+        StartCoroutine(AnimationMoveUnits(move));
+    }
+
+    
+    
+    private IEnumerator AnimationMoveUnits(string[] move)
+    {
+        // Définir la durée totale de l'animation aller et retour
+        float durationGo = 0.25f; // Durée totale pour dessiner la ligne
+        float durationOg = 2f; // Durée totale pour effacer la ligne
+
+        // 1. Convertir les données en liste de positions
+        List<Vector3> positions = new List<Vector3>();
+        for (int i = 0; i < move.Length; i++)
+        {
+            string[] coords = move[i].Split(':');
+            float[] pos = GetHexCoordinates(int.Parse(coords[0]), int.Parse(coords[1]));
+            positions.Add(new Vector3(pos[0], 0.75f, pos[1]));
+        }
+        if (positions.Count == 0)
+            yield break;
+
+        // 2. Calculer la distance totale du chemin
+        float totalDistance = 0f;
+        for (int i = 0; i < positions.Count - 1; i++)
+        {
+            totalDistance += Vector3.Distance(positions[i], positions[i + 1]);
+        }
+
+        // 3. Animation de création (aller) sur l'ensemble du chemin
+        float t = 0f;
+        while (t < durationGo)
+        {
+            t += Time.deltaTime;
+            float fraction = Mathf.Clamp01(t / durationGo);
+            float distanceCovered = fraction * totalDistance;
+
+            // Déterminer la position courante le long du chemin
+            float d = 0f;
+            Vector3 currentPoint = positions[0];
+            int lastFullIndex = 0;
+            for (int i = 0; i < positions.Count - 1; i++)
+            {
+                float segmentLength = Vector3.Distance(positions[i], positions[i + 1]);
+                if (d + segmentLength >= distanceCovered)
+                {
+                    float segFraction = (distanceCovered - d) / segmentLength;
+                    currentPoint = Vector3.Lerp(positions[i], positions[i + 1], segFraction);
+                    lastFullIndex = i;
+                    break;
+                }
+                d += segmentLength;
+            }
+
+            // Construire la ligne actuelle :
+            // - Tous les points déjà atteints (de 0 à lastFullIndex)
+            // - Le point courant interpolé sur le segment en cours
+            List<Vector3> currentLine = new List<Vector3>();
+            for (int i = 0; i <= lastFullIndex; i++)
+            {
+                currentLine.Add(positions[i]);
+            }
+            currentLine.Add(currentPoint);
+
+            moveUnitsLine.positionCount = currentLine.Count;
+            for (int i = 0; i < currentLine.Count; i++)
+            {
+                moveUnitsLine.SetPosition(i, currentLine[i]);
+            }
+
+            yield return null;
+        }
+        // Assurer que la ligne complète est affichée
+        moveUnitsLine.positionCount = positions.Count;
+        for (int i = 0; i < positions.Count; i++)
+        {
+            moveUnitsLine.SetPosition(i, positions[i]);
+        }
+
+        // 4. Animation d'effacement (retour) : faire disparaître la ligne depuis le début jusqu'à la fin
+        t = 0f;
+        while (t < durationOg)
+        {
+            t += Time.deltaTime;
+            float fraction = Mathf.Clamp01(t / durationOg);
+            float distanceErased = fraction * totalDistance;
+
+            // Déterminer le nouveau point de départ le long du chemin
+            float d = 0f;
+            Vector3 newStart = positions[0];
+            int firstFullIndex = 0;
+            for (int i = 0; i < positions.Count - 1; i++)
+            {
+                float segmentLength = Vector3.Distance(positions[i], positions[i + 1]);
+                if (d + segmentLength >= distanceErased)
+                {
+                    float segFraction = (distanceErased - d) / segmentLength;
+                    newStart = Vector3.Lerp(positions[i], positions[i + 1], segFraction);
+                    firstFullIndex = i + 1;
+                    break;
+                }
+                d += segmentLength;
+            }
+
+            // Construire la nouvelle ligne à partir du nouveau point de départ jusqu'à la fin
+            List<Vector3> newLine = new List<Vector3>();
+            newLine.Add(newStart);
+            for (int i = firstFullIndex; i < positions.Count; i++)
+            {
+                newLine.Add(positions[i]);
+            }
+
+            moveUnitsLine.positionCount = newLine.Count;
+            for (int i = 0; i < newLine.Count; i++)
+            {
+                moveUnitsLine.SetPosition(i, newLine[i]);
+            }
+
+            yield return null;
+        }
+
+        // Effacer complètement la ligne
+        moveUnitsLine.positionCount = 0;
+    }
 
 
 
+
+
+    #endregion
 
 }
