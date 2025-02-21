@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
 
 public class GridVue : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class GridVue : MonoBehaviour
     [SerializeField] private GameObject tilePrefab;
 
     [SerializeField] private TilePanel tilePanel;
+    [SerializeField] private GameObject stateInfos;
+
 
     [Space(10)]
     [Header("UI Tiles")]
@@ -28,7 +31,7 @@ public class GridVue : MonoBehaviour
     [Space(2)]
     [Header("Panels Tiles")]
     [SerializeField] private BuildPanel buildPanel;
-    // [SerializeField] private MovePanel movePanel;
+    [SerializeField] private MovePanel movePanel;
     // [SerializeField] private RallyPanel rallyPanel;
     // [SerializeField] private ConfigBuildPanel configBuildPanel;
 
@@ -43,11 +46,12 @@ public class GridVue : MonoBehaviour
         camController = Camera.main.GetComponent<CamController>();
 
         // Listeners des boutons de tiles
-
         buildBtn.onClick.AddListener(() => EnableGameObject(buildPanel.gameObject));
-        // moveBtn.onClick.AddListener(() => EnableGameObject(movePanel.gameObject));
-        // rallyBtn.onClick.AddListener(() => EnableGameObject(rallyPanel.gameObject));
         // configBuildBtn.onClick.AddListener(() => EnableGameObject(configBuildPanel.gameObject));
+
+        // rallyBtn.onClick.AddListener(() => EnableGameObject(rallyPanel.gameObject));
+
+        moveBtn.onClick.AddListener(() => MoveBtnClick());
     }
 
 
@@ -103,11 +107,6 @@ public class GridVue : MonoBehaviour
         tile.SetupTile(hexData);
     }
 
-    #endregion
-
-
-
-    #region utils
 
     // Convertit les coordonnées d'un hex en coordonnées pixel
     public float[] GetHexCoordinates(int x, int z)
@@ -127,15 +126,11 @@ public class GridVue : MonoBehaviour
 
     #region Gestion de l'affichage des différents panels
 
-    // TODO: Uncoment when panels are implemented
     private void DisableAllPanels()
     {
         DisableGameObject(tilePanel.gameObject);
         DisableGameObject(buildPanel.gameObject);
-        // DisableGameObject(upgradePanel.gameObject);
-        // DisableGameObject(movePanel.gameObject);
-        // DisableGameObject(rallyPanel.gameObject);
-        // Déselectionner la tile
+        DisableGameObject(movePanel.gameObject);
     }
 
 
@@ -182,37 +177,89 @@ public class GridVue : MonoBehaviour
 
 
 
-    #region Gestion des retours des différents panels
+
+
+    #region Gestion des clicks sur les boutons de tiles
+
+
+    #region Bouton de construction de tiles
     public void BuildPanelRetour(string type = "")
     {
         presenteurCarte.BuildTile(type);
-        DisableAllPanels();
-    }
-
-
-    public void UpgradePanelRetour()
-    {
-        DisableAllPanels();
-        // TODO: Gérer l'envoi au presenteur
-    }
-
-
-    public void MovePanelRetour()
-    {
-        DisableAllPanels();
-        // TODO: Gérer l'envoi au presenteur
-    }
-
-
-    public void RallyPanelRetour()
-    {
-        DisableAllPanels();
-        // TODO: Gérer l'envoi au presenteur
+        ClosedPanel();
     }
 
     #endregion
 
 
+    #region Bouton de déploiement d'unités
+    private void MoveBtnClick()
+    {
+        presenteurCarte.State = "move";
+        HighlightTiles(presenteurCarte.GetTilesToMove());
+    }
+
+    public void DisplayMovePanel(Tile tile1, Tile tile2)
+    {
+        DisableAllPanels();
+        movePanel.gameObject.SetActive(true);
+        movePanel.SetupPanel(tile1, tile2);
+    }
+
+    public void MovePanelRetour(int units)
+    {
+        if (units > 0){
+            presenteurCarte.MoveUnits(units);
+        }
+        ClosedPanel();
+    }
+
+    #endregion
+
+
+    #endregion
+
+
+
+
+    #region Gestion de l'affichage de l'état du controle de clics sur la grille
+    public void SetupStateInfos(string state)
+    {
+        switch (state)
+        {
+            case "move":
+                // Désactiver le menu de la tile 
+                DisableAllPanels();
+                stateInfos.GetComponentInChildren<TextMeshProUGUI>().text = "Selectionnez un hexagone vers lequel déplacer vos unités";
+                stateInfos.SetActive(true);
+                break;
+            default:
+                stateInfos.GetComponentInChildren<TextMeshProUGUI>().text = "";
+                stateInfos.SetActive(false);
+                break;
+        }
+    }
+    
+    private void UnHighlightTiles()
+    {
+        Tile[] tiles = FindObjectsOfType<Tile>();
+        foreach (Tile tile in tiles)
+        {
+            tile.UnHighlightTile();
+        }
+    }
+
+    private void HighlightTiles(Tile[] tiles)
+    {   
+        foreach (Tile tile in tiles)
+        {
+            tile.HighlightTile();
+        }
+    }
+
+
+    
+    #endregion
 
 
     #region Coroutine d'animations de tiles

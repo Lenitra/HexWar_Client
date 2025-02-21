@@ -104,12 +104,12 @@ public class ServerClient : MonoBehaviour
 
     
     
-    public void MoveUnits(string from, string to, int units)
+    public void MoveUnits(string[] from, string[] to, int units)
     {
         StartCoroutine(MoveUnitsCoro(from, to, units));
     }
     
-    IEnumerator MoveUnitsCoro(string from, string to, int units)
+    IEnumerator MoveUnitsCoro(string[] from, string[] to, int units)
     {
         UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP")+"/move_units");
         // origin = request.form.get("origin") # format "x:y"
@@ -118,7 +118,7 @@ public class ServerClient : MonoBehaviour
         // faire une méthode post
         request.method = "POST";
         request.SetRequestHeader("Content-Type", "application/json");
-        request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{\"origin\":\"" + from + "\",\"destination\":\"" + to + "\",\"units\":" + units + "}"));
+        request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{\"originX\":\"" + from[0] + "\",\"originY\":\"" + from[1] + "\",\"destinationX\":\"" + to[0] + "\",\"destinationY\":\"" + to[1] + "\",\"units\":" + units + "}"));
         request.downloadHandler = new DownloadHandlerBuffer();
 
         yield return request.SendWebRequest();
@@ -156,7 +156,7 @@ public class ServerClient : MonoBehaviour
                         tmp += move + " ";
                     }
 
-                    StartCoroutine(gameManager.moveUnitsAnimation(moves));
+                    StartCoroutine(gameManager.MoveUnitsServerResponse(moves));
                     updateMap();
                 }
             }

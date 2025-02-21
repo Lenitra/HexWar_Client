@@ -22,6 +22,7 @@ public class Tile : MonoBehaviour
 
     [Header("Elements enfants")]
     [SerializeField] private MeshRenderer meshDeRendu;
+    [SerializeField] private GameObject glow;
 
 
 
@@ -141,7 +142,6 @@ public class Tile : MonoBehaviour
     }
 
 
-    // TODO: Faire spawn le batiment correspondant au type de tile
     private void SetupType()
     {
         int index = -1;
@@ -173,6 +173,17 @@ public class Tile : MonoBehaviour
             typePrefab.transform.position = this.transform.position;
         }
 
+    }
+
+
+    public void HighlightTile()
+    {
+        glow.SetActive(true);
+    }
+
+    public void UnHighlightTile()
+    {
+        glow.SetActive(false);
     }
 
 

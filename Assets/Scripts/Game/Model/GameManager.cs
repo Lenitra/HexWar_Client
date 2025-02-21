@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
             presenteurHUD.UpdateMoney(money);
         }
     }
+    public List<Hex> HexMap { get { return hexMap; } }
 
 
     void Start()
@@ -171,6 +172,12 @@ public class GameManager : MonoBehaviour
     }
 
 
+    public void AskServerMoveUnitsTiles(string[] from, string[] to, int units)
+    {
+        serverClient.MoveUnits(from, to, units);
+    }
+
+
     #endregion
 
 
@@ -179,7 +186,7 @@ public class GameManager : MonoBehaviour
 
 
 
-    public string moveUnitsAnimation(string[] move)
+    public string MoveUnitsServerResponse(string[] move)
     {
         // TODO: Implémenter l'animation du déplacement d'unités
         return "";

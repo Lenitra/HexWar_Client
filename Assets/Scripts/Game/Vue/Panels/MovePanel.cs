@@ -7,174 +7,120 @@ public class MovePanel : MonoBehaviour
     [Header("Elements communs")]
     [SerializeField] private GridVue gridVue;
     [SerializeField] private Button closeBtn;
+    [SerializeField] private Button validateBtn;
+
+    [Header("Inputs")]
+    [SerializeField] private TMP_InputField inputField;
+    [SerializeField] private Slider slider;
+
+    [Header("Informations visuelles")]
+    [SerializeField] private TextMeshProUGUI originTileText;
+    [SerializeField] private TextMeshProUGUI destinationTileText;
+    [SerializeField] private Transform attackIcon;
+    [SerializeField] private Transform defenceIcon;
 
 
-    private int unitsMax = 0;
-    private int unitsToMove = 0;
-    
+
+
+    private int unitsMax;
+    private int unitsToMove;
+
 
 
 
 
     private void Start()
     {
-        // TODO: Récupération des prix des bâtiments depuis le serveur pour la construction et l'upgrade
 
         // Setup des boutons généraux
         closeBtn.onClick.AddListener(gridVue.ClosedPanel);
 
-        // Setup des boutons de build 
-        buildBtnNext.onClick.AddListener(() => NextBuild());
-        buildBtnPrevious.onClick.AddListener(() => PreviousBuild());
-        buildBtnValidate.onClick.AddListener(() => ValidateBuild());
+        // Setup des boutons de déplacement
+        validateBtn.onClick.AddListener(ValidateMove);
 
-        // Setup des boutons d'upgrade
-        // upgradeBtnDestroy.onClick.AddListener(() => gridVue.DestroyTile());
-        upgradeBtnValidate.onClick.AddListener(() => ValidateUpgrade());
+        // Setup des inputs
+        inputField.onValueChanged.AddListener(OnInputFieldChange);
+        slider.onValueChanged.AddListener(OnSliderChange);
+
     }
 
 
-
-    public void SetupPanel(Tile tile)
+    private void OnInputFieldChange(string value)
     {
-        // Activer le bon body
-        if (tile.Type == "")
+        if (value == "")
         {
-            buildBody.SetActive(true);
-            upgradeBody.SetActive(false);
-            SetupBuildBody();
+            slider.value = 0;
+            unitsToMove = 0;
         }
         else
         {
-            upgradeBody.SetActive(true);
-            buildBody.SetActive(false);
-            SetupUpgradeBody(tile.Type, tile.Lvl);
+            int units = int.Parse(value);
+            if (units > unitsMax)
+            {
+                units = unitsMax;
+                inputField.text = units.ToString();
+            }
+            if (units < 0)
+            {
+                units = 0;
+                inputField.text = units.ToString();
+            }
+            slider.value = units;
+            unitsToMove = units;
         }
     }
 
 
-    #region Build Body
-
-    private void SetupBuildBody()
+    private void OnSliderChange(float value)
     {
-        buildTextTitle.text = buildTitles[buildIndex];
-        buildTextDescription.text = buildDescriptions[buildIndex];
-        buildSpriteRenderer.sprite = buildSprite[buildIndex];
-        buildBtnValidate.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "¤ " + prices[buildIndex+1][0];
+        int units = (int)value;
+        inputField.text = units.ToString();
+        unitsToMove = units;
     }
 
 
-    private void NextBuild()
+
+
+    public void SetupPanel(Tile origin, Tile destination)
     {
-        buildIndex++;
-        if (buildIndex >= buildTitles.Length)
+        // Setup des textes d'informations sur les tuiles
+        originTileText.text = TilesInfos(origin);
+        destinationTileText.text = TilesInfos(destination);
+
+        if (origin.Owner == destination.Owner)
         {
-            buildIndex = 0;
-        }
-
-        SetupBuildBody();
-    }
-
-    private void PreviousBuild()
-    {
-        buildIndex--;
-        if (buildIndex < 0)
-        {
-            buildIndex = buildTitles.Length - 1;
-        }
-
-        SetupBuildBody();
-    }
-
-
-    private void ValidateBuild()
-    {
-        gridVue.BuildPanelRetour(buildType[buildIndex]);
-    }
-
-    #endregion
-
-
-
-
-    #region Upgrade Body
-    private void SetupUpgradeBody(string type, int lvl)
-    {
-        int index = -1;
-        string descr = "";
-        bool lvlMax = false;
-
-        switch (type.ToLower())
-        {
-            case "hq":
-                index = 0;
-                descr = "Augmente les le niveau maximum des améliorations";
-                lvlMax = lvl >= prices[index].Length;
-                if (!lvlMax)
-                {
-                    descr += "\nNiv. " + lvl + " -> " + (lvl + 1);
-                }
-                break;
-            case "miner":
-                index = 1;
-                descr = "Augmente la production de nanites";
-                lvlMax = lvl >= prices[index].Length;
-                if (!lvlMax)
-                {
-                    descr += "\nNiv. " + lvl + " -> " + (lvl + 1);
-                    descr += "\nProd. " + lvl + "/h -> " + (lvl + 1) + "/h";
-                }
-                break;
-            case "barrack":
-                index = 2;
-                descr = "Augmente la vitesse de production des drones";
-                lvlMax = lvl >= prices[index].Length;
-                if (!lvlMax)
-                {
-                    descr += "\nNiv. " + lvl + " -> " + (lvl + 1);
-                    descr += "\nProd. " + lvl + "/h -> " + (lvl + 1) + "/h";
-                }
-                break;
-            case "radar":
-                index = 3;
-                descr = "Augmente la portée de vision";
-                lvlMax = lvl >= prices[index].Length;
-                if (!lvlMax)
-                {
-                    descr += "\nNiv. " + lvl + " -> " + (lvl + 1);
-                    descr += "\nPortée " + (2 + lvl) + " -> " + (3 + lvl);
-                }
-                break;
-        }
-
-        if ((lvlMax))
-        {
-            upgradeBtnValidate.interactable = false;
-            upgradeBtnValidate.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "MAX";
+            attackIcon.gameObject.SetActive(false);
+            defenceIcon.gameObject.SetActive(true);
         }
         else
         {
-            upgradeBtnValidate.interactable = true;
-            upgradeBtnValidate.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "¤ " + prices[index][lvl];
+            attackIcon.gameObject.SetActive(true);
+            defenceIcon.gameObject.SetActive(false);
         }
 
+        // Setup des inputs
+        slider.maxValue = origin.Units;
+        slider.value = 0;
 
-        upgradeTextTitle.text = "Amélioration\n" + upgradeType[index];
-        upgradeTextDescription.text = descr;
 
+        unitsMax = origin.Units;
+        unitsToMove = 0;
     }
 
+    private string TilesInfos(Tile tile){
+        string toret = "";
+        toret += $"({tile.X}, {tile.Y})";
+        toret += $"\n{tile.Owner}";
+        if (tile.Owner == PlayerPrefs.GetString("username"))
+        {
+            toret += $"\n{tile.Units} drones";
+        }
+        return toret;
+    }
 
-
-    private void ValidateUpgrade()
+    private void ValidateMove()
     {
-        gridVue.BuildPanelRetour();
+        gridVue.MovePanelRetour(unitsToMove);
     }
-
-
-
-    #endregion
-
-
 
 }
