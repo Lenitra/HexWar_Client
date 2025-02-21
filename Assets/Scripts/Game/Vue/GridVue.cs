@@ -400,7 +400,7 @@ public class GridVue : MonoBehaviour
     private IEnumerator AnimationMoveUnits(string[] move)
     {
         // Définir la durée totale de l'animation aller et retour
-        float durationGo = 0.25f; // Durée totale pour dessiner la ligne
+        float durationGo = 0f; // Durée totale pour dessiner la ligne
         float durationOg = 2f; // Durée totale pour effacer la ligne
 
         // 1. Convertir les données en liste de positions

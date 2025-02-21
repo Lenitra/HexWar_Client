@@ -11,6 +11,7 @@ public class BuildAutomation
         string basePath = "Builds";
         string linuxPath = Path.Combine(basePath, "Linux");
         string windowsPath = Path.Combine(basePath, "Windows");
+        string androidPath = Path.Combine(basePath, "Android");
 
         // Générer une version basée sur la date
         string version = System.DateTime.Now.ToString("yyMMddHHmm");
@@ -37,6 +38,12 @@ public class BuildAutomation
         options.target = BuildTarget.StandaloneWindows64;
         options.locationPathName = Path.Combine(windowsPath, $"HexWar_v{version}.exe");
         Directory.CreateDirectory(windowsPath); // Assurer que le dossier existe
+        BuildPipeline.BuildPlayer(options);
+
+        // Construire pour Android
+        options.target = BuildTarget.Android;
+        options.locationPathName = Path.Combine(androidPath, $"HexWar_v{version}.exe");
+        Directory.CreateDirectory(androidPath); // Assurer que le dossier existe
         BuildPipeline.BuildPlayer(options);
 
 

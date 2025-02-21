@@ -57,6 +57,7 @@ print("Creating build archive...")
 
 linux_build_path = os.path.join(OUTPUT_PATH, "Linux")
 windows_build_path = os.path.join(OUTPUT_PATH, "Windows")
+android_build_path = os.path.join(OUTPUT_PATH, "Android")
 
 if os.path.exists(linux_build_path):
     shutil.make_archive(f"{OUTPUT_PATH}/HexWar_{VERSION}_linux", 'zip', linux_build_path)
@@ -66,6 +67,11 @@ if os.path.exists(linux_build_path):
 if os.path.exists(windows_build_path):
     shutil.make_archive(f"{OUTPUT_PATH}/HexWar_{VERSION}_windows", 'zip', windows_build_path)
     shutil.rmtree(windows_build_path)
+    print(f"Windows archive created successfully.")
+
+if os.path.exists(android_build_path):
+    shutil.make_archive(f"{OUTPUT_PATH}/HexWar_{VERSION}_android", 'zip', android_build_path)
+    shutil.rmtree(android_build_path)
     print(f"Windows archive created successfully.")
 
 # Supprimer le fichier version.txt une fois les archives créées
