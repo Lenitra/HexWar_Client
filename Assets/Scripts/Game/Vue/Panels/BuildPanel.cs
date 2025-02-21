@@ -165,8 +165,8 @@ public class BuildPanel : MonoBehaviour
                 {
                     descr += "\nNiv. " + lvl + " -> " + (lvl + 1);
                     descr += "\nProd. " + lvl + "/h -> " + (lvl + 1) + "/h";
-                    break;
                 }
+                break;
             case "barrack":
                 index = 2;
                 descr = "Augmente la vitesse de production des drones";
@@ -201,7 +201,7 @@ public class BuildPanel : MonoBehaviour
 
         upgradeTextTitle.text = "Amélioration\n" + upgradeType[index];
         upgradeTextDescription.text = descr;
-        
+
     }
 
 
