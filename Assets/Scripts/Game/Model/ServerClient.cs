@@ -172,7 +172,6 @@ public class ServerClient : MonoBehaviour
 
     IEnumerator BuildCoro(string[] tileCoords, string type)
     {
-        Debug.Log("Building " + type + " at " + tileCoords[0] + ":" + tileCoords[1]);
         UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/buildbat");
         request.method = "POST";
         request.SetRequestHeader("Content-Type", "application/json");

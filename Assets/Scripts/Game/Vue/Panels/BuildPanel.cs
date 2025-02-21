@@ -35,10 +35,15 @@ public class BuildPanel : MonoBehaviour
         "Construit des drones",
         "Augmente portée de vision de l'hexagone"
     };
-    private string[] buildPrices = new string[] { "75", "150", "100" };
 
 
-
+    // Prix des upgrades dans lordre : QG, Excavateur, Usine de drones, Radar
+    private string[][] prices = new string[][] {
+        new string[] { "0", "500", "1500", "3000", "5000" }, // HQ
+        new string[] { "75", "300", "500", "800", "1500" }, // Miner
+        new string[] { "150", "300", "500", "800", "1500" }, // Barrack
+        new string[] { "100", "300", "500", "800", "1500" } // Radar
+    };
 
 
 
@@ -51,7 +56,6 @@ public class BuildPanel : MonoBehaviour
 
     [Header("Upgrade Body - Buildings")]
     private string[] upgradeType = new string[] { "QG", "Excavateur", "Usine de drones", "Radar" };
-    private string[,] upgradePrices = new string[,] { { "500", "1500", "3000", "5000" }, { "300", "500", "800", "1500" }, { "300", "500", "800", "1500" }, { "300", "500", "800", "1500" } };
 
 
 
@@ -100,7 +104,7 @@ public class BuildPanel : MonoBehaviour
         buildTextTitle.text = buildTitles[buildIndex];
         buildTextDescription.text = buildDescriptions[buildIndex];
         buildSpriteRenderer.sprite = buildSprite[buildIndex];
-        buildBtnValidate.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "¤ " + buildPrices[buildIndex];
+        buildBtnValidate.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "¤ " + prices[buildIndex+1][0];
     }
 
 
@@ -143,16 +147,13 @@ public class BuildPanel : MonoBehaviour
         int index = -1;
         string descr = "";
         bool lvlMax = false;
-        if (lvl >= 5)
-        {
-            lvlMax = true;
-        }
 
         switch (type.ToLower())
         {
             case "hq":
                 index = 0;
                 descr = "Augmente les le niveau maximum des améliorations";
+                lvlMax = lvl >= prices[index].Length;
                 if (!lvlMax)
                 {
                     descr += "\nNiv. " + lvl + " -> " + (lvl + 1);
@@ -161,6 +162,7 @@ public class BuildPanel : MonoBehaviour
             case "miner":
                 index = 1;
                 descr = "Augmente la production de nanites";
+                lvlMax = lvl >= prices[index].Length;
                 if (!lvlMax)
                 {
                     descr += "\nNiv. " + lvl + " -> " + (lvl + 1);
@@ -170,6 +172,7 @@ public class BuildPanel : MonoBehaviour
             case "barrack":
                 index = 2;
                 descr = "Augmente la vitesse de production des drones";
+                lvlMax = lvl >= prices[index].Length;
                 if (!lvlMax)
                 {
                     descr += "\nNiv. " + lvl + " -> " + (lvl + 1);
@@ -179,6 +182,7 @@ public class BuildPanel : MonoBehaviour
             case "radar":
                 index = 3;
                 descr = "Augmente la portée de vision";
+                lvlMax = lvl >= prices[index].Length;
                 if (!lvlMax)
                 {
                     descr += "\nNiv. " + lvl + " -> " + (lvl + 1);
@@ -187,7 +191,7 @@ public class BuildPanel : MonoBehaviour
                 break;
         }
 
-        if ((!lvlMax))
+        if ((lvlMax))
         {
             upgradeBtnValidate.interactable = false;
             upgradeBtnValidate.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "MAX";
@@ -195,7 +199,7 @@ public class BuildPanel : MonoBehaviour
         else
         {
             upgradeBtnValidate.interactable = true;
-            upgradeBtnValidate.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "¤ " + upgradePrices[index, lvl];
+            upgradeBtnValidate.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "¤ " + prices[index][lvl];
         }
 
 
