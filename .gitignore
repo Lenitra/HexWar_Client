@@ -1,4 +1,6 @@
 # This .gitignore file should be placed at the root of your Unity project directory
+
+
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
@@ -25,6 +27,9 @@
 
 # Visual Studio cache directory
 .vs/
+.vscode/
+.utmp/
+.mypy_cache/
 
 # Gradle cache directory
 .gradle/

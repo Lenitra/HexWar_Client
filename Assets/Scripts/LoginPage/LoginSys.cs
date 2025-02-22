@@ -65,7 +65,7 @@ public class LoginSys : MonoBehaviour
                 string responseText = request.downloadHandler.text;
                 Debug.Log("Réponse du serveur: " + responseText);
 
-                if (responseText.Split('"')[3] != version)
+                if (int.Parse(responseText.Split('"')[3]) < int.Parse(version))
                 {
                     UnityEngine.SceneManagement.SceneManager.LoadScene("VersionError");
                 }

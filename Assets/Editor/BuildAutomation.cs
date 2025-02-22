@@ -42,7 +42,7 @@ public class BuildAutomation
 
         // Construire pour Android
         options.target = BuildTarget.Android;
-        options.locationPathName = Path.Combine(androidPath, $"HexWar_v{version}.exe");
+        options.locationPathName = Path.Combine(androidPath, $"HexWar_v{version}.apk");
         Directory.CreateDirectory(androidPath); // Assurer que le dossier existe
         BuildPipeline.BuildPlayer(options);
 

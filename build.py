@@ -41,6 +41,8 @@ if result.returncode != 0:
     print("Build failed!")
     sys.exit(1)
 
+sys.exit(1)
+
 # Récupérer la version du build depuis le fichier version.txt
 version_file = os.path.join(OUTPUT_PATH, "version.txt")
 if not os.path.exists(version_file):
@@ -72,7 +74,7 @@ if os.path.exists(windows_build_path):
 if os.path.exists(android_build_path):
     shutil.make_archive(f"{OUTPUT_PATH}/HexWar_{VERSION}_android", 'zip', android_build_path)
     shutil.rmtree(android_build_path)
-    print(f"Windows archive created successfully.")
+print(f"Andoid APK created successfully.")
 
 # Supprimer le fichier version.txt une fois les archives créées
 version_txt_path = os.path.join(OUTPUT_PATH, "version.txt")
@@ -88,7 +90,7 @@ print("")
 print("")
 
 # Informations de connexion SSH
-hostname = "217.160.99.153"  # Adresse IP du VPS
+hostname = "212.227.52.171"  # Adresse IP du VPS
 port = 22  # Port SSH par défaut
 username = "root"
 password = input(
@@ -143,5 +145,3 @@ try:
 
 except Exception as e:
     print(f"Erreur lors de l'upload : \n{e}")
-
-
