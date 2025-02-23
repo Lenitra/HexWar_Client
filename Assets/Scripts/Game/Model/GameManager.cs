@@ -15,8 +15,9 @@ public class GameManager : MonoBehaviour
     public int Money
     {
         get { return money; }
-        set { 
-            money = value; 
+        set
+        {
+            money = value;
             presenteurHUD.UpdateMoney(money);
         }
     }
@@ -185,13 +186,38 @@ public class GameManager : MonoBehaviour
 
 
 
+    public int GetAllUnits(string username = "")
+    {
+        int totalUnits = 0;
+        foreach (Hex hex in hexMap)
+        {
+            if (username == "")
+            {
+                totalUnits += hex.units;
+            }
+            else
+            {
+                if (hex.owner == username)
+                {
+                    totalUnits += hex.units;
+                }
+            }
+
+        }
+
+        return totalUnits;
+
+    }
+
+
+
 
     public void MoveUnitsServerResponse(string[] move)
     {
         presenteurCarte.CallAnimationMoveUnits(move);
     }
 
-    
+
 }
 
 #region Classes de données

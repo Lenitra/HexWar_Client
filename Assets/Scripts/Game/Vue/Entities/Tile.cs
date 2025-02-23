@@ -24,6 +24,7 @@ public class Tile : MonoBehaviour
     [SerializeField] private MeshRenderer meshDeRendu;
     [SerializeField] private GameObject glow;
     [SerializeField] private TextMeshPro tileInfosOnMap;
+    private GameObject building;
 
 
 
@@ -180,14 +181,19 @@ public class Tile : MonoBehaviour
                 index = 4;
                 break;
             default:
-                return;
+                index = -1;
+                break;
         }
 
         // instancier le prefab avec l'index
         if (index != -1)
         {
-            GameObject typePrefab = Instantiate(typesPrefabs[index], this.transform);
-            typePrefab.transform.position = this.transform.position;
+            building = Instantiate(typesPrefabs[index], this.transform);
+            building.transform.position = this.transform.position;
+        }
+        else 
+        {
+            Destroy(building);
         }
 
     }

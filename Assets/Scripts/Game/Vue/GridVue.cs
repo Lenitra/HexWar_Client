@@ -38,10 +38,9 @@ public class GridVue : MonoBehaviour
     [Header("Panels Tiles")]
     [SerializeField] private BuildPanel buildPanel;
     [SerializeField] private MovePanel movePanel;
-    // [SerializeField] private RallyPanel rallyPanel;
-    // [SerializeField] private ConfigBuildPanel configBuildPanel;
+    [SerializeField] private RallyPanel rallyPanel;
 
-    // [SerializeField] private ModalPanel modalPanel;
+    // [SerializeField] private ConfigBuildPanel configBuildPanel;
 
 
     private Tile hoverTile = null;
@@ -54,17 +53,17 @@ public class GridVue : MonoBehaviour
         camController = Camera.main.GetComponent<CamController>();
 
         // Listeners des boutons de tiles
-        buildBtn.onClick.AddListener(() => EnableGameObject(buildPanel.gameObject));
+        buildBtn.onClick.AddListener(() => BuildBtnClick());
         // configBuildBtn.onClick.AddListener(() => EnableGameObject(configBuildPanel.gameObject));
 
-        // rallyBtn.onClick.AddListener(() => EnableGameObject(rallyPanel.gameObject));
+        rallyBtn.onClick.AddListener(() => RallyBtnClick());
 
         moveBtn.onClick.AddListener(() => MoveBtnClick());
     }
 
 
 
-    // Gestions des clicks sur la grille
+    // Gestions des clicks sur la grille et des hovers
     private void Update()
     {
         // Vérification supplémentaire pour éviter les conflits avec le drag de la caméra
@@ -87,26 +86,28 @@ public class GridVue : MonoBehaviour
             Tile tile = hit.collider.GetComponent<Tile>();
             if (tile != null)
             {
-                // Définir le cursor sur pointer
-                Cursor.SetCursor(Resources.Load<Texture2D>("Sprites/UI/cursor_pointer"), Vector2.zero, CursorMode.Auto);
-
                 if (presenteurCarte.State != "move")
                 {
-                    if (hoverTile != null && hoverTile != tile)
+                    if (hoverTile != tile)
                     {
-                        hoverTile.UnPreSelect();
+                        if (hoverTile != null)
+                        {
+                            hoverTile.UnPreSelect();
+                        }
                         hoverTile = tile;
-                        hoverTile.PreSelect();
-                        return;
-                    }
-                    else if (hoverTile == null)
-                    {
-                        hoverTile = tile;
-                        hoverTile.PreSelect();
+                        if (tile.Owner == PlayerPrefs.GetString("username"))
+                        {
+                            hoverTile.PreSelect();
+                        }
+                        else
+                        {
+                            hoverTile.ShowInfos();
+                        }
                         return;
                     }
                 }
-                else
+
+                else if (presenteurCarte.State == "move")
                 {
                     if (hoverTile != null && hoverTile != tile)
                     {
@@ -123,6 +124,12 @@ public class GridVue : MonoBehaviour
                     }
                 }
             }
+
+        }
+        else if (hoverTile != null && presenteurCarte.State != "move")
+        {
+            hoverTile.UnPreSelect();
+            hoverTile = null;
 
         }
 
@@ -190,38 +197,13 @@ public class GridVue : MonoBehaviour
         DisableGameObject(tilePanel.gameObject);
         DisableGameObject(buildPanel.gameObject);
         DisableGameObject(movePanel.gameObject);
+        DisableGameObject(rallyPanel.gameObject);
     }
 
 
     private void DisableGameObject(GameObject go)
     {
         go.SetActive(false);
-    }
-
-    private void EnableGameObject(GameObject go)
-    {
-        DisableAllPanels();
-        go.SetActive(true);
-        string name = go.name;
-
-        Tile tile = presenteurCarte.SelectTile;
-
-        switch (name)
-        {
-            case "Build Panel":
-                buildPanel.SetupPanel(tile);
-                break;
-            case "Move Panel":
-                // movePanel.SetupPanel(tile);
-                break;
-            case "Rally Panel":
-                // rallyPanel.SetupPanel(tile);
-                break;
-            case "Config BuildPanel":
-                // configBuildPanel.SetupPanel(tile);
-                break;
-        }
-
     }
 
 
@@ -242,6 +224,13 @@ public class GridVue : MonoBehaviour
 
 
     #region Bouton de construction de tiles
+    private void BuildBtnClick()
+    {
+        DisableAllPanels();
+        buildPanel.gameObject.SetActive(true);
+        buildPanel.SetupPanel(presenteurCarte.SelectTile); 
+    }
+
     public void BuildPanelRetour(string type = "")
     {
         presenteurCarte.BuildTile(type);
@@ -254,6 +243,7 @@ public class GridVue : MonoBehaviour
     #region Bouton de déploiement d'unités
     private void MoveBtnClick()
     {
+        DisableAllPanels();
         presenteurCarte.State = "move";
         HighlightTiles(presenteurCarte.GetTilesToMove());
     }
@@ -275,6 +265,27 @@ public class GridVue : MonoBehaviour
     }
 
     #endregion
+
+
+
+    #region Bouton de ralliement
+
+    private void RallyBtnClick()
+    {
+        DisableAllPanels();
+        rallyPanel.gameObject.SetActive(true);
+        rallyPanel.SetupPanel(presenteurCarte.GetTotalUnitCount(), $"{presenteurCarte.SelectTile.X}:{presenteurCarte.SelectTile.Y}");
+    }
+
+    public void ValidateRally()
+    {
+        Debug.Log("TODO: envoyer la requête de ralliement au serveur");
+        ClosedPanel();
+    }
+
+    #endregion
+
+
 
 
     #endregion
@@ -369,6 +380,17 @@ public class GridVue : MonoBehaviour
         string coords = $"({tile.X}, {tile.Y})";
         string desc = $"Type: {tile.Type}\nLvl: {tile.Lvl}\nUnits: {tile.Units}";
         tilePanel.SetInfoTilePanel(title, coords, desc);
+
+        // Gestion de boutons
+        if (tile.Units > 0)
+        {
+            // Set the move button interactable
+            moveBtn.interactable = true;
+        }
+        else
+        {
+            moveBtn.interactable = false;
+        }
     }
 
     private void HideTilePanel()

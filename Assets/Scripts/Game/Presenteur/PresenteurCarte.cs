@@ -272,7 +272,10 @@ public class PresenteurCarte : MonoBehaviour
         };
     }
 
-
+    public int GetTotalUnitCount()
+    {
+        return gameManager.GetAllUnits(PlayerPrefs.GetString("username"));
+    }
 
     #endregion
 
