@@ -190,6 +190,11 @@ public class GameManager : MonoBehaviour
         serverClient.RallyUnits(tileCoords);
     }
 
+    public void RallyUnitsServerResponse(string[] tileCoords)
+    {
+        presenteurCarte.CallAnimationRallyUnits(tileCoords);
+    }
+
 
     #endregion
 

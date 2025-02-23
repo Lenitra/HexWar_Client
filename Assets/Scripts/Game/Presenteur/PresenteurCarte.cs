@@ -203,6 +203,13 @@ public class PresenteurCarte : MonoBehaviour
         gameManager.AskServerRallyUnits(new string[] { SelectTile.X.ToString(), SelectTile.Y.ToString() });
     }
 
+
+    
+    public void CallAnimationRallyUnits(string[] coords)
+    {
+        gridVue.RallyUnitsAnim(coords);
+    }
+
     #endregion
 
 

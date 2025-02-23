@@ -605,4 +605,19 @@ public class GridVue : MonoBehaviour
 
     #endregion
 
+
+
+    #region Gestion des animations de ralliement
+    public void RallyUnitsAnim(string[] coords)
+    {
+        StartCoroutine(AnimationRallyUnits(coords));
+    }
+
+    private IEnumerator AnimationRallyUnits(string[] coords)
+    {
+        Debug.Log("Rallying units annimation");
+        yield return null;
+    }
+
+    #endregion
 }
