@@ -44,6 +44,8 @@ public class GridVue : MonoBehaviour
     // [SerializeField] private ModalPanel modalPanel;
 
 
+    private Tile hoverTile = null;
+
 
 
     private void Start()
@@ -72,9 +74,60 @@ public class GridVue : MonoBehaviour
             && !EventSystem.current.IsPointerOverGameObject()
         )
         {
-
             presenteurCarte.TraiterClick(Input.mousePosition);
         }
+
+
+
+
+
+        // Hover avec raycast
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit))
+        {
+            Tile tile = hit.collider.GetComponent<Tile>();
+            if (tile != null)
+            {
+                // Définir le cursor sur pointer
+                Cursor.SetCursor(Resources.Load<Texture2D>("Sprites/UI/cursor_pointer"), Vector2.zero, CursorMode.Auto);
+
+                if (presenteurCarte.State != "move")
+                {
+                    if (hoverTile != null && hoverTile != tile)
+                    {
+                        hoverTile.UnPreSelect();
+                        hoverTile = tile;
+                        hoverTile.PreSelect();
+                        return;
+                    }
+                    else if (hoverTile == null)
+                    {
+                        hoverTile = tile;
+                        hoverTile.PreSelect();
+                        return;
+                    }
+                }
+                else
+                {
+                    if (hoverTile != null && hoverTile != tile)
+                    {
+                        hoverTile.HideInfos();
+                        hoverTile = tile;
+                        hoverTile.ShowInfos();
+                        return;
+                    }
+                    else if (hoverTile == null)
+                    {
+                        hoverTile = tile;
+                        hoverTile.ShowInfos();
+                        return;
+                    }
+                }
+            }
+
+        }
+
+
+
     }
 
 
@@ -214,7 +267,8 @@ public class GridVue : MonoBehaviour
 
     public void MovePanelRetour(int units)
     {
-        if (units > 0){
+        if (units > 0)
+        {
             presenteurCarte.MoveUnits(units);
         }
         ClosedPanel();
@@ -245,7 +299,7 @@ public class GridVue : MonoBehaviour
                 break;
         }
     }
-    
+
 
     #endregion
 
@@ -372,7 +426,7 @@ public class GridVue : MonoBehaviour
         Tile[] tiles = FindObjectsOfType<Tile>();
         foreach (Tile tile in tiles)
         {
-            tile.UnHighlightTile();
+            tile.UnPreSelect();
         }
     }
 
@@ -395,8 +449,8 @@ public class GridVue : MonoBehaviour
         StartCoroutine(AnimationMoveUnits(move));
     }
 
-    
-    
+
+
     private IEnumerator AnimationMoveUnits(string[] move)
     {
         // Définir la durée totale de l'animation aller et retour

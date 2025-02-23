@@ -23,6 +23,7 @@ public class Tile : MonoBehaviour
     [Header("Elements enfants")]
     [SerializeField] private MeshRenderer meshDeRendu;
     [SerializeField] private GameObject glow;
+    [SerializeField] private TextMeshPro tileInfosOnMap;
 
 
 
@@ -42,13 +43,21 @@ public class Tile : MonoBehaviour
     public int Units
     {
         get { return units; }
-        set { units = value; }
+        set
+        {
+            units = value;
+            SetupTileInfos();
+        }
     }
 
     public string Owner
     {
         get { return owner; }
-        set { owner = value; }
+        set
+        {
+            owner = value;
+            SetupTileInfos();
+        }
     }
 
     public int Lvl
@@ -124,6 +133,14 @@ public class Tile : MonoBehaviour
         }
     }
 
+    private void SetupTileInfos()
+    {
+        tileInfosOnMap.text = $"{X}:{Y}\n{Owner}";
+        if (Units > 0 && Owner == PlayerPrefs.GetString("username"))
+        {
+            tileInfosOnMap.text += $"\n{Units} Drones";
+        }
+    }
 
 
     // Défini la couleur du mesh de rendu du dessus de l'objet
@@ -185,6 +202,31 @@ public class Tile : MonoBehaviour
     {
         glow.SetActive(false);
     }
+
+
+    public void ShowInfos()
+    {
+        tileInfosOnMap.gameObject.SetActive(true);
+    }
+
+    public void HideInfos()
+    {
+        tileInfosOnMap.gameObject.SetActive(false);
+    }
+
+
+    public void PreSelect()
+    {
+        HighlightTile();
+        ShowInfos();
+    }
+
+    public void UnPreSelect()
+    {
+        UnHighlightTile();
+        HideInfos();
+    }
+
 
 
 }
