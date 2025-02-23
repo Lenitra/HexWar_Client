@@ -174,7 +174,7 @@ public class PresenteurCarte : MonoBehaviour
 
 
 
-    #region Gestion des actions de tile(s)
+    #region Gestion des bontons pouractions de tile(s) (Build, Move, Rally)
 
     // Demande de construction (envoi des données depuis le panel de build/upgrade)
     public void BuildTile(string type)
@@ -195,6 +195,12 @@ public class PresenteurCarte : MonoBehaviour
     public void CallAnimationMoveUnits(string[] move)
     {
         gridVue.MoveUnitsAnim(move);
+    }
+
+    // Demande de ralliement d'unités depuis GridVue
+    public void RallyUnits()
+    {
+        gameManager.AskServerRallyUnits(new string[] { SelectTile.X.ToString(), SelectTile.Y.ToString() });
     }
 
     #endregion

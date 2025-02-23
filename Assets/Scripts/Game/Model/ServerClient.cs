@@ -188,6 +188,43 @@ public class ServerClient : MonoBehaviour
     }
 
 
+
+    public void RallyUnits(string[] tileCoords)
+    {
+        StartCoroutine(RallyUnitsCoro(tileCoords));
+    }
+
+    IEnumerator RallyUnitsCoro(string[] tileCoords)
+    {
+        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/rally");
+        request.method = "POST";
+        request.SetRequestHeader("Content-Type", "application/json");
+        request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{\"x\":" + tileCoords[0] + ",\"y\":" + tileCoords[1] + "}"));
+        request.downloadHandler = new DownloadHandlerBuffer();
+        yield return request.SendWebRequest();
+        // debug the response
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            if (request.downloadHandler.text.ToLower().StartsWith("error : "))
+            {
+                // change the scene to the login scene
+                SceneManager.LoadScene("Home");
+                // Debug.LogError("error: " + request.downloadHandler.text);
+            }
+            else
+            {
+                updateMap();
+            }
+        }
+        else
+        {
+            Debug.LogError("Error: " + request.error);
+        }
+    }
+
+
+
+
     public void GetPrice(string build, int lvl, Action<int> onComplete)
     {
         StartCoroutine(GetPriceCoroutine(build, lvl, onComplete));

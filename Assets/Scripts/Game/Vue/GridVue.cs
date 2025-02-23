@@ -83,6 +83,11 @@ public class GridVue : MonoBehaviour
         // Hover avec raycast
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit))
         {
+            // si on est au dessus d'un élément d'ui 
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
             Tile tile = hit.collider.GetComponent<Tile>();
             if (tile != null)
             {
@@ -192,6 +197,7 @@ public class GridVue : MonoBehaviour
 
     #region Gestion de l'affichage des différents panels
 
+
     private void DisableAllPanels()
     {
         DisableGameObject(tilePanel.gameObject);
@@ -279,7 +285,7 @@ public class GridVue : MonoBehaviour
 
     public void ValidateRally()
     {
-        Debug.Log("TODO: envoyer la requête de ralliement au serveur");
+        presenteurCarte.RallyUnits();
         ClosedPanel();
     }
 

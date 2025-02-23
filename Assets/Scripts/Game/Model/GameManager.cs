@@ -178,6 +178,18 @@ public class GameManager : MonoBehaviour
         serverClient.MoveUnits(from, to, units);
     }
 
+    public void MoveUnitsServerResponse(string[] move)
+    {
+        presenteurCarte.CallAnimationMoveUnits(move);
+    }
+
+
+
+    public void AskServerRallyUnits(string[] tileCoords)
+    {
+        serverClient.RallyUnits(tileCoords);
+    }
+
 
     #endregion
 
@@ -212,10 +224,7 @@ public class GameManager : MonoBehaviour
 
 
 
-    public void MoveUnitsServerResponse(string[] move)
-    {
-        presenteurCarte.CallAnimationMoveUnits(move);
-    }
+
 
 
 }
