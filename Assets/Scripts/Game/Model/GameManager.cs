@@ -178,9 +178,9 @@ public class GameManager : MonoBehaviour
         serverClient.MoveUnits(from, to, units);
     }
 
-    public void MoveUnitsServerResponse(string[] move)
+    public void MoveUnitsServerResponse()
     {
-        presenteurCarte.CallAnimationMoveUnits(move);
+        presenteurCarte.CallAnimationMoveUnits();
     }
 
 

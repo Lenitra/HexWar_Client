@@ -218,6 +218,7 @@ public class GridVue : MonoBehaviour
     {
         DisableAllPanels();
         presenteurCarte.SelectTile = null;
+
     }
 
     #endregion
@@ -234,7 +235,7 @@ public class GridVue : MonoBehaviour
     {
         DisableAllPanels();
         buildPanel.gameObject.SetActive(true);
-        buildPanel.SetupPanel(presenteurCarte.SelectTile); 
+        buildPanel.SetupPanel(presenteurCarte.SelectTile);
     }
 
     public void BuildPanelRetour(string type = "")
@@ -266,8 +267,12 @@ public class GridVue : MonoBehaviour
         if (units > 0)
         {
             presenteurCarte.MoveUnits(units);
+            DisableAllPanels();
         }
-        ClosedPanel();
+        else
+        {
+            ClosedPanel();
+        }
     }
 
     #endregion
@@ -471,7 +476,7 @@ public class GridVue : MonoBehaviour
 
     #region Coroutine d'animation d'un déplacement d'unités
 
-    public void MoveUnitsAnim(string[] move)
+    public void MoveUnitsAnim(Tile[] move)
     {
 
         StartCoroutine(AnimationMoveUnits(move));
@@ -479,20 +484,24 @@ public class GridVue : MonoBehaviour
 
 
 
-    private IEnumerator AnimationMoveUnits(string[] move)
+    private IEnumerator AnimationMoveUnits(Tile[] move)
     {
+        string debugMsg = "";
         // Définir la durée totale de l'animation aller et retour
-        float durationGo = 0f; // Durée totale pour dessiner la ligne
+        float durationGo = 0.001f; // Durée totale pour dessiner la ligne
         float durationOg = 2f; // Durée totale pour effacer la ligne
 
         // 1. Convertir les données en liste de positions
         List<Vector3> positions = new List<Vector3>();
         for (int i = 0; i < move.Length; i++)
         {
-            string[] coords = move[i].Split(':');
-            float[] pos = GetHexCoordinates(int.Parse(coords[0]), int.Parse(coords[1]));
+            float[] pos = GetHexCoordinates(move[i].X, move[i].Y);
             positions.Add(new Vector3(pos[0], 0.75f, pos[1]));
+            debugMsg += $"{move[i].X}:{move[i].Y} -> ";
         }
+
+        Debug.Log(debugMsg);
+
         if (positions.Count == 0)
             yield break;
 
