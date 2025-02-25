@@ -252,6 +252,8 @@ public class Hex
     public string type;
     public string owner;
     public string color;
+    public string protect;
+
 
     // Conversion en dictionnaire (le champ _id n'étant pas présent, il n'est pas inclus)
     public Dictionary<string, object> ToDictionary()
@@ -264,7 +266,8 @@ public class Hex
             {"units", units},
             {"type", type},
             {"owner", owner},
-            {"color", color}
+            {"color", color},
+            {"protect", false}
         };
         return dict;
     }

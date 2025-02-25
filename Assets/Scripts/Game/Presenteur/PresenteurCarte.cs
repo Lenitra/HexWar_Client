@@ -258,7 +258,7 @@ public class PresenteurCarte : MonoBehaviour
 
 
 
-                if (neighbor.Owner == PlayerPrefs.GetString("username"))
+                if (neighbor.Owner == PlayerPrefs.GetString("username") && tile.HasShield == false)
                 {
                     toret.Add(tile);
                     break;

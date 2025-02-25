@@ -164,6 +164,7 @@ public class GridVue : MonoBehaviour
         {
             Camera.main.GetComponent<CamController>().moveCamToTile(coords[0], coords[1], false);
         }
+
     }
 
 
