@@ -5,18 +5,41 @@ using System.Collections;
 
 public class HUDVue : MonoBehaviour
 {
+
+    private PresenteurHUD presenteurHUD;
+
     [SerializeField] private TextMeshProUGUI moneyText;
     
     // Boutons du HUD statique
     [Header("Boutons du HUD statique")]
     [SerializeField] private Button optionsBtn;
     [SerializeField] private Button locateHQBtn;
-    [SerializeField] private Button infosTilesBtn;
+    [SerializeField] private Button dispatchBtn;
 
 
     
 
-    
+    void Start(){
+        presenteurHUD = GetComponent<PresenteurHUD>();
+
+        optionsBtn.onClick.AddListener(optionsBtnClick);
+        locateHQBtn.onClick.AddListener(locateHQBtnClick);
+        dispatchBtn.onClick.AddListener(dispatchBtnClick);
+    }
+
+
+
+    private void locateHQBtnClick(){
+        presenteurHUD.OnBtnLocate();
+    }
+
+    private void optionsBtnClick(){
+        Debug.Log("Bouton options cliqué");
+    }
+
+    private void dispatchBtnClick(){
+        Debug.Log("Bouton dispatch cliqué");
+    }
 
 
 

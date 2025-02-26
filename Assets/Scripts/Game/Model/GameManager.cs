@@ -163,6 +163,16 @@ public class GameManager : MonoBehaviour
     }
 
 
+    public Transform getHQTileTransform(){
+        foreach (Hex hex in hexMap)
+        {
+            if (hex.type.ToLower() == "hq" && hex.owner == PlayerPrefs.GetString("username"))
+            {
+                return GameObject.Find("HexObj " + hex.x + ":" + hex.y).transform;
+            }
+        }
+        return null;
+    }
 
 
     #region Gestion des actions des tiles
