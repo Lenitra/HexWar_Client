@@ -5,14 +5,15 @@ public class PresenteurHUD : MonoBehaviour
     private HUDVue hudVue;
     // private GridVue gridVue;
     private GameManager gameManager;
+    private CamController camController;
 
     
     
-    private void Start()
+    void Start()
     {
         hudVue = GetComponent<HUDVue>();
         gameManager = GetComponent<GameManager>();
-        // gridVue = GetComponent<GridVue>();
+        camController = Camera.main.GetComponent<CamController>();
     }
 
 
@@ -35,7 +36,8 @@ public class PresenteurHUD : MonoBehaviour
     // Déplacer la caméra sur le HQ
     public void OnBtnLocate()
     {
-        
+        Transform hq = gameManager.getHQTileTransform();
+        camController.moveCamToTile(hq.position.x, hq.position.z);
     }
 
     // Demander au serveur de dispatcher les drones

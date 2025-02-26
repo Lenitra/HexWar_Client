@@ -163,6 +163,16 @@ public class GameManager : MonoBehaviour
     }
 
 
+    public Transform getHQTileTransform(){
+        foreach (Hex hex in hexMap)
+        {
+            if (hex.type.ToLower() == "hq" && hex.owner == PlayerPrefs.GetString("username"))
+            {
+                return GameObject.Find("HexObj " + hex.x + ":" + hex.y).transform;
+            }
+        }
+        return null;
+    }
 
 
     #region Gestion des actions des tiles
@@ -178,9 +188,9 @@ public class GameManager : MonoBehaviour
         serverClient.MoveUnits(from, to, units);
     }
 
-    public void MoveUnitsServerResponse(string[] move)
+    public void MoveUnitsServerResponse()
     {
-        presenteurCarte.CallAnimationMoveUnits(move);
+        presenteurCarte.CallAnimationMoveUnits();
     }
 
 
@@ -252,6 +262,8 @@ public class Hex
     public string type;
     public string owner;
     public string color;
+    public string protect;
+
 
     // Conversion en dictionnaire (le champ _id n'étant pas présent, il n'est pas inclus)
     public Dictionary<string, object> ToDictionary()
@@ -264,7 +276,8 @@ public class Hex
             {"units", units},
             {"type", type},
             {"owner", owner},
-            {"color", color}
+            {"color", color},
+            {"protect", false}
         };
         return dict;
     }

@@ -12,7 +12,7 @@ public class ServerClient : MonoBehaviour
     private GameManager gameManager;
 
     // Interval d'update de la carte en secondes
-    private float pollInterval = 0.5f; 
+    private float pollInterval = 0.5f;
 
     // Coroutine continue du polling
     private Coroutine pollingCoroutine;
@@ -61,7 +61,7 @@ public class ServerClient : MonoBehaviour
     IEnumerator GetGameState()
     {
         float startTime = Time.time;
-        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP")+"/get_hex/"+ PlayerPrefs.GetString("username"));
+        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/get_hex/" + PlayerPrefs.GetString("username"));
         yield return request.SendWebRequest();
 
         if (request.result != UnityWebRequest.Result.Success)
@@ -102,16 +102,16 @@ public class ServerClient : MonoBehaviour
 
     }
 
-    
-    
+
+
     public void MoveUnits(string[] from, string[] to, int units)
     {
         StartCoroutine(MoveUnitsCoro(from, to, units));
     }
-    
+
     IEnumerator MoveUnitsCoro(string[] from, string[] to, int units)
     {
-        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP")+"/move_units");
+        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/move_units");
         // origin = request.form.get("origin") # format "x:y"
         // destination = request.form.get("destination") # format "x:y"
         // units = int(request.form.get("units"))
@@ -140,24 +140,18 @@ public class ServerClient : MonoBehaviour
             {
                 if (request.downloadHandler.text != "NOPE")
                 {
-                    // we recieve a list of moves
-                    string tmp = request.downloadHandler.text;
-                    // delete all [ and ]
-                    tmp = tmp.Replace("[", "");
-                    tmp = tmp.Replace("]", "");
-                    tmp = tmp.Replace("\"", "");
-
-                    string[] moves = tmp.Split(',');
-
-                    gameManager.MoveUnitsServerResponse(moves);
-                    updateMap();
+                    if (request.downloadHandler.text != "NOPE")
+                    {
+                        gameManager.MoveUnitsServerResponse();
+                        updateMap();
+                    }
                 }
             }
         }
     }
-    
 
-    
+
+
     public void Build(string[] tileCoords, string type)
     {
         StartCoroutine(BuildCoro(tileCoords, type));
@@ -237,7 +231,7 @@ public class ServerClient : MonoBehaviour
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success)
-        {   
+        {
             int price = int.Parse(request.downloadHandler.text);
             onComplete?.Invoke(price);
         }
@@ -249,7 +243,7 @@ public class ServerClient : MonoBehaviour
     }
 
 
-    
+
     void OnApplicationQuit()
     {
         StopAllCoroutines();

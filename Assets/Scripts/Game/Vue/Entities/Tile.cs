@@ -15,6 +15,8 @@ public class Tile : MonoBehaviour
     [SerializeField] private int lvl = 0;
     [SerializeField] private string type = "";
     [SerializeField] private string color = "0|0|0";
+    [SerializeField] private string protect = "";
+    [SerializeField] private bool hasShield = false;
 
     [Header("Prefabs des types de tiles")]
     [SerializeField] private GameObject[] typesPrefabs;
@@ -23,6 +25,7 @@ public class Tile : MonoBehaviour
     [Header("Elements enfants")]
     [SerializeField] private MeshRenderer meshDeRendu;
     [SerializeField] private GameObject glow;
+    [SerializeField] private GameObject shieldObject;
     [SerializeField] private TextMeshPro tileInfosOnMap;
     private GameObject building;
 
@@ -87,6 +90,37 @@ public class Tile : MonoBehaviour
         }
     }
 
+    public string Protect
+    {
+        get { return protect; }
+        set { 
+            protect = value;
+            if (protect != "")
+            {
+                System.DateTime protectDate = System.DateTime.Parse(protect);
+                if (protectDate > System.DateTime.Now)
+                {
+                    this.HasShield = true;
+                }
+                else
+                {
+                    this.HasShield = false;
+                }
+            }
+
+        }
+    }
+
+
+    public bool HasShield
+    {
+        get { return hasShield; }
+        set { 
+            hasShield = value; 
+            SetupShield();
+        }
+    }
+
     #endregion
 
 
@@ -103,6 +137,7 @@ public class Tile : MonoBehaviour
             this.Owner = hexData.owner;
             this.Type = hexData.type;
             this.Color = hexData.color;
+            this.Protect = hexData.protect;
             return;
         }
 
@@ -132,6 +167,10 @@ public class Tile : MonoBehaviour
         {
             this.Color = hexData.color;
         }
+        if (this.Protect != hexData.protect)
+        {
+            this.Protect = hexData.protect;
+        }
     }
 
     private void SetupTileInfos()
@@ -140,6 +179,19 @@ public class Tile : MonoBehaviour
         if (Units > 0 && Owner == PlayerPrefs.GetString("username"))
         {
             tileInfosOnMap.text += $"\n{Units} Drones";
+        }
+    }
+
+
+    private void SetupShield()
+    {
+        if (hasShield)
+        {
+            // shieldObject.SetActive(true);
+        }
+        else
+        {
+            // shieldObject.SetActive(false);
         }
     }
 

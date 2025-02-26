@@ -22,7 +22,6 @@ public class PresenteurCarte : MonoBehaviour
         get { return selectTile; }
         set
         {
-            SelectTile2 = null;
             if (selectTile != null)
             {
                 gridVue.DeselectTile(selectTile);
@@ -174,7 +173,7 @@ public class PresenteurCarte : MonoBehaviour
 
 
 
-    #region Gestion des bontons pouractions de tile(s) (Build, Move, Rally)
+    #region Gestion des bontons pour actions de tile(s) (Build, Move, Rally)
 
     // Demande de construction (envoi des données depuis le panel de build/upgrade)
     public void BuildTile(string type)
@@ -192,8 +191,13 @@ public class PresenteurCarte : MonoBehaviour
     }
 
     // Appel de l'animation de déplacement d'unités avec argument le tableau de tiles à traverser # format : ["x1:y1", "x2:y2", ...]
-    public void CallAnimationMoveUnits(string[] move)
+    public void CallAnimationMoveUnits()
     {
+        Debug.Log("Vers " + SelectTile2.X + ":" + SelectTile2.Y);
+        Debug.Log("Depuis " + SelectTile.X + ":" + SelectTile.Y); 
+        Tile[] move = BFS(SelectTile, SelectTile2);
+        SelectTile = null;
+        SelectTile2 = null;
         gridVue.MoveUnitsAnim(move);
     }
 
@@ -254,7 +258,7 @@ public class PresenteurCarte : MonoBehaviour
 
 
 
-                if (neighbor.Owner == PlayerPrefs.GetString("username"))
+                if (neighbor.Owner == PlayerPrefs.GetString("username") && tile.HasShield == false)
                 {
                     toret.Add(tile);
                     break;
@@ -284,6 +288,13 @@ public class PresenteurCarte : MonoBehaviour
             (x - 1, z)       // NW
         };
     }
+
+    public Tile[] BFS(Tile start, Tile end)
+    {
+        return new Tile[] { start, end };
+        // TODO: Implement BFS
+    }
+
 
     public int GetTotalUnitCount()
     {
