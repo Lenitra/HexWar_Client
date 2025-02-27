@@ -9,7 +9,8 @@ public class GridVue : MonoBehaviour
 {
 
     private const float gridGap = 0f;
-    private const float hexSize = 0.5f;
+    // private const float hexSize = 1.012f;
+    private const float hexSize = 1f;
     private PresenteurCarte presenteurCarte;
     private CamController camController;
 

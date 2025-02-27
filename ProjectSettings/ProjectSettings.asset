@@ -164,7 +164,7 @@ PlayerSettings:
   androidMinAspectRatio: 1
   applicationIdentifier:
     Android: com.DefaultCompany.HexWar
-    Standalone: com.DefaultCompany.HexWar
+    Standalone: com.Taulem-Studio.Nyx-s-Imperium
   buildNumber:
     Standalone: 0
     VisionOS: 0

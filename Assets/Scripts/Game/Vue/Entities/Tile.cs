@@ -26,6 +26,7 @@ public class Tile : MonoBehaviour
     [SerializeField] private MeshRenderer meshDeRendu;
     [SerializeField] private GameObject glow;
     [SerializeField] private GameObject shieldObject;
+    [SerializeField] private GameObject contourTerritoire;
     [SerializeField] private TextMeshPro tileInfosOnMap;
     private GameObject building;
 
@@ -93,7 +94,8 @@ public class Tile : MonoBehaviour
     public string Protect
     {
         get { return protect; }
-        set { 
+        set
+        {
             protect = value;
             if (protect != "")
             {
@@ -115,8 +117,9 @@ public class Tile : MonoBehaviour
     public bool HasShield
     {
         get { return hasShield; }
-        set { 
-            hasShield = value; 
+        set
+        {
+            hasShield = value;
             SetupShield();
         }
     }
@@ -187,11 +190,11 @@ public class Tile : MonoBehaviour
     {
         if (hasShield)
         {
-            // shieldObject.SetActive(true);
+            shieldObject.SetActive(true);
         }
         else
         {
-            // shieldObject.SetActive(false);
+            shieldObject.SetActive(false);
         }
     }
 
@@ -200,27 +203,58 @@ public class Tile : MonoBehaviour
     // Appellé dans le setter de la couleur
     private void SetupColor()
     {
+        int minColor = 20;
         string[] rgb = this.Color.Split('|');
-        for (int i = 0; i < rgb.Length; i++)
+        Material material = meshDeRendu.material;
+        if (owner == "")
         {
-            // TODO: Vérifier si c'est pas trop sombre
-            if (rgb[i] == "" || 0=0)
-            {
-                rgb[i] = "0";
-            }
+            // #0000003C
+            Color color = new Color(0, 0, 0, 0.75f);
+            material.SetColor("_Color", color);
+            material.SetColor("_EmissionColor", color);
+            // make it transparent
+            
+            material.SetFloat("_Mode", 2);
+            material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            material.SetInt("_ZWrite", 0);
+            material.DisableKeyword("_ALPHATEST_ON");
+            material.EnableKeyword("_ALPHABLEND_ON");
+            material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+            material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+            contourTerritoire.SetActive(false);
         }
-        Color color = new Color(float.Parse(rgb[0]) / 255, float.Parse(rgb[1]) / 255, float.Parse(rgb[2]) / 255, 80/255);
-        meshDeRendu.material.SetColor("_Color", color);
-        // Make it transparent
-        meshDeRendu.material.SetFloat("_Mode", 3);  // 3 = Transparent 
+        else
+        {
+            for (int i = 0; i < rgb.Length; i++)
+            {
+                if (int.Parse(rgb[i]) < minColor)
+                {
+                    minColor = int.Parse(rgb[i]);
+                }
+            }
+
+            if (minColor < 20)
+            {
+                rgb[0] = (int.Parse(rgb[0]) + 20 - minColor).ToString();
+                rgb[1] = (int.Parse(rgb[1]) + 20 - minColor).ToString();
+                rgb[2] = (int.Parse(rgb[2]) + 20 - minColor).ToString();
+            }
 
 
-        meshDeRendu.material.SetColor("_EmissionColor", color);
-        // intencité de l'émission
-        meshDeRendu.material.SetFloat("_EmissionIntensity", 0.5f);
+            Color color = new Color(float.Parse(rgb[0]) / 255, float.Parse(rgb[1]) / 255, float.Parse(rgb[2]) / 255);
+            material.SetColor("_Color", color);
+            material.SetColor("_EmissionColor", color);
 
-        // Actualise le material
-        meshDeRendu.material.EnableKeyword("_EMISSION");
+
+            // Agrandir la scale en z de la base et réduire sa position en y
+            Transform baseTransform = meshDeRendu.transform;
+            baseTransform.localScale = new Vector3(baseTransform.localScale.x, baseTransform.localScale.y, 2f);
+            baseTransform.localPosition = new Vector3(baseTransform.localPosition.x, -0.126f, baseTransform.localPosition.z);
+
+            contourTerritoire.SetActive(true);
+            contourTerritoire.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", color);
+        }
     }
 
 
@@ -253,9 +287,9 @@ public class Tile : MonoBehaviour
         if (index != -1)
         {
             building = Instantiate(typesPrefabs[index], this.transform);
-            building.transform.position = this.transform.position;
+            building.transform.position = new Vector3(this.transform.position.x, this.transform.position.y - 0.333f, this.transform.position.z);
         }
-        else 
+        else
         {
             Destroy(building);
         }
