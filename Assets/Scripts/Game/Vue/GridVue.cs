@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class GridVue : MonoBehaviour
 {
 
-    private const float gridGap = 0.1f;
+    private const float gridGap = 0f;
     private const float hexSize = 0.5f;
     private PresenteurCarte presenteurCarte;
     private CamController camController;
@@ -24,7 +24,7 @@ public class GridVue : MonoBehaviour
 
     [Space(10)]
     [Header("Elements d'effets temporaires")]
-    [SerializeField] private LineRenderer moveUnitsLine;
+    [SerializeField] private LineRenderer prefabLine;
 
     [Space(10)]
     [Header("UI Tiles")]
@@ -506,6 +506,8 @@ public class GridVue : MonoBehaviour
         if (positions.Count == 0)
             yield break;
 
+        LineRenderer moveUnitsLine = Instantiate(prefabLine);
+
         // 2. Calculer la distance totale du chemin
         float totalDistance = 0f;
         for (int i = 0; i < positions.Count - 1; i++)
@@ -605,8 +607,8 @@ public class GridVue : MonoBehaviour
             yield return null;
         }
 
-        // Effacer complètement la ligne
-        moveUnitsLine.positionCount = 0;
+        // Détruire la ligne
+        Destroy(moveUnitsLine.gameObject);
     }
 
 

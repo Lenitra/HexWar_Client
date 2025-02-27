@@ -201,8 +201,20 @@ public class Tile : MonoBehaviour
     private void SetupColor()
     {
         string[] rgb = this.Color.Split('|');
-        Color color = new Color(float.Parse(rgb[0]) / 255, float.Parse(rgb[1]) / 255, float.Parse(rgb[2]) / 255);
+        for (int i = 0; i < rgb.Length; i++)
+        {
+            // TODO: Vérifier si c'est pas trop sombre
+            if (rgb[i] == "" || 0=0)
+            {
+                rgb[i] = "0";
+            }
+        }
+        Color color = new Color(float.Parse(rgb[0]) / 255, float.Parse(rgb[1]) / 255, float.Parse(rgb[2]) / 255, 80/255);
         meshDeRendu.material.SetColor("_Color", color);
+        // Make it transparent
+        meshDeRendu.material.SetFloat("_Mode", 3);  // 3 = Transparent 
+
+
         meshDeRendu.material.SetColor("_EmissionColor", color);
         // intencité de l'émission
         meshDeRendu.material.SetFloat("_EmissionIntensity", 0.5f);
