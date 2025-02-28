@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     private List<Hex> hexMap = new List<Hex>(); // Tableau des hexagones
     private int money; // Argent du joueur
 
+    private List<string[]> coordsHexWithUnits = new List<string[]>();
+
     // Getter et setter pour money
     public int Money
     {
@@ -197,12 +199,22 @@ public class GameManager : MonoBehaviour
 
     public void AskServerRallyUnits(string[] tileCoords)
     {
+        coordsHexWithUnits.Clear();
+        // On ajoute les coordonnées des hexagones à traverser pour l'animation
+        for (int i = 0; i < hexMap.Count; i++)
+        {
+            if (hexMap[i].owner == PlayerPrefs.GetString("username") && hexMap[i].units > 0)
+            {
+                coordsHexWithUnits.Add(hexMap[i].getCoords());
+            }
+        }     
         serverClient.RallyUnits(tileCoords);
     }
 
-    public void RallyUnitsServerResponse(string[] tileCoords)
+    public void RallyUnitsServerResponse()
     {
-        presenteurCarte.CallAnimationRallyUnits(tileCoords);
+        presenteurCarte.CallAnimationRallyUnits(coordsHexWithUnits);
+        coordsHexWithUnits.Clear();
     }
 
 
@@ -280,6 +292,11 @@ public class Hex
             {"protect", false}
         };
         return dict;
+    }
+
+    public string[] getCoords()
+    {
+        return new string[] {x.ToString(), y.ToString()};
     }
 }
 

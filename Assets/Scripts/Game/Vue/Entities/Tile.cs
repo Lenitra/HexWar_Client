@@ -332,5 +332,10 @@ public class Tile : MonoBehaviour
     }
 
 
+    public string[] GetCoords()
+    {
+        return new string[] { X.ToString(), Y.ToString() };
+    }
+
 
 }
