@@ -10,9 +10,9 @@ public class CamController : MonoBehaviour
     [SerializeField] private float dragThreshold = 50f; // Seuil de déclenchement du drag
 
     [Header("Paramètres de zoom")]
-    [SerializeField] private float zoomSpeed = 10f;
-    [SerializeField] private float minZoom = 5f;
-    [SerializeField] private float maxZoom = 29f;
+    private float zoomSpeed = 10f;
+    private float minZoom = 10f;
+    private float maxZoom = 40f;
 
     public bool isDragging = false;
     private Vector3 initialMousePosition;
