@@ -206,6 +206,19 @@ public class GameManager : MonoBehaviour
     }
 
 
+    public void AskServerDispatchUnits()
+    {
+        serverClient.DispatchUnits();
+    }
+
+    public void DispatchUnitsServerResponse()
+    {
+        Debug.Log("Drones dispatchés");
+    }
+
+
+
+
     #endregion
 
 

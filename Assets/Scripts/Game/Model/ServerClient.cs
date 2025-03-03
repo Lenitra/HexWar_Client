@@ -218,6 +218,41 @@ public class ServerClient : MonoBehaviour
     }
 
 
+    public void DispatchUnits()
+    {
+        StartCoroutine(DispatchUnitsCoro());
+    }
+
+    IEnumerator DispatchUnitsCoro()
+    {
+        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/dispatch");
+        request.method = "POST";
+        request.SetRequestHeader("Content-Type", "application/json");
+        request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{}"));
+        request.downloadHandler = new DownloadHandlerBuffer();
+        yield return request.SendWebRequest();
+        // debug the response
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            if (request.downloadHandler.text.ToLower().StartsWith("error : "))
+            {
+                // change the scene to the login scene
+                SceneManager.LoadScene("Home");
+                // Debug.LogError("error: " + request.downloadHandler.text);
+            }
+            else
+            {
+                gameManager.DispatchUnitsServerResponse();
+                updateMap();
+            }
+        }
+        else
+        {
+            Debug.LogError("Error: " + request.error);
+        }
+    }
+
+
 
 
     public void GetPrice(string build, int lvl, Action<int> onComplete)

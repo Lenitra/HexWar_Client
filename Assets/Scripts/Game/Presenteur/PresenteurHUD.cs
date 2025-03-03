@@ -7,6 +7,7 @@ public class PresenteurHUD : MonoBehaviour
     private GameManager gameManager;
     private CamController camController;
 
+
     
     
     void Start()
@@ -14,6 +15,7 @@ public class PresenteurHUD : MonoBehaviour
         hudVue = GetComponent<HUDVue>();
         gameManager = GetComponent<GameManager>();
         camController = Camera.main.GetComponent<CamController>();
+
     }
 
 
@@ -43,7 +45,7 @@ public class PresenteurHUD : MonoBehaviour
     // Demander au serveur de dispatcher les drones
     public void OnBtnDispatch()
     {
-        
+        gameManager.AskServerDispatchUnits();
     }
 
 

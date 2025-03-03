@@ -38,7 +38,7 @@ public class HUDVue : MonoBehaviour
     }
 
     private void dispatchBtnClick(){
-        Debug.Log("Bouton dispatch cliqué");
+        presenteurHUD.OnBtnDispatch();
     }
 
 
