@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 933969689780722491}
   serializedVersion: 2
   m_LocalRotation: {x: -0.6830127, y: 0.18301274, z: 0.18301274, w: 0.6830127}
-  m_LocalPosition: {x: 0, y: 0.128, z: 0}
+  m_LocalPosition: {x: 0, y: 0.17, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7caf0414d3eaf4f429e33798459ddfe4, type: 2}
+  - {fileID: 2100000, guid: fdf24e1abcf137ef2bb494329f9266e2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -381,7 +381,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 1
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &838945947689357494
 Transform:
   m_ObjectHideFlags: 0
@@ -691,7 +691,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 3c9c419c0b2734a37a6f9cddbb374275, type: 2}
     - target: {fileID: 7803407436844761574, guid: 91c34ed63869f070a91423bf3f3d9256, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8560426426855154222, guid: 91c34ed63869f070a91423bf3f3d9256, type: 3}
       propertyPath: m_LocalPosition.y
@@ -726,14 +726,13 @@ PrefabInstance:
       value: 30
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 7803407436844761574, guid: 91c34ed63869f070a91423bf3f3d9256, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 91c34ed63869f070a91423bf3f3d9256, type: 3}
-      insertIndex: -1
+      insertIndex: 2
       addedObject: {fileID: 838945947689357494}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 91c34ed63869f070a91423bf3f3d9256, type: 3}
-      insertIndex: -1
+      insertIndex: 3
       addedObject: {fileID: 8924802495935612931}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 91c34ed63869f070a91423bf3f3d9256, type: 3}
       insertIndex: -1

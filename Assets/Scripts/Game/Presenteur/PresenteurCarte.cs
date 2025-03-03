@@ -196,9 +196,9 @@ public class PresenteurCarte : MonoBehaviour
         Debug.Log("Vers " + SelectTile2.X + ":" + SelectTile2.Y);
         Debug.Log("Depuis " + SelectTile.X + ":" + SelectTile.Y); 
         Tile[] move = BFS(SelectTile, SelectTile2);
-        gridVue.MoveUnitsAnim(move);
         SelectTile = null;
         SelectTile2 = null;
+        gridVue.MoveUnitsAnim(move);
     }
 
     // Demande de ralliement d'unités depuis GridVue
@@ -209,17 +209,9 @@ public class PresenteurCarte : MonoBehaviour
 
 
     
-    public void CallAnimationRallyUnits(List<string[]> coords)
+    public void CallAnimationRallyUnits(string[] coords)
     {
-        // Ajouter new string[] { SelectTile.X.ToString(), SelectTile.Y.ToString() } à coords au début
-        coords.Insert(0, new string[] { SelectTile.X.ToString(), SelectTile.Y.ToString() });
-        for (int i = 0; i < coords.Count; i++)
-        {
-            Debug.Log(coords[i][0] + ":" + coords[i][1]);
-        }
         gridVue.RallyUnitsAnim(coords);
-        SelectTile = null;
-        SelectTile2 = null;
     }
 
     #endregion

@@ -293,7 +293,7 @@ public class GridVue : MonoBehaviour
     public void ValidateRally()
     {
         presenteurCarte.RallyUnits();
-        DisableAllPanels();
+        ClosedPanel();
     }
 
     #endregion
@@ -483,17 +483,7 @@ public class GridVue : MonoBehaviour
 
         StartCoroutine(AnimationMoveUnits(move));
     }
-    
-    public void RallyUnitsAnim(List<string[]> coords)
-    {
-        Tile tileTORally = GameObject.Find("HexObj " + coords[0][0] + ":" + coords[0][1]).GetComponent<Tile>();
-        for (int i = 0; i < coords.Count; i++)
-        {   
-            if (i == 0) continue;
-            Tile tileFROMRally = GameObject.Find("HexObj " + coords[i][0] + ":" + coords[i][1]).GetComponent<Tile>();
-            StartCoroutine(AnimationMoveUnits(new Tile[] {tileFROMRally, tileTORally}));
-        }
-    }
+
 
 
     private IEnumerator AnimationMoveUnits(Tile[] move)
@@ -509,7 +499,7 @@ public class GridVue : MonoBehaviour
         {
             float[] pos = GetHexCoordinates(move[i].X, move[i].Y);
             positions.Add(new Vector3(pos[0], 0.75f, pos[1]));
-            // debugMsg += $"{move[i].X}:{move[i].Y} -> ";
+            debugMsg += $"{move[i].X}:{move[i].Y} -> ";
         }
 
         Debug.Log(debugMsg);
@@ -629,4 +619,18 @@ public class GridVue : MonoBehaviour
     #endregion
 
 
+
+    #region Gestion des animations de ralliement
+    public void RallyUnitsAnim(string[] coords)
+    {
+        StartCoroutine(AnimationRallyUnits(coords));
+    }
+
+    private IEnumerator AnimationRallyUnits(string[] coords)
+    {
+        Debug.Log("Rallying units annimation");
+        yield return null;
+    }
+
+    #endregion
 }

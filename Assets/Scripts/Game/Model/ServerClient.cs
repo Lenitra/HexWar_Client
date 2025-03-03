@@ -207,7 +207,7 @@ public class ServerClient : MonoBehaviour
             }
             else
             {
-                gameManager.RallyUnitsServerResponse();
+                gameManager.RallyUnitsServerResponse(tileCoords);
                 updateMap();
             }
         }

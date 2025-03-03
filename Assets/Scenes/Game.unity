@@ -618,7 +618,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 104215909}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d51de0bcb63dfe4bbabd6e0c50223ce, type: 3}
+  m_Script: {fileID: 11500000, guid: 24da10078c38282528853207246f96e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gridVue: {fileID: 137831715}
@@ -1041,9 +1041,9 @@ Transform:
   m_GameObject: {fileID: 171236189}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 71}
-  m_LocalScale: {x: 3.94, y: 3.94, z: 3.94}
-  m_ConstrainProportionsScale: 1
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 746453574}
   - {fileID: 575614918}
@@ -1248,7 +1248,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -108.3999, y: -36}
+  m_AnchoredPosition: {x: -108.4, y: -36}
   m_SizeDelta: {x: 48, y: 48}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &246162473
@@ -2342,7 +2342,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 351852587}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dff479bc7df98fd4894f09fa9fc42724, type: 3}
+  m_Script: {fileID: 11500000, guid: 0772f73441075a50aadda2f6b6de08e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gridVue: {fileID: 137831715}
@@ -6647,6 +6647,9 @@ MonoBehaviour:
   canMove: 1
   moveSpeed: 10
   dragThreshold: 5
+  zoomSpeed: 10
+  minZoom: 5
+  maxZoom: 29
   isDragging: 0
 --- !u!114 &963194231
 MonoBehaviour:
@@ -8802,7 +8805,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 60}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -71.5, y: -56.19995}
+  m_AnchoredPosition: {x: -71.5, y: -56.2}
   m_SizeDelta: {x: 48, y: 48}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1469279411
@@ -9810,7 +9813,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 113.1001, y: -38.299927}
+  m_AnchoredPosition: {x: 113.1, y: -38.3}
   m_SizeDelta: {x: 150, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1567230034
@@ -9919,7 +9922,7 @@ RectTransform:
   m_GameObject: {fileID: 1613494887}
   m_LocalRotation: {x: 0.5735764, y: 0, z: 0, w: 0.8191521}
   m_LocalPosition: {x: 0, y: 0, z: 20}
-  m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1467895124}
@@ -9941,7 +9944,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1613494887}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 854ae634eb0eaae40a35449b8d742d28, type: 3}
+  m_Script: {fileID: 11500000, guid: f269c3efb194d0bd7b082d51f57d1305, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   titleText: {fileID: 1531170048}
@@ -10362,7 +10365,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1731608614}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5ff04de984be5c4cae0b5877dd7bc9a, type: 3}
+  m_Script: {fileID: 11500000, guid: c6d0e74a72ce57a8e83bf83b16bfd7aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gridVue: {fileID: 137831715}
@@ -10569,7 +10572,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 60}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -145.22021, y: -56.200073}
+  m_AnchoredPosition: {x: -145.22, y: -56.2}
   m_SizeDelta: {x: 48, y: 48}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1768232281
