@@ -16,6 +16,9 @@ public class HUDVue : MonoBehaviour
     [SerializeField] private Button locateHQBtn;
     [SerializeField] private Button dispatchBtn;
 
+    // 
+    [SerializeField] private GameObject dispatchPanel;
+
 
     
 
@@ -24,10 +27,12 @@ public class HUDVue : MonoBehaviour
 
         optionsBtn.onClick.AddListener(optionsBtnClick);
         locateHQBtn.onClick.AddListener(locateHQBtnClick);
-        dispatchBtn.onClick.AddListener(dispatchBtnClick);
+        dispatchBtn.onClick.AddListener (activateDispatchPanel);
     }
 
-
+    private void activateDispatchPanel(){
+        dispatchPanel.SetActive(true);
+    }
 
     private void locateHQBtnClick(){
         presenteurHUD.OnBtnLocate();
@@ -37,7 +42,7 @@ public class HUDVue : MonoBehaviour
         Debug.Log("Bouton options cliqué");
     }
 
-    private void dispatchBtnClick(){
+    public void dispatchBtnClick(){
         presenteurHUD.OnBtnDispatch();
     }
 

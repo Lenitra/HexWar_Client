@@ -46,6 +46,7 @@ public class PresenteurHUD : MonoBehaviour
     public void OnBtnDispatch()
     {
         gameManager.AskServerDispatchUnits();
+        
     }
 
 
