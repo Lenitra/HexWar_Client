@@ -21,20 +21,58 @@ public class LoginSys : MonoBehaviour
     {
         // Ajouter un listener au bouton de connexion pour démarrer le processus de connexion avec les entrées utilisateur
         LOGINbutton.onClick.AddListener(() => StartLogin(LOGINusernameInput.text, LOGINpasswordInput.text));
-        
+
         // Charger les informations de connexion sauvegardées (si elles existent)
         LOGINusernameInput.text = PlayerPrefs.GetString("username");
         LOGINpasswordInput.text = PlayerPrefs.GetString("password");
-        
+
         // Démarrer la vérification de la version du jeu
         StartCoroutine(checkVersion());
-        
+
         // Ajouter un listener au bouton d'inscription pour ouvrir l'URL d'inscription dans le navigateur par défaut
         registerButton.onClick.AddListener(() => Application.OpenURL(DataManager.Instance.GetData("serverIP") + "/login"));
-        
+
         // Ajouter un listener au bouton de sortie pour quitter l'application
         exitButton.onClick.AddListener(() => Application.Quit());
+
+
+        // Focus par défaut sur le champ de nom d'utilisateur
+        // if (string.IsNullOrEmpty(LOGINusernameInput.text))
+        // {
+            LOGINusernameInput.Select();
+            LOGINusernameInput.ActivateInputField();
+        // }
     }
+
+
+    void Update()
+    {
+        // Si le champ est focus et que l'utilisateur appuie sur Tab
+        if (LOGINusernameInput.isFocused && Input.GetKeyDown(KeyCode.Tab))
+        {
+            Debug.Log("L'utilisateur a appuyé sur Tab alors que le champ est focus.");
+            LOGINpasswordInput.Select();
+            LOGINpasswordInput.ActivateInputField();
+        }
+
+
+        if (LOGINpasswordInput.isFocused && Input.GetKeyDown(KeyCode.Tab))
+        {
+            Debug.Log("L'utilisateur a appuyé sur Tab alors que le champ2 est focus.");
+            LOGINusernameInput.Select();
+            LOGINusernameInput.ActivateInputField();
+        }
+
+        // Si le champ est focus et que l'utilisateur appuie sur Enter
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            Debug.Log("L'utilisateur a appuyé sur Enter alors que le champ est focus.");
+            StartLogin(LOGINusernameInput.text, LOGINpasswordInput.text);
+        }
+
+    }
+
+
 
     IEnumerator checkVersion()
     {

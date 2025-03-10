@@ -21,7 +21,7 @@ public class DispatchPanel : MonoBehaviour
         closeButton.onClick.AddListener(ClosePanel);
 
         // Setup des boutons de déplacement
-        validateBtn.onClick.AddListener(hudVue.dispatchBtnClick);
+        validateBtn.onClick.AddListener(ValidateDispatch);
     }
 
     public void ClosePanel()

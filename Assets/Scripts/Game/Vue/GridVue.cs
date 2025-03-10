@@ -18,8 +18,9 @@ public class GridVue : MonoBehaviour
     // Prefab de l'hexagone
     [SerializeField] private GameObject tilePrefab;
 
-    // Panel d'infos sur la tile
-    [SerializeField] private TilePanel tilePanel;
+    // Panel d'infos sur en hover d'une tile
+    [SerializeField] private TilePanel tilePanelHover;
+
     // Panel d'infos sur l'état des inputs
     [SerializeField] private GameObject stateInfos;
 
@@ -29,7 +30,7 @@ public class GridVue : MonoBehaviour
 
     [Space(10)]
     [Header("UI Tiles")]
-
+    [SerializeField] private TilePanel tilePanel;
     [SerializeField] private Button buildBtn;
     [SerializeField] private Button moveBtn;
     [SerializeField] private Button rallyBtn;
@@ -67,6 +68,9 @@ public class GridVue : MonoBehaviour
     // Gestions des clicks sur la grille et des hovers
     private void Update()
     {
+
+
+
         // Vérification supplémentaire pour éviter les conflits avec le drag de la caméra
         if (
             Input.GetMouseButtonUp(0) // Si on clique
@@ -80,67 +84,50 @@ public class GridVue : MonoBehaviour
 
 
 
-
         // Hover avec raycast
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit))
         {
-            // si on est au dessus d'un élément d'ui 
-            if (EventSystem.current.IsPointerOverGameObject())
+
+
+            Tile newHoverTile = hit.collider.GetComponent<Tile>();
+            if (newHoverTile != null)
             {
-                return;
-            }
-            Tile tile = hit.collider.GetComponent<Tile>();
-            if (tile != null)
-            {
-                if (presenteurCarte.State != "move")
+
+                SetHoverPanelPosition(Input.mousePosition);
+                if (EventSystem.current.IsPointerOverGameObject())
                 {
-                    if (hoverTile != tile)
-                    {
-                        if (hoverTile != null)
-                        {
-                            hoverTile.UnPreSelect();
-                        }
-                        hoverTile = tile;
-                        if (tile.Owner == PlayerPrefs.GetString("username"))
-                        {
-                            hoverTile.PreSelect();
-                        }
-                        else
-                        {
-                            hoverTile.ShowInfos();
-                        }
-                        return;
-                    }
+                    // regarder si on est pas au survol du tilePanelHover
+                    
+                    tilePanelHover.gameObject.SetActive(false);
+                    return;
                 }
 
-                else if (presenteurCarte.State == "move")
+                // Si on est en hover d'une nouvelle tile, on déselectionne l'ancienne
+                if (hoverTile != null && presenteurCarte.State != "move")
                 {
-                    if (hoverTile != null && hoverTile != tile)
+                    hoverTile.UnHighlightTile();
+                    tilePanelHover.gameObject.SetActive(false);
+                }
+                hoverTile = newHoverTile;
+                ShowHoverPanel(hoverTile);
+                if (hoverTile.Owner == PlayerPrefs.GetString("username"))
+                {
+                    if (presenteurCarte.State != "move")
                     {
-                        hoverTile.HideInfos();
-                        hoverTile = tile;
-                        hoverTile.ShowInfos();
-                        return;
-                    }
-                    else if (hoverTile == null)
-                    {
-                        hoverTile = tile;
-                        hoverTile.ShowInfos();
-                        return;
+                        hoverTile.HighlightTile();
                     }
                 }
             }
-
         }
-        else if (hoverTile != null && presenteurCarte.State != "move")
+        else
         {
-            hoverTile.UnPreSelect();
-            hoverTile = null;
-
+            if (hoverTile != null)
+            {
+                tilePanelHover.gameObject.SetActive(false);
+                hoverTile.UnHighlightTile();
+                hoverTile = null;
+            }
         }
-
-
-
     }
 
 
@@ -221,6 +208,40 @@ public class GridVue : MonoBehaviour
         DisableAllPanels();
         presenteurCarte.SelectTile = null;
 
+    }
+
+    // Gestion du placement et affichage du hoverpanel
+    public void ShowHoverPanel(Tile tile)
+    {
+        tilePanelHover.gameObject.SetActive(true);
+
+        string title = $"{tile.Owner}";
+        if (tile.Owner == "")
+        {
+            title = "(Neutre)";
+        }
+        string coords = $"({tile.X}, {tile.Y})";
+        string desc = "";
+        if (tile.Owner == PlayerPrefs.GetString("username"))
+        {
+            desc = $"Type: {tile.Type}\nLvl: {tile.Lvl}\nUnits: {tile.Units}";
+            tilePanelHover.SetInfoTilePanel(title, coords, desc);
+        }
+        else
+        {
+            if (tile.Type != "")
+            {
+                desc = $"Type: {tile.Type}\nLvl: {tile.Lvl}";
+            }
+            tilePanelHover.SetInfoTilePanel(title, coords, desc);
+        }
+        tilePanelHover.SetInfoTilePanel(title, coords, desc);
+    }
+
+    // Placement du tilePanelHover aux position de la souris
+    public void SetHoverPanelPosition(Vector3 pos)
+    {
+        tilePanelHover.transform.GetChild(0).position = new Vector3(pos.x + 76, pos.y - 40, 2);
     }
 
     #endregion
@@ -369,12 +390,13 @@ public class GridVue : MonoBehaviour
 
 
     #region Selection de tiles
+    // Sélection d'une tuile
     public void SelectTile(Tile tile)
     {
         ShowTilePanel(tile);
         StartCoroutine(SelectTileAnim(tile));
     }
-
+    // Désélection d'une tuile
     public void DeselectTile(Tile tile)
     {
         HideTilePanel();
@@ -382,7 +404,8 @@ public class GridVue : MonoBehaviour
     }
 
 
-    // Placement et affichage du panel relatif à la tuile selectionée
+    // Affichage du panel relatif à la tuile selectionée
+    // Gère aussi l'interactabilité des boutons
     private void ShowTilePanel(Tile tile)
     {
         tilePanel.gameObject.SetActive(true);
@@ -461,7 +484,7 @@ public class GridVue : MonoBehaviour
         Tile[] tiles = FindObjectsOfType<Tile>();
         foreach (Tile tile in tiles)
         {
-            tile.UnPreSelect();
+            tile.UnHighlightTile();
         }
     }
 
@@ -633,4 +656,9 @@ public class GridVue : MonoBehaviour
     }
 
     #endregion
+
+
+
+
+
 }

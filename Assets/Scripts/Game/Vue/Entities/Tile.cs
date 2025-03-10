@@ -27,7 +27,7 @@ public class Tile : MonoBehaviour
     [SerializeField] private GameObject glow;
     [SerializeField] private GameObject shieldObject;
     [SerializeField] private GameObject contourTerritoire;
-    [SerializeField] private TextMeshPro tileInfosOnMap;
+    // [SerializeField] private TextMeshPro tileInfosOnMap;
     private GameObject building;
 
 
@@ -51,7 +51,6 @@ public class Tile : MonoBehaviour
         set
         {
             units = value;
-            SetupTileInfos();
         }
     }
 
@@ -61,7 +60,6 @@ public class Tile : MonoBehaviour
         set
         {
             owner = value;
-            SetupTileInfos();
         }
     }
 
@@ -176,14 +174,7 @@ public class Tile : MonoBehaviour
         }
     }
 
-    private void SetupTileInfos()
-    {
-        tileInfosOnMap.text = $"{X}:{Y}\n{Owner}";
-        if (Units > 0 && Owner == PlayerPrefs.GetString("username"))
-        {
-            tileInfosOnMap.text += $"\n{Units} Drones";
-        }
-    }
+
 
 
     private void SetupShield()
@@ -308,27 +299,15 @@ public class Tile : MonoBehaviour
     }
 
 
-    public void ShowInfos()
-    {
-        tileInfosOnMap.gameObject.SetActive(true);
-    }
-
-    public void HideInfos()
-    {
-        tileInfosOnMap.gameObject.SetActive(false);
-    }
-
 
     public void PreSelect()
     {
         HighlightTile();
-        ShowInfos();
     }
 
     public void UnPreSelect()
     {
         UnHighlightTile();
-        HideInfos();
     }
 
 
