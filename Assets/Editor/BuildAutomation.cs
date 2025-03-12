@@ -1,17 +1,30 @@
 using UnityEditor;
 using System.IO;
 using System.Linq;
+using System.IO.Compression;
 
 public class BuildAutomation
 {
     [MenuItem("Build/Build All Platforms")]
     public static void BuildAllPlatforms()
     {
+
+
         // Définir les chemins de sortie pour chaque plateforme
+        string zipPath = "";
         string basePath = "Builds";
         string linuxPath = Path.Combine(basePath, "Linux");
         string windowsPath = Path.Combine(basePath, "Windows");
         string androidPath = Path.Combine(basePath, "Android");
+
+        // supprimer le contenu du dossier de build
+        if (Directory.Exists(basePath))
+        {
+            Directory.Delete(basePath, true);
+        }
+
+        // Créer le dossier de build
+        Directory.CreateDirectory(basePath);
 
         // Générer une version basée sur la date
         string version = System.DateTime.Now.ToString("yyMMddHHmm");
@@ -48,6 +61,14 @@ public class BuildAutomation
 
 
         
+        // Chemins de sortie pour les builds
+        string linuxZipPath = Path.Combine(basePath, $"HexWar_{version}_linux.zip");
+        string windowsZipPath = Path.Combine(basePath, $"HexWar_{version}_windows.zip");
+
+        // Compresser le dossier Linux et Windows en les plaçant dans le dossier 'Builds' (basePath)
+        ZipFile.CreateFromDirectory(linuxPath, linuxZipPath);
+        ZipFile.CreateFromDirectory(windowsPath, windowsZipPath);
+
 
         // Afficher un message une fois terminé
         EditorUtility.DisplayDialog("Build Completed", $"All builds are completed! Version: {version}", "OK");
