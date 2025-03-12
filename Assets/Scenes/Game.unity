@@ -1015,6 +1015,7 @@ MonoBehaviour:
   tilePanelHover: {fileID: 1521858796}
   stateInfos: {fileID: 1762635596}
   prefabLine: {fileID: 1608641640049243484, guid: 7e8c443cc7cec70a4a8b5b7b639ea289, type: 3}
+  prefabSphere: {fileID: 1873238218509225230, guid: cfcc3e9eca7f34900a95e2068b54d2f7, type: 3}
   tilePanel: {fileID: 1613494891}
   buildBtn: {fileID: 1247708097}
   moveBtn: {fileID: 739537340}

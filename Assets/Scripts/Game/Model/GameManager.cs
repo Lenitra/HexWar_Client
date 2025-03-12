@@ -202,7 +202,8 @@ public class GameManager : MonoBehaviour
 
     public void RallyUnitsServerResponse(string[] tileCoords)
     {
-        presenteurCarte.CallAnimationRallyUnits(tileCoords);
+        Tile rallyPoint = GameObject.Find("HexObj " + tileCoords[0] + ":" + tileCoords[1]).GetComponent<Tile>();
+        presenteurCarte.CallAnimationRallyUnits(rallyPoint);
     }
 
 
@@ -213,7 +214,7 @@ public class GameManager : MonoBehaviour
 
     public void DispatchUnitsServerResponse()
     {
-        Debug.Log("Drones dispatchés");
+        presenteurCarte.CallAnimationDispatchUnits(getHQTileTransform().GetComponent<Tile>());
     }
 
 
@@ -224,7 +225,17 @@ public class GameManager : MonoBehaviour
 
 
 
-
+    public Tile[] GetAllTilesWithUnits(){
+        List<Tile> tiles = new List<Tile>();
+        foreach (Hex hex in hexMap)
+        {
+            if (hex.units > 0)
+            {
+                tiles.Add(GameObject.Find("HexObj " + hex.x + ":" + hex.y).GetComponent<Tile>());
+            }
+        }
+        return tiles.ToArray();
+    }
 
     public int GetAllUnits(string username = "")
     {

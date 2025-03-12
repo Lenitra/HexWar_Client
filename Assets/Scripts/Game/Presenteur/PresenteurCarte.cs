@@ -209,10 +209,17 @@ public class PresenteurCarte : MonoBehaviour
 
 
     
-    public void CallAnimationRallyUnits(string[] coords)
+    public void CallAnimationRallyUnits(Tile rallyPoint)
     {
-        gridVue.RallyUnitsAnim(coords);
+        gridVue.RallyUnitsAnim(rallyPoint);
     }
+
+    public void CallAnimationDispatchUnits(Tile hq)
+    {
+        gridVue.DispatchUnitsAnim(hq);
+    }
+
+
 
     #endregion
 

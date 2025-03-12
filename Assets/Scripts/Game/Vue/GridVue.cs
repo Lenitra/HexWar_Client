@@ -27,6 +27,7 @@ public class GridVue : MonoBehaviour
     [Space(10)]
     [Header("Elements d'effets temporaires")]
     [SerializeField] private LineRenderer prefabLine;
+    [SerializeField] private GameObject prefabSphere;
 
     [Space(10)]
     [Header("UI Tiles")]
@@ -501,12 +502,47 @@ public class GridVue : MonoBehaviour
 
     #region Coroutine d'animation d'un déplacement d'unités
 
+    public void DispatchUnitsAnim(Tile hq){
+        StartCoroutine(BubleAnim(hq, true));
+    }
+
+    public void RallyUnitsAnim(Tile to)
+    {
+        StartCoroutine(BubleAnim(to, false));
+    }
+
+
+
+
+    private IEnumerator BubleAnim(Tile tile, bool expand = true){
+        GameObject sphere = Instantiate(prefabSphere, tile.transform.position, Quaternion.identity);
+        float duration = 0.75f;
+        float t = 0;
+        float startScale = expand ? 0 : 20;
+        float endScale = expand ? 20 : 0;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            float scale = Mathf.Lerp(startScale, endScale, t / duration);
+            sphere.transform.localScale = new Vector3(scale, scale, scale);
+            sphere.transform.position = new Vector3(tile.transform.position.x, 0.75f, tile.transform.position.z);
+            yield return null;
+        }
+        Destroy(sphere);
+    }
+
+
+
+
+
+
+
+
     public void MoveUnitsAnim(Tile[] move)
     {
 
         StartCoroutine(AnimationMoveUnits(move));
     }
-
 
 
     private IEnumerator AnimationMoveUnits(Tile[] move)
@@ -642,20 +678,6 @@ public class GridVue : MonoBehaviour
     #endregion
 
 
-
-    #region Gestion des animations de ralliement
-    public void RallyUnitsAnim(string[] coords)
-    {
-        StartCoroutine(AnimationRallyUnits(coords));
-    }
-
-    private IEnumerator AnimationRallyUnits(string[] coords)
-    {
-        Debug.Log("Rallying units annimation");
-        yield return null;
-    }
-
-    #endregion
 
 
 
