@@ -46,18 +46,18 @@ public class BuildAutomation
         options.locationPathName = Path.Combine(linuxPath, $"NyxsImperium.x86_64");
         Directory.CreateDirectory(linuxPath); // Assurer que le dossier existe
         BuildPipeline.BuildPlayer(options);
+        // Ajouter le fichier /update.sh sans le dossier linux
+        File.Copy("Assets/Editor/update.sh", Path.Combine(linuxPath, "update.sh"));
+
 
         // Construire pour Windows
         options.target = BuildTarget.StandaloneWindows64;
         options.locationPathName = Path.Combine(windowsPath, $"NyxsImperium.exe");
         Directory.CreateDirectory(windowsPath); // Assurer que le dossier existe
         BuildPipeline.BuildPlayer(options);
+        // Ajouter le fichier /update.bat sans le dossier windows
+        File.Copy("Assets/Editor/update.bat", Path.Combine(windowsPath, "update.bat"));
 
-        // Construire pour Android
-        // options.target = BuildTarget.Android;
-        // options.locationPathName = Path.Combine(androidPath, $"HexWar_v{version}.apk");
-        // Directory.CreateDirectory(androidPath); // Assurer que le dossier existe
-        // BuildPipeline.BuildPlayer(options);
 
 
         
