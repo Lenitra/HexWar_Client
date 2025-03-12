@@ -62,8 +62,8 @@ public class BuildAutomation
 
         
         // Chemins de sortie pour les builds
-        string linuxZipPath = Path.Combine(basePath, $"HexWar_{version}_linux.zip");
-        string windowsZipPath = Path.Combine(basePath, $"HexWar_{version}_windows.zip");
+        string linuxZipPath = Path.Combine(basePath, $"NyxsImperium_{version}_linux.zip");
+        string windowsZipPath = Path.Combine(basePath, $"NyxsImperium_{version}_windows.zip");
 
         // Compresser le dossier Linux et Windows en les plaçant dans le dossier 'Builds' (basePath)
         ZipFile.CreateFromDirectory(linuxPath, linuxZipPath);
