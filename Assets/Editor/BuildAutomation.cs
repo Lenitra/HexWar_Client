@@ -43,13 +43,13 @@ public class BuildAutomation
 
         // Construire pour Linux
         options.target = BuildTarget.StandaloneLinux64;
-        options.locationPathName = Path.Combine(linuxPath, $"HexWar_v{version}.x86_64");
+        options.locationPathName = Path.Combine(linuxPath, $"NyxsImperium.x86_64");
         Directory.CreateDirectory(linuxPath); // Assurer que le dossier existe
         BuildPipeline.BuildPlayer(options);
 
         // Construire pour Windows
         options.target = BuildTarget.StandaloneWindows64;
-        options.locationPathName = Path.Combine(windowsPath, $"HexWar_v{version}.exe");
+        options.locationPathName = Path.Combine(windowsPath, $"NyxsImperium.exe");
         Directory.CreateDirectory(windowsPath); // Assurer que le dossier existe
         BuildPipeline.BuildPlayer(options);
 
