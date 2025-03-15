@@ -112,7 +112,7 @@ Transform:
   m_GameObject: {fileID: 2146663319328855137}
   serializedVersion: 2
   m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
-  m_LocalPosition: {x: -0, y: -0, z: 20}
+  m_LocalPosition: {x: 0, y: 0, z: 20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -131,7 +131,7 @@ Light:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 2.5
   m_Range: 5.2
-  m_SpotAngle: 28
+  m_SpotAngle: 45
   m_InnerSpotAngle: 2
   m_CookieSize: 10
   m_Shadows:
@@ -168,7 +168,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -789,7 +789,6 @@ MonoBehaviour:
   glow: {fileID: 8480119635419095530}
   shieldObject: {fileID: 933969689780722491}
   contourTerritoire: {fileID: 3879795256385232993}
-  tileInfosOnMap: {fileID: 235466190336037893}
 --- !u!135 &6038593443166120804
 SphereCollider:
   m_ObjectHideFlags: 0

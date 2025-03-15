@@ -189,64 +189,74 @@ public class Tile : MonoBehaviour
         }
     }
 
-
-    // Défini la couleur du mesh de rendu du dessus de l'objet
-    // Appellé dans le setter de la couleur
     private void SetupColor()
     {
-        int minColor = 20;
-        string[] rgb = this.Color.Split('|');
         Material material = meshDeRendu.material;
-        if (owner == "")
+
+        // Forcer le matériau en mode Fade
+        material.SetFloat("_Mode", 2); // 2 correspond à Fade dans le shader standard
+        material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        material.SetInt("_ZWrite", 0);
+        material.DisableKeyword("_ALPHATEST_ON");
+        material.EnableKeyword("_ALPHABLEND_ON");
+        material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+        material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+        material.SetOverrideTag("RenderType", "Transparent");
+
+        if (string.IsNullOrEmpty(owner))
         {
-            // #0000003C
-            Color color = new Color(0, 0, 0, 0.75f);
-            material.SetColor("_Color", color);
-            material.SetColor("_EmissionColor", color);
-            // make it transparent
-            
-            material.SetFloat("_Mode", 2);
-            material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-            material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-            material.SetInt("_ZWrite", 0);
-            material.DisableKeyword("_ALPHATEST_ON");
-            material.EnableKeyword("_ALPHABLEND_ON");
-            material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-            material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+            // Tile non possédée : couleur noire avec alpha à 0.75 pour un effet de fade
+            Color fadeColor = new Color(0f, 0f, 0f, 0.75f);
+            material.SetColor("_Color", fadeColor);
+            material.SetColor("_EmissionColor", fadeColor);
+
             contourTerritoire.SetActive(false);
         }
         else
         {
-            for (int i = 0; i < rgb.Length; i++)
+            // Récupération et ajustement de la couleur du propriétaire
+            string[] rgb = this.Color.Split('|');
+            int minColor = 20;
+
+            // Vérifier et ajuster pour que chaque composante soit au moins à 20
+            for (int i = 0; i < 3; i++)
             {
-                if (int.Parse(rgb[i]) < minColor)
+                int value = int.Parse(rgb[i]);
+                if (value < minColor)
+                    minColor = value;
+            }
+            if (minColor < 20)
+            {
+                for (int i = 0; i < 3; i++)
                 {
-                    minColor = int.Parse(rgb[i]);
+                    int value = int.Parse(rgb[i]);
+                    rgb[i] = (value + 20 - minColor).ToString();
                 }
             }
 
-            if (minColor < 20)
-            {
-                rgb[0] = (int.Parse(rgb[0]) + 20 - minColor).ToString();
-                rgb[1] = (int.Parse(rgb[1]) + 20 - minColor).ToString();
-                rgb[2] = (int.Parse(rgb[2]) + 20 - minColor).ToString();
-            }
+            // Création de la couleur avec alpha = 1 (opaque) tout en restant en mode Fade
+            Color ownerColor = new Color(
+                float.Parse(rgb[0]) / 255f,
+                float.Parse(rgb[1]) / 255f,
+                float.Parse(rgb[2]) / 255f,
+                1f
+            );
+            material.SetColor("_Color", ownerColor);
+            material.SetColor("_EmissionColor", ownerColor);
 
-
-            Color color = new Color(float.Parse(rgb[0]) / 255, float.Parse(rgb[1]) / 255, float.Parse(rgb[2]) / 255);
-            material.SetColor("_Color", color);
-            material.SetColor("_EmissionColor", color);
-
-
-            // Agrandir la scale en z de la base et réduire sa position en y
+            // Ajuster la position et l'échelle du mesh pour la tile possédée
             Transform baseTransform = meshDeRendu.transform;
             baseTransform.localScale = new Vector3(baseTransform.localScale.x, baseTransform.localScale.y, 2f);
             baseTransform.localPosition = new Vector3(baseTransform.localPosition.x, -0.126f, baseTransform.localPosition.z);
 
             contourTerritoire.SetActive(true);
-            contourTerritoire.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", color);
+            contourTerritoire.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", ownerColor);
         }
     }
+
+
+
 
 
     private void SetupType()

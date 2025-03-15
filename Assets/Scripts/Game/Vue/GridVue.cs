@@ -117,49 +117,49 @@ public class GridVue : MonoBehaviour
 
 
 
-
-        // Hover avec raycast
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit))
+        if (presenteurCarte.State != "move")
         {
 
-
-            Tile newHoverTile = hit.collider.GetComponent<Tile>();
-            if (newHoverTile != null)
+            // Hover avec raycast
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit))
             {
 
-                SetHoverPanelPosition(Input.mousePosition);
-                if (EventSystem.current.IsPointerOverGameObject())
-                {
-                    // regarder si on est pas au survol du tilePanelHover
 
-                    tilePanelHover.gameObject.SetActive(false);
-                    return;
-                }
+                Tile newHoverTile = hit.collider.GetComponent<Tile>();
+                if (newHoverTile != null)
+                {
 
-                // Si on est en hover d'une nouvelle tile, on déselectionne l'ancienne
-                if (hoverTile != null && presenteurCarte.State != "move")
-                {
-                    hoverTile.UnHighlightTile();
-                    tilePanelHover.gameObject.SetActive(false);
-                }
-                hoverTile = newHoverTile;
-                ShowHoverPanel(hoverTile);
-                if (hoverTile.Owner == PlayerPrefs.GetString("username"))
-                {
-                    if (presenteurCarte.State != "move")
+                    SetHoverPanelPosition(Input.mousePosition);
+                    if (EventSystem.current.IsPointerOverGameObject())
+                    {
+                        // regarder si on est pas au survol du tilePanelHover
+
+                        tilePanelHover.gameObject.SetActive(false);
+                        return;
+                    }
+
+                    // Si on est en hover d'une nouvelle tile, on déselectionne l'ancienne
+                    if (hoverTile != null)
+                    {
+                        hoverTile.UnHighlightTile();
+                        tilePanelHover.gameObject.SetActive(false);
+                    }
+                    hoverTile = newHoverTile;
+                    ShowHoverPanel(hoverTile);
+                    if (hoverTile.Owner == PlayerPrefs.GetString("username"))
                     {
                         hoverTile.HighlightTile();
                     }
                 }
             }
-        }
-        else
-        {
-            if (hoverTile != null)
+            else
             {
-                tilePanelHover.gameObject.SetActive(false);
-                hoverTile.UnHighlightTile();
-                hoverTile = null;
+                if (hoverTile != null)
+                {
+                    tilePanelHover.gameObject.SetActive(false);
+                    hoverTile.UnHighlightTile();
+                    hoverTile = null;
+                }
             }
         }
     }
