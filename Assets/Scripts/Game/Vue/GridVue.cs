@@ -82,6 +82,39 @@ public class GridVue : MonoBehaviour
             presenteurCarte.TraiterClick(Input.mousePosition);
         }
 
+        // gestion des touches clavier
+
+        // Simuler une selection de tile et un click sur le bouton de construction avec la touche B
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if (presenteurCarte.SelectTile == null)
+            {
+                presenteurCarte.TraiterClick(Input.mousePosition);
+                BuildBtnClick();
+            }
+        }
+
+        // Simuler une selection de tile et un click sur le bouton de déplacement avec la touche E
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (presenteurCarte.SelectTile == null)
+            {
+                presenteurCarte.TraiterClick(Input.mousePosition);
+                MoveBtnClick();
+            }
+        }
+
+        // Simuler une selection de tile et un click sur le bouton de ralliement avec la touche R
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            if (presenteurCarte.SelectTile == null)
+            {
+                presenteurCarte.TraiterClick(Input.mousePosition);
+                RallyBtnClick();
+            }
+        }
+
+
 
 
 
@@ -98,7 +131,7 @@ public class GridVue : MonoBehaviour
                 if (EventSystem.current.IsPointerOverGameObject())
                 {
                     // regarder si on est pas au survol du tilePanelHover
-                    
+
                     tilePanelHover.gameObject.SetActive(false);
                     return;
                 }
@@ -502,7 +535,8 @@ public class GridVue : MonoBehaviour
 
     #region Coroutine d'animation d'un déplacement d'unités
 
-    public void DispatchUnitsAnim(Tile hq){
+    public void DispatchUnitsAnim(Tile hq)
+    {
         StartCoroutine(BubleAnim(hq, true));
     }
 
@@ -514,7 +548,8 @@ public class GridVue : MonoBehaviour
 
 
 
-    private IEnumerator BubleAnim(Tile tile, bool expand = true){
+    private IEnumerator BubleAnim(Tile tile, bool expand = true)
+    {
         GameObject sphere = Instantiate(prefabSphere, tile.transform.position, Quaternion.identity);
         float duration = 0.75f;
         float t = 0;
