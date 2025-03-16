@@ -1,34 +1,36 @@
 @echo off
-REM update.bat - Script de mise à jour pour Windows
+REM Vérifier qu'un argument (le chemin d'installation) est bien fourni
+if "%~1"=="" (
+    echo Erreur : chemin d'installation manquant.
+    exit /b 1
+)
 
-REM Attendre 2 secondes pour laisser le temps à l'application actuelle de se fermer
+set "installPath=%~1"
+set "updatePath=%~dp0"
+
+REM Attendre quelques secondes pour être sûr que le jeu soit fermé
 timeout /t 2 /nobreak >nul
 
-REM Se positionner dans le dossier du script
-cd /d "%~dp0"
+REM Supprimer le contenu du dossier d'installation sans supprimer le dossier lui-même
+echo Suppression du contenu de %installPath%
+pushd "%installPath%"
+for /d %%D in (*) do (
+    rmdir /s /q "%%D"
+)
+for %%F in (*) do (
+    del /q "%%F"
+)
+popd
 
-REM Définir le dossier du jeu : ici, on considère que le dossier d'installation se trouve un niveau au-dessus du script
-set "GAME_DIR=%~dp0..\"
+REM Copier l'intégralité des fichiers et dossiers du dossier d'extraction (updatePath) vers le dossier d'installation
+echo Copie des nouveaux fichiers depuis %updatePath% vers %installPath%
+xcopy "%updatePath%\*" "%installPath%\" /E /Y /I
 
-echo Mise à jour en cours...
+REM Attendre quelques instants pour que la copie se termine
+timeout /t 2 /nobreak >nul
 
-REM Copier tous les fichiers extraits dans le dossier du jeu
-xcopy /s /e /y "%~dp0*" "%GAME_DIR%"
+REM Lancer l'exécutable mis à jour (à adapter selon le nom réel de votre jeu)
+echo Lancement de l'application mise à jour...
+start "" "%installPath%\NyxsImperium.exe"
 
-echo Mise à jour terminée, redémarrage du jeu...
-
-REM Lancer l'exécutable du jeu (à adapter selon le nom réel de votre binaire)
-start "" "%GAME_DIR%NyxsImperium.exe"
-
-REM Création d'un script temporaire pour supprimer le dossier de mise à jour
-(
-    echo @echo off
-    echo timeout /t 2 /nobreak >nul
-    REM Supprimer le dossier contenant le script de mise à jour
-    echo rd /s /q "%~dp0"
-) > "%TEMP%\cleanup.bat"
-
-REM Lancer le script de nettoyage dans une nouvelle fenêtre
-start "" "%TEMP%\cleanup.bat"
-
-exit /b
+exit

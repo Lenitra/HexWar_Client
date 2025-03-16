@@ -48,6 +48,16 @@ public class UpdateBtn : MonoBehaviour
 
     IEnumerator DownloadAndUpdate()
     {
+        // cleanup previous update
+        if (Directory.Exists(extractionPath))
+        {
+            Directory.Delete(extractionPath, true);
+        } 
+        if(File.Exists(downloadedZipPath))
+        {
+            File.Delete(downloadedZipPath);
+        }
+
         string link = "";
 
         if (platform == "linux")
@@ -79,8 +89,8 @@ public class UpdateBtn : MonoBehaviour
 
         // Debug.Log("Téléchargement terminé !");
 
-        // Décompresser le fichier ZIP
-        ExtractDownloadedZip();
+        // Extraire le contenu du zip
+        ZipFile.ExtractToDirectory(downloadedZipPath, extractionPath);
 
         // Exécuter le launcher externe
         LaunchUpdaterScript();
@@ -89,43 +99,54 @@ public class UpdateBtn : MonoBehaviour
         Application.Quit();
     }
 
-    void ExtractDownloadedZip()
-    {
-        if (Directory.Exists(extractionPath))
-            Directory.Delete(extractionPath, true);
-
-        ZipFile.ExtractToDirectory(downloadedZipPath, extractionPath);
-        debugText.text += "Fichier ZIP extrait !";
-    }
 
     void LaunchUpdaterScript()
     {
-
-        string updaterScriptPath = Path.Combine(extractionPath, "update.bat");
+        // Détermination du chemin du script de mise à jour en fonction de la plateforme
+        string updaterScriptPath = "";
         if (platform == "linux")
         {
             updaterScriptPath = Path.Combine(extractionPath, "update.sh");
         }
         else if (platform == "windows")
-        {   
+        {
             updaterScriptPath = Path.Combine(extractionPath, "update.bat");
         }
-        
+        else
+        {
+            debugText.text += "Plateforme non supportée pour la mise à jour automatique.";
+            return;
+        }
 
+        // Vérifier que le script de mise à jour existe
         if (!File.Exists(updaterScriptPath))
         {
             debugText.text += "Script de mise à jour introuvable !";
             return;
         }
 
+        // Détermination du dossier d'installation (ici, le dossier parent du dossier Data)
+        string installPath = Directory.GetParent(Application.dataPath).FullName;
+
+        // Préparation des arguments :
+        // - Le premier argument est le dossier d'installation
+        // - Le deuxième argument est le dossier d'extraction (contenant le nouveau build)
+        string arguments = $"\"{installPath}";
+
+        // Configuration du ProcessStartInfo pour lancer le script externe
         ProcessStartInfo startInfo = new ProcessStartInfo()
         {
             FileName = updaterScriptPath,
+            Arguments = arguments,
             WorkingDirectory = extractionPath,
             CreateNoWindow = true,
             UseShellExecute = false
         };
+
+        // Lancement du script de mise à jour
         Process.Start(startInfo);
         debugText.text += "Mise à jour en cours...";
     }
+
+
 }

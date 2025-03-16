@@ -1,30 +1,35 @@
 #!/bin/bash
-# update.sh - Script de mise à jour pour Linux
 
-# Attendre 2 secondes pour laisser le temps à l'application actuelle de se fermer
+# Vérifier qu'un argument (le chemin d'installation) est bien fourni
+if [ -z "$1" ]; then
+    echo "Erreur : chemin d'installation manquant."
+    exit 1
+fi
+
+installPath="$1"
+# Déterminer le dossier où se trouve le script (dossier d'extraction)
+updatePath="$(dirname "$0")"
+
+# Attendre quelques secondes pour être sûr que l'application soit fermée
 sleep 2
 
-# cd dans le dossier du script
-cd "$(dirname "$0")"
+echo "Suppression du contenu de $installPath"
+# Supprimer le contenu du dossier d'installation (fichiers et dossiers, y compris les fichiers cachés)
+rm -rf "$installPath"/*
+rm -rf "$installPath"/.[!.]*
+rm -rf "$installPath"/..?*
 
-# Déterminer le répertoire du script (celui de l'archive extraite)
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+echo "Copie des nouveaux fichiers depuis $updatePath vers $installPath"
+# Copier tous les fichiers et dossiers (inclus les fichiers cachés)
+cp -r "$updatePath"/* "$installPath"
+cp -r "$updatePath"/.[!.]* "$installPath" 2>/dev/null
+cp -r "$updatePath"/..?* "$installPath" 2>/dev/null
 
-# Définir le dossier du jeu : ici, on considère que le dossier d'installation se trouve deux niveaux au-dessus du script
-GAME_DIR="$SCRIPT_DIR/../"
+# Attendre quelques instants pour être sûr que la copie soit terminée
+sleep 2
 
-echo "Mise à jour en cours..."
+echo "Lancement de l'application mise à jour..."
+# Lancer l'exécutable mis à jour (à adapter selon le nom réel de votre jeu)
+"$installPath/NyxsImperium.x86_64" &
 
-# Copier tous les fichiers extraits dans le dossier du jeu
-cp -r "$SCRIPT_DIR/"* "$GAME_DIR/"
-
-# Supprimer le dossier du script
-rm -rf "$SCRIPT_DIR"
-
-echo "Mise à jour terminée, redémarrage du jeu..."
-
-# Lancer l'exécutable du jeu (à adapter selon le nom réel de votre binaire)
-"$GAME_DIR/NyxsImperium.exe" &
-
-# Fin du script
 exit 0
