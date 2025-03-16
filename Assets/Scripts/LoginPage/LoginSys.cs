@@ -129,17 +129,17 @@ public class LoginSys : MonoBehaviour
             }
             else
             {
-                string responseText = request.downloadHandler.text;
-                Debug.Log("Réponse du serveur: " + responseText);
-
-                if (long.Parse(responseText.Split('"')[3]) > int.Parse(version))
+                string responseText = request.downloadHandler.text; // Récupérer la réponse du serveur
+                string msg = "";
+                msg += ("Version serveur: " + responseText.Split('"')[3]);
+                msg += ("\nVersion locale: " + version);
+                Debug.Log(msg);
+                if (long.Parse(responseText.Split('"')[3]) > long.Parse(version))
                 {
+                    Debug.Log("Version du jeu obsolète");
                     UnityEngine.SceneManagement.SceneManager.LoadScene("VersionError");
                 }
             }
-
-
-
         }
 
 #endif
