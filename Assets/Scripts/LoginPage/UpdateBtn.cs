@@ -105,12 +105,10 @@ public class UpdateBtn : MonoBehaviour
         if (platform == "linux")
         {
             updaterScriptPath = Path.Combine(extractionPath, "update.sh");
-            link = DataManager.Instance.GetData("serverIP") + "/get_last_game_version_lin";
         }
         else if (platform == "windows")
         {   
             updaterScriptPath = Path.Combine(extractionPath, "update.bat");
-            link = DataManager.Instance.GetData("serverIP") + "/get_last_game_version_win";
         }
         
 
