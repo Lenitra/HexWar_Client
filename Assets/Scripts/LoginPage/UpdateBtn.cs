@@ -54,10 +54,6 @@ public class UpdateBtn : MonoBehaviour
         {
             link = DataManager.Instance.GetData("serverIP") + "/get_last_game_version_lin";
         }
-        else if (platform == "macos")
-        {
-            link = DataManager.Instance.GetData("serverIP") + "/get_last_game_version_mac";
-        }
         else if (platform == "windows")
         {
             link = DataManager.Instance.GetData("serverIP") + "/get_last_game_version_win";
@@ -104,7 +100,19 @@ public class UpdateBtn : MonoBehaviour
 
     void LaunchUpdaterScript()
     {
+
         string updaterScriptPath = Path.Combine(extractionPath, "update.bat");
+        if (platform == "linux")
+        {
+            updaterScriptPath = Path.Combine(extractionPath, "update.sh");
+            link = DataManager.Instance.GetData("serverIP") + "/get_last_game_version_lin";
+        }
+        else if (platform == "windows")
+        {   
+            updaterScriptPath = Path.Combine(extractionPath, "update.bat");
+            link = DataManager.Instance.GetData("serverIP") + "/get_last_game_version_win";
+        }
+        
 
         if (!File.Exists(updaterScriptPath))
         {
