@@ -105,7 +105,7 @@ public class LoginSys : MonoBehaviour
                 if (long.Parse(responseText.Split('"')[3]) > long.Parse(version))
                 {
                     Debug.Log("Version du jeu obsolète");
-                    UnityEngine.SceneManagement.SceneManager.LoadScene("VersionError");
+                    // UnityEngine.SceneManagement.SceneManager.LoadScene("VersionError");
                 }
             }
         }
