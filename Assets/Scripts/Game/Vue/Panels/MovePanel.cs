@@ -12,6 +12,7 @@ public class MovePanel : MonoBehaviour
     [Header("Inputs")]
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private Slider slider;
+    [SerializeField] private Button maxBtn;
 
     [Header("Informations visuelles")]
     [SerializeField] private TextMeshProUGUI originTileText;
@@ -41,6 +42,7 @@ public class MovePanel : MonoBehaviour
         // Setup des inputs
         inputField.onValueChanged.AddListener(OnInputFieldChange);
         slider.onValueChanged.AddListener(OnSliderChange);
+        maxBtn.onClick.AddListener(() => OnInputFieldChange(unitsMax.ToString()));
 
     }
 

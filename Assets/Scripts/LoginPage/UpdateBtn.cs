@@ -25,9 +25,7 @@ public class UpdateBtn : MonoBehaviour
 #if UNITY_STANDALONE_WIN
         platform = "windows";
 #elif UNITY_STANDALONE_LINUX
-        platform = "linux";
-#elif UNITY_STANDALONE_OSX
-        platform = "macos";
+        platform = "linux"; 
 #endif
 
         // Ajout du listener au bouton
@@ -36,10 +34,13 @@ public class UpdateBtn : MonoBehaviour
 
     public void UpdateGame()
     {
+#if UNITY_EDITOR
+            debugText.text = "Impossible de mettre à jour en mode éditeur.";
+            return;
+#endif
         // Vérifier la plateforme : Windows, MacOS, Linux
         if (platform == "")
         {
-            // debugTest.text("Plateforme non supportée !");
             return;
         }
 
@@ -52,8 +53,8 @@ public class UpdateBtn : MonoBehaviour
         if (Directory.Exists(extractionPath))
         {
             Directory.Delete(extractionPath, true);
-        } 
-        if(File.Exists(downloadedZipPath))
+        }
+        if (File.Exists(downloadedZipPath))
         {
             File.Delete(downloadedZipPath);
         }
