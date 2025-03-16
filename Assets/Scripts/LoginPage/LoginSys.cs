@@ -39,8 +39,8 @@ public class LoginSys : MonoBehaviour
         // Focus par défaut sur le champ de nom d'utilisateur
         // if (string.IsNullOrEmpty(LOGINusernameInput.text))
         // {
-            LOGINusernameInput.Select();
-            LOGINusernameInput.ActivateInputField();
+        LOGINusernameInput.Select();
+        LOGINusernameInput.ActivateInputField();
         // }
     }
 
@@ -79,7 +79,36 @@ public class LoginSys : MonoBehaviour
 
 #if UNITY_EDITOR
         Debug.Log("Mode éditeur");
-        yield return new WaitForSeconds(1f);
+        string url = DataManager.Instance.GetData("serverIP") + "/get-version";
+        string version = Application.version;
+
+
+        using (UnityWebRequest request = new UnityWebRequest(url, "GET"))
+        {
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            // Envoyer la requête
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.LogError("Erreur de connexion: " + request.error);
+            }
+            else
+            {
+                string responseText = request.downloadHandler.text; // Récupérer la réponse du serveur
+                string msg = "";
+                msg += ("Version serveur: " + responseText.Split('"')[3]);
+                msg += ("\nVersion locale: " + version);
+                Debug.Log(msg);
+                if (long.Parse(responseText.Split('"')[3]) > long.Parse(version))
+                {
+                    Debug.Log("Version du jeu obsolète");
+                    UnityEngine.SceneManagement.SceneManager.LoadScene("VersionError");
+                }
+            }
+        }
 #else
 
         string url = DataManager.Instance.GetData("serverIP") + "/get-version";
@@ -103,7 +132,7 @@ public class LoginSys : MonoBehaviour
                 string responseText = request.downloadHandler.text;
                 Debug.Log("Réponse du serveur: " + responseText);
 
-                if (int.Parse(responseText.Split('"')[3]) < int.Parse(version))
+                if (long.Parse(responseText.Split('"')[3]) > int.Parse(version))
                 {
                     UnityEngine.SceneManagement.SceneManager.LoadScene("VersionError");
                 }
