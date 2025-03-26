@@ -207,7 +207,7 @@ public class Tile : MonoBehaviour
         if (string.IsNullOrEmpty(owner))
         {
             // Tile non possédée : couleur noire avec alpha à 0.75 pour un effet de fade
-            Color fadeColor = new Color(0f, 0f, 0f, 0.75f);
+            Color fadeColor = new Color(0f, 0f, 0f, 0.95f);
             material.SetColor("_Color", fadeColor);
             material.SetColor("_EmissionColor", fadeColor);
 

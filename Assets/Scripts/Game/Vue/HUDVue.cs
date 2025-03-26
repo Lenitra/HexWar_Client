@@ -71,4 +71,9 @@ public class HUDVue : MonoBehaviour
     }
     #endregion
 
+
+    public void nopePanel(string message){
+        Debug.Log("Nope panel");
+    }
+
 }

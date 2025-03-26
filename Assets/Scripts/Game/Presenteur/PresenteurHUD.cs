@@ -48,11 +48,13 @@ public class PresenteurHUD : MonoBehaviour
         gameManager.AskServerDispatchUnits();
         
     }
-
-
-
     #endregion
 
+
+    public void nopePanel(string message)
+    {
+        hudVue.nopePanel(message);
+    }
 
 
 }

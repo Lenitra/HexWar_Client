@@ -71,7 +71,7 @@ public class ServerClient : MonoBehaviour
         else
         {
             // if request.downloadHandler.text start with "error" then we have an error
-            if (request.downloadHandler.text.ToLower().StartsWith("error : "))
+            if (request.downloadHandler.text.ToLower().StartsWith("ERROR : "))
             {
                 // change the scene to the login scene
                 SceneManager.LoadScene("Home");
@@ -129,7 +129,7 @@ public class ServerClient : MonoBehaviour
         }
         else
         {
-            if (request.downloadHandler.text.ToLower().StartsWith("error : "))
+            if (request.downloadHandler.text.ToLower().StartsWith("ERROR : "))
             {
                 // change the scene to the login scene
                 SceneManager.LoadScene("Home");
