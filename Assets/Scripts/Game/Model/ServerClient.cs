@@ -70,7 +70,7 @@ public class ServerClient : MonoBehaviour
             {
                 SceneManager.LoadScene("Home");
             }
-            else if (request.downloadHandler.text == "error : ")
+            else if (request.downloadHandler.text.ToLower().StartsWith("error : "))
             {
                 gameManager.nopePanel(request.downloadHandler.text.Substring(8));
             }
@@ -128,7 +128,7 @@ public class ServerClient : MonoBehaviour
             {
                 SceneManager.LoadScene("Home");
             }
-            else if (request.downloadHandler.text == "error : ")
+            else if (request.downloadHandler.text.ToLower().StartsWith("error : "))
             {
                 gameManager.nopePanel(request.downloadHandler.text.Substring(8));
             }
@@ -164,11 +164,12 @@ public class ServerClient : MonoBehaviour
         // debug the response
         if (request.result == UnityWebRequest.Result.Success)
         {
+            Debug.Log("Response: " + request.downloadHandler.text);
             if (request.downloadHandler.text.ToLower().StartsWith("error : Veillez vous (re)connecter"))
             {
                 SceneManager.LoadScene("Home");
             }
-            else if (request.downloadHandler.text == "error : ")
+            else if (request.downloadHandler.text.ToLower().StartsWith("error : "))
             {
                 gameManager.nopePanel(request.downloadHandler.text.Substring(8));
             }
@@ -205,7 +206,7 @@ public class ServerClient : MonoBehaviour
             {
                 SceneManager.LoadScene("Home");
             }
-            else if (request.downloadHandler.text == "error : ")
+            else if (request.downloadHandler.text.ToLower().StartsWith("error : "))
             {
                 gameManager.nopePanel(request.downloadHandler.text.Substring(8));
             }
@@ -242,7 +243,7 @@ public class ServerClient : MonoBehaviour
             {
                 SceneManager.LoadScene("Home");
             }
-            else if (request.downloadHandler.text == "error : ")
+            else if (request.downloadHandler.text.ToLower().StartsWith("error : "))
             {
                 gameManager.nopePanel(request.downloadHandler.text.Substring(8));
             }
@@ -277,7 +278,7 @@ public class ServerClient : MonoBehaviour
             {
                 SceneManager.LoadScene("Home");
             }
-            else if (request.downloadHandler.text == "error : ")
+            else if (request.downloadHandler.text.ToLower().StartsWith("error : "))
             {
                 gameManager.nopePanel(request.downloadHandler.text.Substring(8));
             }

@@ -70,6 +70,12 @@ public class LoginSys : MonoBehaviour
             StartLogin(LOGINusernameInput.text, LOGINpasswordInput.text);
         }
 
+        // Si le champ est focus et que l'utilisateur appuie sur Enter du pav num
+        if (Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            Debug.Log("L'utilisateur a appuyé sur Enter du pav num alors que le champ est focus.");
+            StartLogin(LOGINusernameInput.text, LOGINpasswordInput.text);
+        }
     }
 
 

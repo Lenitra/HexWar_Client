@@ -26,4 +26,17 @@ public class ErrorPanel : MonoBehaviour
         description.text = desc;
     }
 
+    void Update(){
+        if (Input.GetKeyDown(KeyCode.Escape)){
+            closeBtnClick();
+        }
+        // on press enter 
+        if (Input.GetKeyDown(KeyCode.Return)){
+            closeBtnClick();
+        }
+        if (Input.GetKeyDown(KeyCode.KeypadEnter)){
+            closeBtnClick();
+        }
+    }
+
 }
