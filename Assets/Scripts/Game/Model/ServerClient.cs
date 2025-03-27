@@ -97,7 +97,7 @@ public class ServerClient : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Error: " + request.error);
+            Debug.Log("Error: " + request.error);
         }
     }
 

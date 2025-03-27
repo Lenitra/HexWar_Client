@@ -74,6 +74,7 @@ public class HUDVue : MonoBehaviour
 
 
     public void nopePanel(string message){
+        errorPanel.gameObject.SetActive(true);
         errorPanel.init(message);
     }
 
