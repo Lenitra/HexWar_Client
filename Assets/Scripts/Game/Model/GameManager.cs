@@ -262,6 +262,10 @@ public class GameManager : MonoBehaviour
 
 
 
+    public void nopePanel(string message)
+    {
+        presenteurHUD.nopePanel(message);
+    }
 
 
 

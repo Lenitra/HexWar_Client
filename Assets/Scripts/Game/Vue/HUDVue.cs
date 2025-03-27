@@ -18,6 +18,7 @@ public class HUDVue : MonoBehaviour
 
     // 
     [SerializeField] private GameObject dispatchPanel;
+    [SerializeField] private ErrorPanel errorPanel;
 
 
     
@@ -73,7 +74,7 @@ public class HUDVue : MonoBehaviour
 
 
     public void nopePanel(string message){
-        Debug.Log("Nope panel");
+        errorPanel.init(message);
     }
 
 }

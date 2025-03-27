@@ -1,11 +1,5 @@
 MODELS 3D : https://sketchfab.com/MRowa/models
 
-## Todo List
-- Gestion client de l'affichage du territoire avec un code couleur
-- Visuel de déplacement des unités
-
-
-
 
 
 Inspirations : 

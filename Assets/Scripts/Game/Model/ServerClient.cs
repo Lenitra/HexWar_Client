@@ -64,18 +64,15 @@ public class ServerClient : MonoBehaviour
         UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/get_hex/" + PlayerPrefs.GetString("username"));
         yield return request.SendWebRequest();
 
-        if (request.result != UnityWebRequest.Result.Success)
+        if (request.result == UnityWebRequest.Result.Success)
         {
-            // Debug.LogError("Error: " + request.error);
-        }
-        else
-        {
-            // if request.downloadHandler.text start with "error" then we have an error
-            if (request.downloadHandler.text.ToLower().StartsWith("ERROR : "))
+            if (request.downloadHandler.text.ToLower().StartsWith("error : Veillez vous (re)connecter"))
             {
-                // change the scene to the login scene
                 SceneManager.LoadScene("Home");
-                // Debug.LogError("error: " + request.downloadHandler.text);
+            }
+            else if (request.downloadHandler.text == "error : ")
+            {
+                gameManager.nopePanel(request.downloadHandler.text.Substring(8));
             }
             else
             {
@@ -98,8 +95,10 @@ public class ServerClient : MonoBehaviour
                 gameManager.SetupTiles(hexes);
             }
         }
-        // Debug.Log("PollGameState took: " + (Time.time - startTime) + " seconds");
-
+        else
+        {
+            Debug.LogError("Error: " + request.error);
+        }
     }
 
 
@@ -122,33 +121,30 @@ public class ServerClient : MonoBehaviour
         request.downloadHandler = new DownloadHandlerBuffer();
 
         yield return request.SendWebRequest();
-        // debug the response
-        if (request.result != UnityWebRequest.Result.Success)
+
+        if (request.result == UnityWebRequest.Result.Success)
         {
-            // Debug.LogError("Error: " + request.error);
+            if (request.downloadHandler.text.ToLower().StartsWith("error : Veillez vous (re)connecter"))
+            {
+                SceneManager.LoadScene("Home");
+            }
+            else if (request.downloadHandler.text == "error : ")
+            {
+                gameManager.nopePanel(request.downloadHandler.text.Substring(8));
+            }
+            else
+            {
+                gameManager.MoveUnitsServerResponse();
+                updateMap();
+            }
         }
         else
         {
-            if (request.downloadHandler.text.ToLower().StartsWith("ERROR : "))
-            {
-                // change the scene to the login scene
-                SceneManager.LoadScene("Home");
-                // Debug.LogError("error: " + request.downloadHandler.text);
-            }
-
-            else
-            {
-                if (request.downloadHandler.text != "NOPE")
-                {
-                    if (request.downloadHandler.text != "NOPE")
-                    {
-                        gameManager.MoveUnitsServerResponse();
-                        updateMap();
-                    }
-                }
-            }
+            Debug.LogError("Error: " + request.error);
         }
     }
+
+
 
 
 
@@ -166,18 +162,24 @@ public class ServerClient : MonoBehaviour
         request.downloadHandler = new DownloadHandlerBuffer();
         yield return request.SendWebRequest();
         // debug the response
-        if (request.result != UnityWebRequest.Result.Success)
+        if (request.result == UnityWebRequest.Result.Success)
         {
-            updateMap();
+            if (request.downloadHandler.text.ToLower().StartsWith("error : Veillez vous (re)connecter"))
+            {
+                SceneManager.LoadScene("Home");
+            }
+            else if (request.downloadHandler.text == "error : ")
+            {
+                gameManager.nopePanel(request.downloadHandler.text.Substring(8));
+            }
+            else
+            {
+                updateMap();
+            }
         }
         else
         {
-            if (request.downloadHandler.text.ToLower().StartsWith("error : "))
-            {
-                // change the scene to the login scene
-                SceneManager.LoadScene("Home");
-                // Debug.LogError("error: " + request.downloadHandler.text);
-            }
+            Debug.LogError("Error: " + request.error);
         }
     }
 
@@ -199,11 +201,13 @@ public class ServerClient : MonoBehaviour
         // debug the response
         if (request.result == UnityWebRequest.Result.Success)
         {
-            if (request.downloadHandler.text.ToLower().StartsWith("error : "))
+            if (request.downloadHandler.text.ToLower().StartsWith("error : Veillez vous (re)connecter"))
             {
-                // change the scene to the login scene
                 SceneManager.LoadScene("Home");
-                // Debug.LogError("error: " + request.downloadHandler.text);
+            }
+            else if (request.downloadHandler.text == "error : ")
+            {
+                gameManager.nopePanel(request.downloadHandler.text.Substring(8));
             }
             else
             {
@@ -213,7 +217,7 @@ public class ServerClient : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Error: " + request.error);
+            Debug.LogError("error: " + request.error);
         }
     }
 
@@ -234,11 +238,13 @@ public class ServerClient : MonoBehaviour
         // debug the response
         if (request.result == UnityWebRequest.Result.Success)
         {
-            if (request.downloadHandler.text.ToLower().StartsWith("error : "))
+            if (request.downloadHandler.text.ToLower().StartsWith("error : Veillez vous (re)connecter"))
             {
-                // change the scene to the login scene
                 SceneManager.LoadScene("Home");
-                // Debug.LogError("error: " + request.downloadHandler.text);
+            }
+            else if (request.downloadHandler.text == "error : ")
+            {
+                gameManager.nopePanel(request.downloadHandler.text.Substring(8));
             }
             else
             {
@@ -267,13 +273,23 @@ public class ServerClient : MonoBehaviour
 
         if (request.result == UnityWebRequest.Result.Success)
         {
-            int price = int.Parse(request.downloadHandler.text);
-            onComplete?.Invoke(price);
+            if (request.downloadHandler.text.ToLower().StartsWith("error : Veillez vous (re)connecter"))
+            {
+                SceneManager.LoadScene("Home");
+            }
+            else if (request.downloadHandler.text == "error : ")
+            {
+                gameManager.nopePanel(request.downloadHandler.text.Substring(8));
+            }
+            else
+            {
+                int price = int.Parse(request.downloadHandler.text);
+                onComplete?.Invoke(price);
+            }
         }
         else
         {
-            // Gérer les erreurs ici
-            onComplete?.Invoke(-1);
+            Debug.LogError("Error: " + request.error);
         }
     }
 
