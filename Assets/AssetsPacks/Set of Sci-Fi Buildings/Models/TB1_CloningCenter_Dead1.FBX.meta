@@ -1,0 +1,258 @@
+fileFormatVersion: 2
+guid: 8021774835008d444ac1c27dc54decab
+timeCreated: 1532380252
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: BackPart
+    100002: Basis
+    100004: BoneBackPart
+    100006: BoneColumn
+    100008: BoneHose1_001
+    100010: BoneHose1_002
+    100012: BoneHose1_003
+    100014: BoneHose1_004
+    100016: BoneHose1_005
+    100018: BoneHose2_001
+    100020: BoneHose2_002
+    100022: BoneHose2_003
+    100024: BoneHose2_004
+    100026: BoneHose2_005
+    100028: BoneHose2_006
+    100030: BoneHose3_001
+    100032: BoneHose3_002
+    100034: BoneHose3_003
+    100036: BoneHose3_004
+    100038: BoneHose3_005
+    100040: BoneHose3_006
+    100042: BoneHose4_001
+    100044: BoneHose4_002
+    100046: BoneHose4_003
+    100048: BoneHose4_004
+    100050: BoneHose4_005
+    100052: BoneHose5_001
+    100054: BoneHose5_002
+    100056: BoneHose5_003
+    100058: BoneHose5_004
+    100060: BoneHose5_005
+    100062: BoneHose5_006
+    100064: Box1
+    100066: Box2
+    100068: Capsule1
+    100070: Capsule2
+    100072: Capsule3
+    100074: Capsule4
+    100076: Capsule5
+    100078: Column
+    100080: Display
+    100082: Door
+    100084: Hose1
+    100086: Hose2
+    100088: Hose3
+    100090: Hose4
+    100092: Hose5
+    100094: LeftPart
+    100096: Logo
+    100098: MainBlock
+    100100: RightPart
+    100102: //RootNode
+    100104: Vent1
+    100106: Vent2
+    400000: BackPart
+    400002: Basis
+    400004: BoneBackPart
+    400006: BoneColumn
+    400008: BoneHose1_001
+    400010: BoneHose1_002
+    400012: BoneHose1_003
+    400014: BoneHose1_004
+    400016: BoneHose1_005
+    400018: BoneHose2_001
+    400020: BoneHose2_002
+    400022: BoneHose2_003
+    400024: BoneHose2_004
+    400026: BoneHose2_005
+    400028: BoneHose2_006
+    400030: BoneHose3_001
+    400032: BoneHose3_002
+    400034: BoneHose3_003
+    400036: BoneHose3_004
+    400038: BoneHose3_005
+    400040: BoneHose3_006
+    400042: BoneHose4_001
+    400044: BoneHose4_002
+    400046: BoneHose4_003
+    400048: BoneHose4_004
+    400050: BoneHose4_005
+    400052: BoneHose5_001
+    400054: BoneHose5_002
+    400056: BoneHose5_003
+    400058: BoneHose5_004
+    400060: BoneHose5_005
+    400062: BoneHose5_006
+    400064: Box1
+    400066: Box2
+    400068: Capsule1
+    400070: Capsule2
+    400072: Capsule3
+    400074: Capsule4
+    400076: Capsule5
+    400078: Column
+    400080: Display
+    400082: Door
+    400084: Hose1
+    400086: Hose2
+    400088: Hose3
+    400090: Hose4
+    400092: Hose5
+    400094: LeftPart
+    400096: Logo
+    400098: MainBlock
+    400100: RightPart
+    400102: //RootNode
+    400104: Vent1
+    400106: Vent2
+    2300000: BackPart
+    2300002: Basis
+    2300004: Box1
+    2300006: Box2
+    2300008: Capsule1
+    2300010: Capsule2
+    2300012: Capsule3
+    2300014: Capsule4
+    2300016: Capsule5
+    2300018: Column
+    2300020: Display
+    2300022: Door
+    2300024: LeftPart
+    2300026: Logo
+    2300028: MainBlock
+    2300030: RightPart
+    2300032: Vent1
+    2300034: Vent2
+    3300000: BackPart
+    3300002: Basis
+    3300004: Box1
+    3300006: Box2
+    3300008: Capsule1
+    3300010: Capsule2
+    3300012: Capsule3
+    3300014: Capsule4
+    3300016: Capsule5
+    3300018: Column
+    3300020: Display
+    3300022: Door
+    3300024: LeftPart
+    3300026: Logo
+    3300028: MainBlock
+    3300030: RightPart
+    3300032: Vent1
+    3300034: Vent2
+    4300000: LeftPart
+    4300002: Basis
+    4300004: MainBlock
+    4300006: Logo
+    4300008: Door
+    4300010: Display
+    4300012: Box2
+    4300014: RightPart
+    4300016: Box1
+    4300018: BackPart
+    4300020: Vent2
+    4300022: Column
+    4300024: Vent1
+    4300026: Hose5
+    4300028: Hose4
+    4300030: Hose3
+    4300032: Hose2
+    4300034: Hose1
+    4300036: Capsule1
+    4300038: Capsule2
+    4300040: Capsule3
+    4300042: Capsule4
+    4300044: Capsule5
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: Hose1
+    13700002: Hose2
+    13700004: Hose3
+    13700006: Hose4
+    13700008: Hose5
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Models/TB1_CloningCenter_Dead1.FBX
+  uploadId: 283134

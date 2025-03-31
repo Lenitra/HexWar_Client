@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 85188fed67f490c48b65c480bd03340e
+timeCreated: 1532230331
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Prefab/TB1_Drone.prefab
+  uploadId: 283134

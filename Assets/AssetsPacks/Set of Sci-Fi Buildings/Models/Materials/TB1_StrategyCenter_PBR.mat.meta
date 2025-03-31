@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 86feb1919dee68140bfe6283a57d988e
+timeCreated: 1534077777
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Models/Materials/TB1_StrategyCenter_PBR.mat
+  uploadId: 283134

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 645f0e6a6b077074a9f43380a5adeb8e
+timeCreated: 1525153658
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Models/Materials/TB1_Lamp_PBR.mat
+  uploadId: 283134

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 93e6140523ecea046862bb99df7b5b31
+timeCreated: 1532325248
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Animations/Anim_TB1_MilitaryFactory_Idle.anim
+  uploadId: 283134

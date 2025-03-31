@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: e0226427183bfad4c9ed8d4f96e1f04e
+timeCreated: 1481781414
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Demo_Table_Animations/Scripts/TB1_Ui_Char_Panel.cs
+  uploadId: 283134

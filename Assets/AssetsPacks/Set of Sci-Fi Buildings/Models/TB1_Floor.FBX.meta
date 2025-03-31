@@ -1,0 +1,804 @@
+fileFormatVersion: 2
+guid: 6ff2a740bc1ca9f4a821c31502219bae
+timeCreated: 1524674592
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: cube
+    100002: cube101
+    100004: cube104
+    100006: cube107
+    100008: cube108
+    100010: cube109
+    100012: cube110
+    100014: cube111
+    100016: cube112
+    100018: cube113
+    100020: cube114
+    100022: cube115
+    100024: cube116
+    100026: cube117
+    100028: cube118
+    100030: cube119
+    100032: cube120
+    100034: cube121
+    100036: cube122
+    100038: cube123
+    100040: cube124
+    100042: cube125
+    100044: cube127
+    100046: cube128
+    100048: cube129
+    100050: cube130
+    100052: cube131
+    100054: cube132
+    100056: cube133
+    100058: cube134
+    100060: cube135
+    100062: cube136
+    100064: cube137
+    100066: cube138
+    100068: cube139
+    100070: cube140
+    100072: cube141
+    100074: cube142
+    100076: cube143
+    100078: cube144
+    100080: cube145
+    100082: cube146
+    100084: cube147
+    100086: cube148
+    100088: cube149
+    100090: cube150
+    100092: cube151
+    100094: cube152
+    100096: cube153
+    100098: cube154
+    100100: cube155
+    100102: cube156
+    100104: cube157
+    100106: cube158
+    100108: cube159
+    100110: cube160
+    100112: cube161
+    100114: cube162
+    100116: cube163
+    100118: cube164
+    100120: cube165
+    100122: cube166
+    100124: cube167
+    100126: cube168
+    100128: cube169
+    100130: cube170
+    100132: cube171
+    100134: cube172
+    100136: cube173
+    100138: cube174
+    100140: cube175
+    100142: cube176
+    100144: cube177
+    100146: cube19
+    100148: cube29
+    100150: grid
+    100152: grid1
+    100154: polymsh026
+    100156: polymsh027
+    100158: polymsh029
+    100160: polymsh031
+    100162: polymsh032
+    100164: polymsh033
+    100166: polymsh034
+    100168: polymsh035
+    100170: polymsh036
+    100172: polymsh037
+    100174: polymsh038
+    100176: polymsh039
+    100178: polymsh040
+    100180: polymsh041
+    100182: polymsh042
+    100184: polymsh043
+    100186: polymsh044
+    100188: polymsh045
+    100190: polymsh16
+    100192: polymsh_extracted
+    100194: //RootNode
+    100196: Vent
+    400000: cube
+    400002: cube101
+    400004: cube104
+    400006: cube107
+    400008: cube108
+    400010: cube109
+    400012: cube110
+    400014: cube111
+    400016: cube112
+    400018: cube113
+    400020: cube114
+    400022: cube115
+    400024: cube116
+    400026: cube117
+    400028: cube118
+    400030: cube119
+    400032: cube120
+    400034: cube121
+    400036: cube122
+    400038: cube123
+    400040: cube124
+    400042: cube125
+    400044: cube127
+    400046: cube128
+    400048: cube129
+    400050: cube130
+    400052: cube131
+    400054: cube132
+    400056: cube133
+    400058: cube134
+    400060: cube135
+    400062: cube136
+    400064: cube137
+    400066: cube138
+    400068: cube139
+    400070: cube140
+    400072: cube141
+    400074: cube142
+    400076: cube143
+    400078: cube144
+    400080: cube145
+    400082: cube146
+    400084: cube147
+    400086: cube148
+    400088: cube149
+    400090: cube150
+    400092: cube151
+    400094: cube152
+    400096: cube153
+    400098: cube154
+    400100: cube155
+    400102: cube156
+    400104: cube157
+    400106: cube158
+    400108: cube159
+    400110: cube160
+    400112: cube161
+    400114: cube162
+    400116: cube163
+    400118: cube164
+    400120: cube165
+    400122: cube166
+    400124: cube167
+    400126: cube168
+    400128: cube169
+    400130: cube170
+    400132: cube171
+    400134: cube172
+    400136: cube173
+    400138: cube174
+    400140: cube175
+    400142: cube176
+    400144: cube177
+    400146: cube19
+    400148: cube29
+    400150: grid
+    400152: grid1
+    400154: polymsh026
+    400156: polymsh027
+    400158: polymsh029
+    400160: polymsh031
+    400162: polymsh032
+    400164: polymsh033
+    400166: polymsh034
+    400168: polymsh035
+    400170: polymsh036
+    400172: polymsh037
+    400174: polymsh038
+    400176: polymsh039
+    400178: polymsh040
+    400180: polymsh041
+    400182: polymsh042
+    400184: polymsh043
+    400186: polymsh044
+    400188: polymsh045
+    400190: polymsh16
+    400192: polymsh_extracted
+    400194: //RootNode
+    400196: Vent
+    2300000: cube
+    2300002: cube101
+    2300004: cube104
+    2300006: cube107
+    2300008: cube108
+    2300010: cube109
+    2300012: cube110
+    2300014: cube111
+    2300016: cube112
+    2300018: cube113
+    2300020: cube114
+    2300022: cube115
+    2300024: cube116
+    2300026: cube117
+    2300028: cube118
+    2300030: cube119
+    2300032: cube120
+    2300034: cube121
+    2300036: cube122
+    2300038: cube123
+    2300040: cube124
+    2300042: cube125
+    2300044: cube127
+    2300046: cube128
+    2300048: cube129
+    2300050: cube130
+    2300052: cube131
+    2300054: cube132
+    2300056: cube133
+    2300058: cube134
+    2300060: cube135
+    2300062: cube136
+    2300064: cube137
+    2300066: cube138
+    2300068: cube139
+    2300070: cube140
+    2300072: cube141
+    2300074: cube142
+    2300076: cube143
+    2300078: cube144
+    2300080: cube145
+    2300082: cube146
+    2300084: cube147
+    2300086: cube148
+    2300088: cube149
+    2300090: cube150
+    2300092: cube151
+    2300094: cube152
+    2300096: cube153
+    2300098: cube154
+    2300100: cube155
+    2300102: cube156
+    2300104: cube157
+    2300106: cube158
+    2300108: cube159
+    2300110: cube160
+    2300112: cube161
+    2300114: cube162
+    2300116: cube163
+    2300118: cube164
+    2300120: cube165
+    2300122: cube166
+    2300124: cube167
+    2300126: cube168
+    2300128: cube169
+    2300130: cube170
+    2300132: cube171
+    2300134: cube172
+    2300136: cube173
+    2300138: cube174
+    2300140: cube175
+    2300142: cube176
+    2300144: cube177
+    2300146: cube19
+    2300148: cube29
+    2300150: grid
+    2300152: grid1
+    2300154: polymsh026
+    2300156: polymsh027
+    2300158: polymsh029
+    2300160: polymsh031
+    2300162: polymsh032
+    2300164: polymsh033
+    2300166: polymsh034
+    2300168: polymsh035
+    2300170: polymsh036
+    2300172: polymsh037
+    2300174: polymsh038
+    2300176: polymsh039
+    2300178: polymsh040
+    2300180: polymsh041
+    2300182: polymsh042
+    2300184: polymsh043
+    2300186: polymsh044
+    2300188: polymsh045
+    2300190: polymsh16
+    2300192: polymsh_extracted
+    2300194: Vent
+    3300000: cube
+    3300002: cube101
+    3300004: cube104
+    3300006: cube107
+    3300008: cube108
+    3300010: cube109
+    3300012: cube110
+    3300014: cube111
+    3300016: cube112
+    3300018: cube113
+    3300020: cube114
+    3300022: cube115
+    3300024: cube116
+    3300026: cube117
+    3300028: cube118
+    3300030: cube119
+    3300032: cube120
+    3300034: cube121
+    3300036: cube122
+    3300038: cube123
+    3300040: cube124
+    3300042: cube125
+    3300044: cube127
+    3300046: cube128
+    3300048: cube129
+    3300050: cube130
+    3300052: cube131
+    3300054: cube132
+    3300056: cube133
+    3300058: cube134
+    3300060: cube135
+    3300062: cube136
+    3300064: cube137
+    3300066: cube138
+    3300068: cube139
+    3300070: cube140
+    3300072: cube141
+    3300074: cube142
+    3300076: cube143
+    3300078: cube144
+    3300080: cube145
+    3300082: cube146
+    3300084: cube147
+    3300086: cube148
+    3300088: cube149
+    3300090: cube150
+    3300092: cube151
+    3300094: cube152
+    3300096: cube153
+    3300098: cube154
+    3300100: cube155
+    3300102: cube156
+    3300104: cube157
+    3300106: cube158
+    3300108: cube159
+    3300110: cube160
+    3300112: cube161
+    3300114: cube162
+    3300116: cube163
+    3300118: cube164
+    3300120: cube165
+    3300122: cube166
+    3300124: cube167
+    3300126: cube168
+    3300128: cube169
+    3300130: cube170
+    3300132: cube171
+    3300134: cube172
+    3300136: cube173
+    3300138: cube174
+    3300140: cube175
+    3300142: cube176
+    3300144: cube177
+    3300146: cube19
+    3300148: cube29
+    3300150: grid
+    3300152: grid1
+    3300154: polymsh026
+    3300156: polymsh027
+    3300158: polymsh029
+    3300160: polymsh031
+    3300162: polymsh032
+    3300164: polymsh033
+    3300166: polymsh034
+    3300168: polymsh035
+    3300170: polymsh036
+    3300172: polymsh037
+    3300174: polymsh038
+    3300176: polymsh039
+    3300178: polymsh040
+    3300180: polymsh041
+    3300182: polymsh042
+    3300184: polymsh043
+    3300186: polymsh044
+    3300188: polymsh045
+    3300190: polymsh16
+    3300192: polymsh_extracted
+    3300194: Vent
+    4300000: cube
+    4300002: cube19
+    4300004: cube29
+    4300006: cube101
+    4300008: cube104
+    4300010: cube107
+    4300012: cube108
+    4300014: cube109
+    4300016: cube110
+    4300018: cube111
+    4300020: cube112
+    4300022: cube113
+    4300024: cube114
+    4300026: cube115
+    4300028: cube116
+    4300030: cube117
+    4300032: cube118
+    4300034: cube119
+    4300036: cube120
+    4300038: cube121
+    4300040: cube122
+    4300042: cube123
+    4300044: cube124
+    4300046: cube125
+    4300048: cube127
+    4300050: cube128
+    4300052: cube129
+    4300054: cube130
+    4300056: cube131
+    4300058: cube132
+    4300060: cube133
+    4300062: cube134
+    4300064: cube135
+    4300066: cube136
+    4300068: cube137
+    4300070: cube138
+    4300072: cube139
+    4300074: cube140
+    4300076: cube141
+    4300078: cube142
+    4300080: cube143
+    4300082: cube144
+    4300084: cube145
+    4300086: cube146
+    4300088: cube147
+    4300090: cube148
+    4300092: cube149
+    4300094: cube150
+    4300096: cube151
+    4300098: cube152
+    4300100: cube153
+    4300102: cube154
+    4300104: cube155
+    4300106: cube156
+    4300108: cube157
+    4300110: cube158
+    4300112: cube159
+    4300114: cube160
+    4300116: cube161
+    4300118: cube162
+    4300120: cube163
+    4300122: cube164
+    4300124: cube165
+    4300126: cube166
+    4300128: cube167
+    4300130: cube168
+    4300132: cube169
+    4300134: grid
+    4300136: grid1
+    4300138: polymsh_extracted
+    4300140: polymsh16
+    4300142: Vent
+    4300144: polymsh026
+    4300146: polymsh027
+    4300148: polymsh029
+    4300150: polymsh031
+    4300152: polymsh032
+    4300154: polymsh033
+    4300156: polymsh034
+    4300158: polymsh035
+    4300160: polymsh036
+    4300162: polymsh037
+    4300164: polymsh038
+    4300166: polymsh039
+    4300168: polymsh040
+    4300170: polymsh041
+    4300172: polymsh042
+    4300174: polymsh043
+    4300176: polymsh044
+    4300178: cube170
+    4300180: cube171
+    4300182: cube172
+    4300184: cube173
+    4300186: cube174
+    4300188: cube175
+    4300190: cube176
+    4300192: cube177
+    4300194: polymsh045
+    7400000: Take 001
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Take 001
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 10
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: cube
+        weight: 1
+      - path: cube19
+        weight: 1
+      - path: cube29
+        weight: 1
+      - path: cube101
+        weight: 1
+      - path: cube104
+        weight: 1
+      - path: cube107
+        weight: 1
+      - path: cube108
+        weight: 1
+      - path: cube109
+        weight: 1
+      - path: cube110
+        weight: 1
+      - path: cube111
+        weight: 1
+      - path: cube112
+        weight: 1
+      - path: cube113
+        weight: 1
+      - path: cube114
+        weight: 1
+      - path: cube115
+        weight: 1
+      - path: cube116
+        weight: 1
+      - path: cube117
+        weight: 1
+      - path: cube118
+        weight: 1
+      - path: cube119
+        weight: 1
+      - path: cube120
+        weight: 1
+      - path: cube121
+        weight: 1
+      - path: cube122
+        weight: 1
+      - path: cube123
+        weight: 1
+      - path: cube124
+        weight: 1
+      - path: cube125
+        weight: 1
+      - path: cube127
+        weight: 1
+      - path: cube128
+        weight: 1
+      - path: cube129
+        weight: 1
+      - path: cube130
+        weight: 1
+      - path: cube131
+        weight: 1
+      - path: cube132
+        weight: 1
+      - path: cube133
+        weight: 1
+      - path: cube134
+        weight: 1
+      - path: cube135
+        weight: 1
+      - path: cube136
+        weight: 1
+      - path: cube137
+        weight: 1
+      - path: cube138
+        weight: 1
+      - path: cube139
+        weight: 1
+      - path: cube140
+        weight: 1
+      - path: cube141
+        weight: 1
+      - path: cube142
+        weight: 1
+      - path: cube143
+        weight: 1
+      - path: cube144
+        weight: 1
+      - path: cube145
+        weight: 1
+      - path: cube146
+        weight: 1
+      - path: cube147
+        weight: 1
+      - path: cube148
+        weight: 1
+      - path: cube149
+        weight: 1
+      - path: cube150
+        weight: 1
+      - path: cube151
+        weight: 1
+      - path: cube152
+        weight: 1
+      - path: cube153
+        weight: 1
+      - path: cube154
+        weight: 1
+      - path: cube155
+        weight: 1
+      - path: cube156
+        weight: 1
+      - path: cube157
+        weight: 1
+      - path: cube158
+        weight: 1
+      - path: cube159
+        weight: 1
+      - path: cube160
+        weight: 1
+      - path: cube161
+        weight: 1
+      - path: cube162
+        weight: 1
+      - path: cube163
+        weight: 1
+      - path: cube164
+        weight: 1
+      - path: cube165
+        weight: 1
+      - path: cube166
+        weight: 1
+      - path: cube167
+        weight: 1
+      - path: cube168
+        weight: 1
+      - path: cube169
+        weight: 1
+      - path: cube170
+        weight: 1
+      - path: cube171
+        weight: 1
+      - path: cube172
+        weight: 1
+      - path: cube173
+        weight: 1
+      - path: cube174
+        weight: 1
+      - path: cube175
+        weight: 1
+      - path: cube176
+        weight: 1
+      - path: cube177
+        weight: 1
+      - path: grid
+        weight: 1
+      - path: grid1
+        weight: 1
+      - path: polymsh16
+        weight: 1
+      - path: polymsh026
+        weight: 1
+      - path: polymsh027
+        weight: 1
+      - path: polymsh029
+        weight: 1
+      - path: polymsh031
+        weight: 1
+      - path: polymsh032
+        weight: 1
+      - path: polymsh033
+        weight: 1
+      - path: polymsh034
+        weight: 1
+      - path: polymsh035
+        weight: 1
+      - path: polymsh036
+        weight: 1
+      - path: polymsh037
+        weight: 1
+      - path: polymsh038
+        weight: 1
+      - path: polymsh039
+        weight: 1
+      - path: polymsh040
+        weight: 1
+      - path: polymsh041
+        weight: 1
+      - path: polymsh042
+        weight: 1
+      - path: polymsh043
+        weight: 1
+      - path: polymsh044
+        weight: 1
+      - path: polymsh045
+        weight: 1
+      - path: polymsh_extracted
+        weight: 1
+      - path: Vent
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Models/TB1_Floor.FBX
+  uploadId: 283134

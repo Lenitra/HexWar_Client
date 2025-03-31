@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 6b9510ac557fde44e96befe7c67bcb7c
+timeCreated: 1521608042
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Animations/Animator_Controller_TB1_CloningCenter.controller
+  uploadId: 283134

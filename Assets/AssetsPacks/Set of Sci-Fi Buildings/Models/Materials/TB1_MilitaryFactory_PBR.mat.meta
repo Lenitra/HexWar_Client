@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: db5132aeb62055042b22464711e92cc9
+timeCreated: 1524074933
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Models/Materials/TB1_MilitaryFactory_PBR.mat
+  uploadId: 283134

@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: ca1c6427f8b856a43bb1850bae60b6ca
+timeCreated: 1532228555
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Scripts/DroneMove.cs
+  uploadId: 283134

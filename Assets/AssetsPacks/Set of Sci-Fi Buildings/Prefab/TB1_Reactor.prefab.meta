@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 1a3024198b03d694abd3c3a5da829888
+timeCreated: 1532212305
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Prefab/TB1_Reactor.prefab
+  uploadId: 283134

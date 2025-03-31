@@ -1,0 +1,197 @@
+fileFormatVersion: 2
+guid: f3883d82526be3d469f8f5432c85dd6b
+timeCreated: 1542032854
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: _0_cube048
+    100002: _0_cube5
+    100004: _0_cylinder
+    100006: _0_cylinder011
+    100008: _0_cylinder012
+    100010: _0_cylinder013
+    100012: _0_cylinder10
+    100014: _0_cylinder2
+    100016: _0_cylinder4
+    100018: _0_cylinder9
+    100020: _0_polymsh
+    100022: _0_polymsh003
+    100024: _0_polymsh1
+    100026: Base
+    100028: BoneBody
+    100030: BoneWheelB
+    100032: BoneWheelF1
+    100034: BoneWheelF2
+    100036: Cab
+    100038: polymsh
+    100040: polymsh1
+    100042: Tank
+    100044: //RootNode
+    100046: Main
+    100048: Object001
+    100050: Logo
+    400000: _0_cube048
+    400002: _0_cube5
+    400004: _0_cylinder
+    400006: _0_cylinder011
+    400008: _0_cylinder012
+    400010: _0_cylinder013
+    400012: _0_cylinder10
+    400014: _0_cylinder2
+    400016: _0_cylinder4
+    400018: _0_cylinder9
+    400020: _0_polymsh
+    400022: _0_polymsh003
+    400024: _0_polymsh1
+    400026: Base
+    400028: BoneBody
+    400030: BoneWheelB
+    400032: BoneWheelF1
+    400034: BoneWheelF2
+    400036: Cab
+    400038: polymsh
+    400040: polymsh1
+    400042: Tank
+    400044: //RootNode
+    400046: Main
+    400048: Object001
+    400050: Logo
+    2300000: _0_cube048
+    2300002: _0_cube5
+    2300004: _0_cylinder
+    2300006: _0_cylinder011
+    2300008: _0_cylinder012
+    2300010: _0_cylinder013
+    2300012: _0_cylinder10
+    2300014: _0_cylinder4
+    2300016: _0_cylinder9
+    2300018: _0_polymsh
+    2300020: _0_polymsh003
+    2300022: _0_polymsh1
+    2300024: Base
+    2300026: Cab
+    2300028: polymsh
+    2300030: polymsh1
+    2300032: Tank
+    2300034: Object001
+    2300036: Logo
+    3300000: _0_cube048
+    3300002: _0_cube5
+    3300004: _0_cylinder
+    3300006: _0_cylinder011
+    3300008: _0_cylinder012
+    3300010: _0_cylinder013
+    3300012: _0_cylinder10
+    3300014: _0_cylinder4
+    3300016: _0_cylinder9
+    3300018: _0_polymsh
+    3300020: _0_polymsh003
+    3300022: _0_polymsh1
+    3300024: Base
+    3300026: Cab
+    3300028: polymsh
+    3300030: polymsh1
+    3300032: Tank
+    3300034: Object001
+    3300036: Logo
+    4300000: _0_cylinder4
+    4300002: _0_cylinder9
+    4300004: polymsh1
+    4300006: polymsh
+    4300008: _0_cylinder013
+    4300010: _0_cube048
+    4300012: _0_cube5
+    4300014: _0_cylinder2
+    4300016: _0_polymsh1
+    4300018: _0_cylinder012
+    4300020: _0_cylinder011
+    4300022: _0_cylinder
+    4300024: _0_cylinder10
+    4300026: _0_polymsh
+    4300028: _0_polymsh003
+    4300030: Tank
+    4300032: Cab
+    4300034: Base
+    4300036: Object001
+    4300038: Logo
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: _0_cylinder2
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Models/TB1_Harvester.FBX
+  uploadId: 283134

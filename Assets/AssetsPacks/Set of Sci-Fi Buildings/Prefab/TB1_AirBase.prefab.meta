@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: bd894d63797d80249a8e9fd161664b92
+timeCreated: 1532320708
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Prefab/TB1_AirBase.prefab
+  uploadId: 283134

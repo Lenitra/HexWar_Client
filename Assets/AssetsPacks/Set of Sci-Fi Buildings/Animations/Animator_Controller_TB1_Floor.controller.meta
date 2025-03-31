@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 17770f12b54fc8446a61cb565560c92e
+timeCreated: 1521608042
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Animations/Animator_Controller_TB1_Floor.controller
+  uploadId: 283134

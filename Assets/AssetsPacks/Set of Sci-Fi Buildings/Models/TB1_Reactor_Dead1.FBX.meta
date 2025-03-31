@@ -1,0 +1,140 @@
+fileFormatVersion: 2
+guid: 690c6fa2c4c56ed4f80a2b883fe5f1aa
+timeCreated: 1532380251
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Airing
+    100002: Block1
+    100004: Block2
+    100006: Block3
+    100008: BoneHatch
+    100010: Gears
+    100012: Hatch
+    100014: Logo1
+    100016: Logo2
+    100018: Logo3
+    100020: Rod
+    100022: //RootNode
+    400000: Airing
+    400002: Block1
+    400004: Block2
+    400006: Block3
+    400008: BoneHatch
+    400010: Gears
+    400012: Hatch
+    400014: Logo1
+    400016: Logo2
+    400018: Logo3
+    400020: Rod
+    400022: //RootNode
+    2300000: Airing
+    2300002: Block1
+    2300004: Block2
+    2300006: Block3
+    2300008: Gears
+    2300010: Hatch
+    2300012: Logo1
+    2300014: Logo2
+    2300016: Logo3
+    2300018: Rod
+    3300000: Airing
+    3300002: Block1
+    3300004: Block2
+    3300006: Block3
+    3300008: Gears
+    3300010: Hatch
+    3300012: Logo1
+    3300014: Logo2
+    3300016: Logo3
+    3300018: Rod
+    4300000: Gears
+    4300002: Hatch
+    4300004: Rod
+    4300006: Airing
+    4300008: Block1
+    4300010: Logo1
+    4300012: Block2
+    4300014: Logo2
+    4300016: Block3
+    4300018: Logo3
+    7400000: Take 001
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Models/TB1_Reactor_Dead1.FBX
+  uploadId: 283134

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: d449c7e103f2ea94ca1b343d35ca147a
+timeCreated: 1532325735
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Animations/Anim_TB1_Reactor_Idle.anim
+  uploadId: 283134

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 68c7c1d4ea742434ea6757b0ad6eb2e3
+timeCreated: 1544567473
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Animations/Anim_TB1_CommandCenter_Destroy1.anim
+  uploadId: 283134

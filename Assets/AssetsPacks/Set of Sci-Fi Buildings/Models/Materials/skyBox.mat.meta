@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: c035293d464fc6b4daa18aded158605d
+timeCreated: 1493532693
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: -1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Models/Materials/skyBox.mat
+  uploadId: 283134

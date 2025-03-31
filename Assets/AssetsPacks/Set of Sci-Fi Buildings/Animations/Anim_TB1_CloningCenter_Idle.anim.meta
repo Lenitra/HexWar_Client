@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 45fd56d5840f69f4b928e9a5e8d2bb3f
+timeCreated: 1532322955
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Animations/Anim_TB1_CloningCenter_Idle.anim
+  uploadId: 283134

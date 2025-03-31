@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 28a4e7a5c04570342ad52bf553ed9fba
+timeCreated: 1534286315
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Prefab/TB1_StrategyCenter.prefab
+  uploadId: 283134

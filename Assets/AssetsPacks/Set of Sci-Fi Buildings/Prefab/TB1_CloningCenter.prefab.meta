@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 89bc6d5b3d5e26948b3b0edce9008144
+timeCreated: 1532227115
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Prefab/TB1_CloningCenter.prefab
+  uploadId: 283134

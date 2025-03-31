@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: a3e641dce1a838148ad0b9ea24e087cd
+timeCreated: 1542033020
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Animations/TB1_Harvester.controller
+  uploadId: 283134

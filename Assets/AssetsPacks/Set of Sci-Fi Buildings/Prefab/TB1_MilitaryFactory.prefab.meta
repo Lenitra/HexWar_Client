@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 191bb25fd5e80094c96db71722182eff
+timeCreated: 1532227075
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105084
+  packageName: Set of Sci-Fi Buildings
+  packageVersion: 1.4
+  assetPath: Assets/Set of Sci-Fi Buildings/Prefab/TB1_MilitaryFactory.prefab
+  uploadId: 283134
