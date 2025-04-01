@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class GridVue : MonoBehaviour
 {
 
-    private const float gridGap = 0f;
+    private const float gridGap = 0.025f;
     // private const float hexSize = 1.012f;
     private const float hexSize = 1f;
     private PresenteurCarte presenteurCarte;
@@ -551,19 +551,27 @@ public class GridVue : MonoBehaviour
     private IEnumerator BubleAnim(Tile tile, bool expand = true)
     {
         GameObject sphere = Instantiate(prefabSphere, tile.transform.position, Quaternion.identity);
-        float duration = 0.75f;
-        float t = 0;
-        float startScale = expand ? 0 : 20;
-        float endScale = expand ? 20 : 0;
-        while (t < duration)
+        if (expand)
         {
-            t += Time.deltaTime;
-            float scale = Mathf.Lerp(startScale, endScale, t / duration);
-            sphere.transform.localScale = new Vector3(scale, scale, scale);
-            sphere.transform.position = new Vector3(tile.transform.position.x, 0.75f, tile.transform.position.z);
-            yield return null;
+            sphere.GetComponent<Scanner>().StartScanOutward();
         }
-        Destroy(sphere);
+        else
+        {
+            sphere.GetComponent<Scanner>().StartScanInward();
+        }
+        // float duration = 0.75f;
+        // float t = 0;
+        // float startScale = expand ? 0 : 20;
+        // float endScale = expand ? 20 : 0;
+        // while (t < duration)
+        // {
+        //     t += Time.deltaTime;
+        //     float scale = Mathf.Lerp(startScale, endScale, t / duration);
+        //     sphere.transform.localScale = new Vector3(scale, scale, scale);
+        //     sphere.transform.position = new Vector3(tile.transform.position.x, 0.75f, tile.transform.position.z);
+            yield return null;
+        // }
+        // Destroy(sphere);z
     }
 
 

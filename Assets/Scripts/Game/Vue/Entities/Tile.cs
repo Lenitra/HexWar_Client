@@ -26,7 +26,6 @@ public class Tile : MonoBehaviour
     [SerializeField] private MeshRenderer meshDeRendu;
     [SerializeField] private GameObject glow;
     [SerializeField] private GameObject shieldObject;
-    [SerializeField] private GameObject contourTerritoire;
     // [SerializeField] private TextMeshPro tileInfosOnMap;
     private GameObject building;
 
@@ -193,7 +192,7 @@ public class Tile : MonoBehaviour
     {
         Material material = meshDeRendu.material;
 
-        // Forcer le matériau en mode Fade
+        // Forcer le matériau en mode Fadedd
         material.SetFloat("_Mode", 2); // 2 correspond à Fade dans le shader standard
         material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
         material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
@@ -207,11 +206,10 @@ public class Tile : MonoBehaviour
         if (string.IsNullOrEmpty(owner))
         {
             // Tile non possédée : couleur noire avec alpha à 0.75 pour un effet de fade
-            Color fadeColor = new Color(0f, 0f, 0f, 0.95f);
+            Color fadeColor = new Color(0f, 0f, 0f, 0f);
             material.SetColor("_Color", fadeColor);
             material.SetColor("_EmissionColor", fadeColor);
 
-            contourTerritoire.SetActive(false);
         }
         else
         {
@@ -247,11 +245,9 @@ public class Tile : MonoBehaviour
 
             // Ajuster la position et l'échelle du mesh pour la tile possédée
             Transform baseTransform = meshDeRendu.transform;
-            baseTransform.localScale = new Vector3(baseTransform.localScale.x, baseTransform.localScale.y, 2f);
-            baseTransform.localPosition = new Vector3(baseTransform.localPosition.x, -0.126f, baseTransform.localPosition.z);
+            // baseTransform.localScale = new Vector3(baseTransform.localScale.x, baseTransform.localScale.y, 2f);
+            // baseTransform.localPosition = new Vector3(baseTransform.localPosition.x, -0.126f, baseTransform.localPosition.z);
 
-            contourTerritoire.SetActive(true);
-            contourTerritoire.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", ownerColor);
         }
     }
 
@@ -288,7 +284,7 @@ public class Tile : MonoBehaviour
         if (index != -1)
         {
             building = Instantiate(typesPrefabs[index], this.transform);
-            building.transform.position = new Vector3(this.transform.position.x, this.transform.position.y - 0.333f, this.transform.position.z);
+            building.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
         }
         else
         {

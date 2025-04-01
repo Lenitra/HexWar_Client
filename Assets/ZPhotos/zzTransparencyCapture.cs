@@ -3,6 +3,14 @@ using System.IO;
 
 public class zzTransparencyCapture
 {
+
+    // void Awake(){
+    //     captureScreenshot("Screenshot.png");
+    //     // stop processing
+    //     Application.Quit();
+    // }
+
+
     public static Texture2D  capture(Rect pRect)
     {
         Camera lCamera = Camera.main;
