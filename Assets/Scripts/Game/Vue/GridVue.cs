@@ -27,6 +27,7 @@ public class GridVue : MonoBehaviour
     [Space(10)]
     [Header("Elements d'effets temporaires")]
     [SerializeField] private LineRenderer prefabLine;
+    [SerializeField] private GameObject dronePrefab;
     [SerializeField] private GameObject prefabSphere;
 
     [Space(10)]
@@ -387,17 +388,35 @@ public class GridVue : MonoBehaviour
     // Créé un nouvel hexagone avec une animation de pop
     private IEnumerator CreerTileAnim(GameObject tile)
     {
-        float duration = 0.5f;
+        float duration = 0.75f;
         float t = 0;
+
         Vector3 startPos = tile.transform.position;
         Vector3 endPos = new Vector3(tile.transform.position.x, 0, tile.transform.position.z);
+
+        Vector3 startScale = Vector3.zero;
+        Vector3 endScale = Vector3.one;
+
+        Quaternion startRot = Quaternion.Euler(0, 180, 0);
+        Quaternion endRot = Quaternion.Euler(0, 0, 0);
+
+        tile.transform.position = startPos;
+        tile.transform.localScale = startScale;
+        tile.transform.rotation = startRot;
+
         while (t < duration)
         {
             t += Time.deltaTime;
-            tile.transform.position = Vector3.Lerp(startPos, endPos, t / duration);
+            float progress = t / duration;
+            tile.transform.position = Vector3.Lerp(startPos, endPos, progress);
+            tile.transform.localScale = Vector3.Lerp(startScale, endScale, progress);
+            tile.transform.rotation = Quaternion.Lerp(startRot, endRot, progress);
             yield return null;
         }
+
         tile.transform.position = endPos;
+        tile.transform.localScale = endScale;
+        tile.transform.rotation = endRot;
     }
 
 
@@ -559,19 +578,7 @@ public class GridVue : MonoBehaviour
         {
             sphere.GetComponent<Scanner>().StartScanInward();
         }
-        // float duration = 0.75f;
-        // float t = 0;
-        // float startScale = expand ? 0 : 20;
-        // float endScale = expand ? 20 : 0;
-        // while (t < duration)
-        // {
-        //     t += Time.deltaTime;
-        //     float scale = Mathf.Lerp(startScale, endScale, t / duration);
-        //     sphere.transform.localScale = new Vector3(scale, scale, scale);
-        //     sphere.transform.position = new Vector3(tile.transform.position.x, 0.75f, tile.transform.position.z);
-            yield return null;
-        // }
-        // Destroy(sphere);z
+        yield return null;
     }
 
 
@@ -610,6 +617,9 @@ public class GridVue : MonoBehaviour
             yield break;
 
         LineRenderer moveUnitsLine = Instantiate(prefabLine);
+        // instancier le drone prefab
+        GameObject drone = Instantiate(dronePrefab, positions[0], Quaternion.identity);
+        drone.transform.SetParent(moveUnitsLine.transform);
 
         // 2. Calculer la distance totale du chemin
         float totalDistance = 0f;
@@ -643,6 +653,8 @@ public class GridVue : MonoBehaviour
                 d += segmentLength;
             }
 
+
+
             // Construire la ligne actuelle :
             // - Tous les points déjà atteints (de 0 à lastFullIndex)
             // - Le point courant interpolé sur le segment en cours
@@ -661,6 +673,8 @@ public class GridVue : MonoBehaviour
 
             yield return null;
         }
+
+
         // Assurer que la ligne complète est affichée
         moveUnitsLine.positionCount = positions.Count;
         for (int i = 0; i < positions.Count; i++)
@@ -668,7 +682,9 @@ public class GridVue : MonoBehaviour
             moveUnitsLine.SetPosition(i, positions[i]);
         }
 
+
         // 4. Animation d'effacement (retour) : faire disparaître la ligne depuis le début jusqu'à la fin
+        // Et faire faire suivre le drone à la ligne
         t = 0f;
         while (t < durationOg)
         {
@@ -679,6 +695,7 @@ public class GridVue : MonoBehaviour
             // Déterminer le nouveau point de départ le long du chemin
             float d = 0f;
             Vector3 newStart = positions[0];
+            Vector3 nextDirection = Vector3.forward; // Valeur par défaut pour éviter les warnings
             int firstFullIndex = 0;
             for (int i = 0; i < positions.Count - 1; i++)
             {
@@ -688,9 +705,24 @@ public class GridVue : MonoBehaviour
                     float segFraction = (distanceErased - d) / segmentLength;
                     newStart = Vector3.Lerp(positions[i], positions[i + 1], segFraction);
                     firstFullIndex = i + 1;
+
+                    // Calculer la direction pour orienter le drone
+                    Vector3 dir = positions[i + 1] - positions[i];
+                    if (dir != Vector3.zero)
+                    {
+                        nextDirection = dir.normalized;
+                    }
+
                     break;
                 }
                 d += segmentLength;
+            }
+
+            // Déplacer et orienter le drone
+            drone.transform.position = newStart;
+            if (nextDirection != Vector3.zero)
+            {
+                drone.transform.rotation = Quaternion.LookRotation(nextDirection);
             }
 
             // Construire la nouvelle ligne à partir du nouveau point de départ jusqu'à la fin
@@ -709,6 +741,8 @@ public class GridVue : MonoBehaviour
 
             yield return null;
         }
+
+
 
         // Détruire la ligne
         Destroy(moveUnitsLine.gameObject);
