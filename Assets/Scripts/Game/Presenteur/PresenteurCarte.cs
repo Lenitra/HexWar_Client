@@ -183,6 +183,14 @@ public class PresenteurCarte : MonoBehaviour
         SelectTile = null;
     }
 
+    // Demande de destruction d'un batiment
+    public void DestroyTile()
+    {   
+        string[] tileCoords = { SelectTile.X.ToString(), SelectTile.Y.ToString() };
+        gameManager.DestroyTile(tileCoords);
+        SelectTile = null;
+    }
+
 
     // Demande de déplacement d'unités depuis GridVue
     public void MoveUnits(int units)

@@ -183,7 +183,7 @@ public class GridVue : MonoBehaviour
 
         // Si le hex est le hq du joueur, bouger la caméra vers lui
         if (hexData.owner == PlayerPrefs.GetString("username")
-            && hexData.type.ToLower() == "hq")
+            && hexData.type.ToLower() == "node")
         {
             Camera.main.GetComponent<CamController>().moveCamToTile(coords[0], coords[1], false);
         }
@@ -301,6 +301,14 @@ public class GridVue : MonoBehaviour
         presenteurCarte.BuildTile(type);
         ClosedPanel();
     }
+
+    public void BuildPanelDestroy()
+    {
+        presenteurCarte.DestroyTile();
+        ClosedPanel();
+    }
+
+
 
     #endregion
 
@@ -753,6 +761,7 @@ public class GridVue : MonoBehaviour
 
 
     #endregion
+
 
 
 

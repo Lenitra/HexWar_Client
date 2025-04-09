@@ -26,6 +26,7 @@ public class Tile : MonoBehaviour
     [SerializeField] private MeshRenderer meshDeRendu;
     [SerializeField] private GameObject glow;
     [SerializeField] private GameObject shieldObject;
+    [SerializeField] private LineRenderer nodeRadius;
     // [SerializeField] private TextMeshPro tileInfosOnMap;
     private GameObject building;
 
@@ -65,7 +66,11 @@ public class Tile : MonoBehaviour
     public int Lvl
     {
         get { return lvl; }
-        set { lvl = value; }
+        set
+        {
+            lvl = value;
+            SetupNodeRadius();
+        }
     }
 
     public string Type
@@ -132,11 +137,11 @@ public class Tile : MonoBehaviour
         {
             this.X = hexData.x;
             this.Y = hexData.y;
-            this.Lvl = hexData.lvl;
-            this.Units = hexData.units;
             this.Owner = hexData.owner;
             this.Type = hexData.type;
+            this.Lvl = hexData.lvl;
             this.Color = hexData.color;
+            this.Units = hexData.units;
             this.Protect = hexData.protect;
             return;
         }
@@ -187,6 +192,53 @@ public class Tile : MonoBehaviour
             shieldObject.SetActive(false);
         }
     }
+
+    private void SetupNodeRadius()
+    {
+        nodeRadius.enabled = false;
+        if (Type == "node")
+        {
+
+            nodeRadius.enabled = true;
+            nodeRadius.startWidth = 0.1f;
+            nodeRadius.endWidth = 0.1f;
+            List<Vector3> contour = new List<Vector3>();
+            switch (lvl)
+            {
+                case 1:
+                    // setup les points de la ligne renderer pour faire un cercle
+                    contour = GetHexagonPoints(2f);
+                    nodeRadius.positionCount = contour.Count;
+                    nodeRadius.SetPositions(contour.ToArray());
+                    break;
+                case 2:
+                    contour = GetHexagonPoints(4.05f);
+                    nodeRadius.positionCount = contour.Count;
+                    nodeRadius.SetPositions(contour.ToArray());
+                    break;
+                case 3:
+                    contour = GetHexagonPoints(6.1f);
+                    nodeRadius.positionCount = contour.Count;
+                    nodeRadius.SetPositions(contour.ToArray());
+                    break;
+                case 4:
+                    contour = GetHexagonPoints(8.15f);
+                    nodeRadius.positionCount = contour.Count;
+                    nodeRadius.SetPositions(contour.ToArray());
+                    break;
+                case 5:
+                    contour = GetHexagonPoints(10.2f);
+                    nodeRadius.positionCount = contour.Count;
+                    nodeRadius.SetPositions(contour.ToArray());
+                    break;
+                default:
+                    nodeRadius.positionCount = 0;
+                    break;
+            }
+        }
+    }
+
+
 
     private void SetupColor()
     {
@@ -260,7 +312,7 @@ public class Tile : MonoBehaviour
         int index = -1;
         switch (this.type.ToLower())
         {
-            case "hq":
+            case "node":
                 index = 0;
                 break;
             case "miner":
@@ -271,9 +323,6 @@ public class Tile : MonoBehaviour
                 break;
             case "radar":
                 index = 3;
-                break;
-            case "node":
-                index = 4;
                 break;
             default:
                 index = -1;
@@ -314,6 +363,32 @@ public class Tile : MonoBehaviour
     public void UnPreSelect()
     {
         UnHighlightTile();
+    }
+
+
+
+
+
+
+    public static List<Vector3> GetHexagonPoints(float radius)
+    {
+        List<Vector3> points = new List<Vector3>();
+
+        for (int i = 0; i < 6; i++)
+        {
+            float angleDeg = 60 * i;
+            float angleRad = Mathf.Deg2Rad * angleDeg;
+
+            float x = radius * Mathf.Cos(angleRad);
+            float z = radius * Mathf.Sin(angleRad);
+
+            points.Add(new Vector3(x, 0.1f, z));
+        }
+
+        // Optional: close the loop by repeating the first point at the end
+        points.Add(points[0]);
+
+        return points;
     }
 
 

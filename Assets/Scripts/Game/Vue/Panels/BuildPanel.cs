@@ -26,11 +26,14 @@ public class BuildPanel : MonoBehaviour
     [SerializeField] private Image buildSpriteRenderer;
     private int buildIndex = 0;
 
+
+
     [Header("Build Body - Buildings")]
     [SerializeField] private Sprite[] buildSprite;
-    private string[] buildTitles = new string[] { "Excavateur", "Usine de drones", "Radar" };
-    private string[] buildType = new string[] { "Miner", "Barrack", "Radar" };
+    private string[] buildTitles = new string[] {"Node", "Excavateur", "Usine de drones", "Radar" };
+    private string[] buildType = new string[] {"Node", "Miner", "Barrack", "Radar" };
     private string[] buildDescriptions = new string[] {
+        "Permet de gérer un secteur",
         "Génère des nanites",
         "Construit des drones",
         "Augmente portée de vision de l'hexagone"
@@ -54,8 +57,9 @@ public class BuildPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI upgradeTextTitle;
     [SerializeField] private TextMeshProUGUI upgradeTextDescription;
 
+
     [Header("Upgrade Body - Buildings")]
-    private string[] upgradeType = new string[] { "QG", "Excavateur", "Usine de drones", "Radar" };
+    private string[] upgradeType = new string[] { "Node", "Excavateur", "Usine de drones", "Radar" };
 
 
 
@@ -73,7 +77,7 @@ public class BuildPanel : MonoBehaviour
         buildBtnValidate.onClick.AddListener(() => ValidateBuild());
 
         // Setup des boutons d'upgrade
-        // upgradeBtnDestroy.onClick.AddListener(() => gridVue.DestroyTile());
+        upgradeBtnDestroy.onClick.AddListener(() => gridVue.BuildPanelDestroy());
         upgradeBtnValidate.onClick.AddListener(() => ValidateUpgrade());
     }
 
@@ -104,7 +108,7 @@ public class BuildPanel : MonoBehaviour
         buildTextTitle.text = buildTitles[buildIndex];
         buildTextDescription.text = buildDescriptions[buildIndex];
         buildSpriteRenderer.sprite = buildSprite[buildIndex];
-        buildBtnValidate.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "¤ " + prices[buildIndex+1][0];
+        buildBtnValidate.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "¤ " + prices[buildIndex][0];
     }
 
 

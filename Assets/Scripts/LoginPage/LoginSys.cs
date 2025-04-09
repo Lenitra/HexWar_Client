@@ -227,6 +227,7 @@ public class LoginSys : MonoBehaviour
                 {
                     tmp += pair.Key + " : " + pair.Value + "\n";
                 }
+
                 Debug.Log(tmp);
 
 
@@ -239,8 +240,6 @@ public class LoginSys : MonoBehaviour
 
                 // ajouter le données du serveur dans les PlayerPrefs
                 PlayerPrefs.SetString("username", responseJson["username"]);
-                PlayerPrefs.SetString("color", responseJson["color"]);
-                PlayerPrefs.SetInt("money", int.Parse(responseJson["money"]));
 
 
                 // changement de scene

@@ -166,7 +166,7 @@ public class GameManager : MonoBehaviour
     public Transform getHQTileTransform(){
         foreach (Hex hex in hexMap)
         {
-            if (hex.type.ToLower() == "hq" && hex.owner == PlayerPrefs.GetString("username"))
+            if (hex.type.ToLower() == "node" && hex.owner == PlayerPrefs.GetString("username"))
             {
                 return GameObject.Find("HexObj " + hex.x + ":" + hex.y).transform;
             }
@@ -182,6 +182,10 @@ public class GameManager : MonoBehaviour
         serverClient.Build(tileCoords, type);
     }
 
+    public void DestroyTile(string[] tileCoords)
+    {
+        serverClient.Destroy(tileCoords);
+    }
 
     public void AskServerMoveUnitsTiles(string[] from, string[] to, int units)
     {

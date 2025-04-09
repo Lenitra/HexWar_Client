@@ -186,6 +186,42 @@ public class ServerClient : MonoBehaviour
 
 
 
+    public void Destroy(string[] tileCoords)
+    {
+        StartCoroutine(DestroyCoro(tileCoords));
+    }
+
+    IEnumerator DestroyCoro(string[] tileCoords)
+    {
+        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/destroy");
+        request.method = "POST";
+        request.SetRequestHeader("Content-Type", "application/json");
+        request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes( "{\"x\":" + tileCoords[0] + ",\"y\":" + tileCoords[1] + "}"));
+        request.downloadHandler = new DownloadHandlerBuffer();
+        yield return request.SendWebRequest();
+        // debug the response
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            if (request.downloadHandler.text.ToLower().StartsWith("error : Veillez vous (re)connecter"))
+            {
+                SceneManager.LoadScene("Home");
+            }
+            else if (request.downloadHandler.text.ToLower().StartsWith("error : "))
+            {
+                gameManager.nopePanel(request.downloadHandler.text.Substring(8));
+            }
+            else
+            {
+                updateMap();
+            }
+        }
+        else
+        {
+            Debug.LogError("Error: " + request.error);
+        }
+    }
+
+
     public void RallyUnits(string[] tileCoords)
     {
         StartCoroutine(RallyUnitsCoro(tileCoords));
