@@ -803,7 +803,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24da10078c38282528853207246f96e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridVue: {fileID: 137831715}
+  controller: {fileID: 0}
   closeBtn: {fileID: 1503630257}
   buildBody: {fileID: 104215908}
   upgradeBody: {fileID: 302251422}
@@ -950,10 +950,7 @@ GameObject:
   - component: {fileID: 137831710}
   - component: {fileID: 137831712}
   - component: {fileID: 137831714}
-  - component: {fileID: 137831716}
-  - component: {fileID: 137831720}
   - component: {fileID: 137831715}
-  - component: {fileID: 137831719}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -1000,6 +997,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c808751bcccc67d4294f06832b2ef85d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tilePrefab: {fileID: 6748210058796580171, guid: 7c2f8cbf643442e95a486fcfdd70f4e5, type: 3}
 --- !u!114 &137831715
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1009,65 +1007,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 137831708}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7e111b6273a1834ea0b640453c0f57e, type: 3}
+  m_Script: {fileID: 11500000, guid: 5ef8748445025f5439fdaefcf4027e1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilePrefab: {fileID: 6748210058796580171, guid: 7c2f8cbf643442e95a486fcfdd70f4e5, type: 3}
   tilePanelHover: {fileID: 1521858796}
-  stateInfos: {fileID: 1762635596}
-  prefabLine: {fileID: 1608641640049243484, guid: 7e8c443cc7cec70a4a8b5b7b639ea289, type: 3}
-  dronePrefab: {fileID: 0}
-  prefabSphere: {fileID: 1873238218509225230, guid: cfcc3e9eca7f34900a95e2068b54d2f7, type: 3}
-  tilePanel: {fileID: 1613494891}
+  tilePanelSelected: {fileID: 1613494891}
   buildBtn: {fileID: 1247708097}
   moveBtn: {fileID: 739537340}
   rallyBtn: {fileID: 1557875152}
-  configBuildBtn: {fileID: 0}
+  dispatchBtn: {fileID: 1768232282}
   buildPanel: {fileID: 104215910}
   movePanel: {fileID: 351852588}
   rallyPanel: {fileID: 1731608615}
---- !u!114 &137831716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 137831708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5cc2ae3094a0954697df4ef1796c204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &137831719
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 137831708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a405741d6c999141a7e554504aaab1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moneyText: {fileID: 33855299}
-  optionsBtn: {fileID: 2095831057}
-  locateHQBtn: {fileID: 246162473}
-  dispatchBtn: {fileID: 1768232282}
-  dispatchPanel: {fileID: 1707942453}
-  errorPanel: {fileID: 1517714580}
---- !u!114 &137831720
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 137831708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b512fbb5b31fa6498e1256980c48635, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  dispatchPanel: {fileID: 1707942454}
 --- !u!1 &147434999
 GameObject:
   m_ObjectHideFlags: 0
@@ -2597,7 +2549,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0772f73441075a50aadda2f6b6de08e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridVue: {fileID: 137831715}
+  controller: {fileID: 0}
   closeBtn: {fileID: 351852586}
   validateBtn: {fileID: 351852585}
   inputField: {fileID: 578446710}
@@ -7817,37 +7769,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcf33828b460c3d459fab71b851092cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  invokeAction: 0
-  onMenuRelease: 0
-  disableOnInteract: 0
-  enableMenuSetting: 1
-  keyboardInput: 1
-  mouseInteractButton: 0
-  keyboardEnableKey: 1
-  controllerInput: 0
-  invertHorizontal: 0
-  invertVertical: 0
-  horizontalAxisController: Horizontal
-  verticalAxisController: Vertical
-  interactButtonController: Cancel
-  enableButtonController: Submit
-  touchInput: 1
-  dynamicPositioning: 0
-  activationRadius: 0.25
-  activationHoldTime: 0.25
-  retainTouchPosition: 0
-  centerScreenInput: 0
-  interactOnHover: 0
-  interactHoverTime: 1
-  virtualReality: 0
-  leftEyeCamera: {fileID: 0}
-  rightEyeCamera: {fileID: 0}
-  trackInputPosition: 0
-  trackInputSprite: {fileID: 0}
-  inputTrackerSize: 0.1
-  forwardInputOnly: 0
-  enableWhenInRange: 0
-  customInput: 0
 --- !u!1 &1134777647
 GameObject:
   m_ObjectHideFlags: 0
@@ -11343,7 +11264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 548f4e8d7de1391aeb8f6eff3e8199ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hudVue: {fileID: 137831719}
+  controller: {fileID: 0}
   closeButton: {fileID: 1707942452}
   validateBtn: {fileID: 1707942451}
 --- !u!1 &1711264888
@@ -11628,7 +11549,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6d0e74a72ce57a8e83bf83b16bfd7aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridVue: {fileID: 137831715}
+  controller: {fileID: 0}
   closeButton: {fileID: 1077003436}
   validateBtn: {fileID: 95961830}
   description: {fileID: 1801255531}
