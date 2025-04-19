@@ -1,280 +1,271 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using TMPro;
-using System.Collections.Generic;
 using UnityEngine.UI;
+using TMPro;
 
-
-
+/// <summary>
+/// Handles player interactions with tiles: selection, hover, and action panels (build, move, rally, dispatch).
+/// </summary>
 public class Controller : MonoBehaviour
 {
+    // --- References to other components ---
+    private GameManager gameManager;
+    private CamController camController;
+    private Camera mainCamera;
 
-    private GameManager gameManager; // Référence au Model
-    private CamController camController; // Référence au CamController
+    // --- Player data ---
+    private string playerName;
 
+    // --- Tile selection state ---
+    private Tile hoverTile;
+    private Tile selectedTile;
+    private bool awaitingSecondSelection;
+    private Tile secondSelectedTile;
 
-    // Références aux tiles
-    private Tile hoverTile; // Tile survolée par la souris
-    private Tile selectedTile; // Tile sélectionnée par le joueur
-    private bool secondSelection = false; // Pour savoir si on doit faire une deuxième sélection de tile (pour le déplacement par exemple)
-    private Tile secondSelectedTile; // Deuxième tile sélectionnée par le joueur (pour le déplacement par exemple)
+    [Header("Tile Info Panels")]
+    [SerializeField] private TilePanel hoverInfoPanel;
+    [SerializeField] private TilePanel selectedInfoPanel;
 
+    [Header("Action Buttons")]
+    [SerializeField] private Button buildButton;
+    [SerializeField] private Button moveButton;
+    [SerializeField] private Button rallyButton;
+    [SerializeField] private Button dispatchButton;
 
-    [Header("Références")]
-    [SerializeField] private TilePanel tilePanelHover; // Panneau d'info d'une tile survolée
-    [SerializeField] private TilePanel tilePanelSelected; // Panneau d'info d'une tile survolée
+    [Header("Action Panels")]
+    [SerializeField] private BuildPanel buildPanel;
+    [SerializeField] private MovePanel movePanel;
+    [SerializeField] private RallyPanel rallyPanel;
+    [SerializeField] private DispatchPanel dispatchPanel;
 
-
-    [Header("Références aux boutons")]
-    [SerializeField] private Button buildBtn; // Bouton de construction
-    [SerializeField] private Button moveBtn; // Bouton de déplacement
-    [SerializeField] private Button rallyBtn; // Bouton de ralliement
-    [SerializeField] private Button dispatchBtn; // Bouton de ralliement
-
-
-    [Header("Panels d'interaction")]
-    [SerializeField] private BuildPanel buildPanel; // Panel de construction
-    [SerializeField] private MovePanel movePanel; // Panel de déplacement
-    [SerializeField] private RallyPanel rallyPanel; // Panel de ralliement
-    [SerializeField] private DispatchPanel dispatchPanel; // Panel de ralliement
-
-
-
-
-
-
-
-
-
-    // Setters
-
-    // Gère le changement de la tile sélectionnée par le joueur
-
-    public void SetSelectedTile(Tile tile)
+    /// <summary>
+    /// Currently selected tile by the player.
+    /// Setting this property will handle visual feedback and info panel.
+    /// </summary>
+    private Tile SelectedTile
     {
-        // Cas ou tile est null
-        // Cas ou tile appartient pas au joueur 
-        // Cas ou tile est la même que la tile déjà sélectionnée => SelectedTile == null 
-
-        if (tile != null)
+        get => selectedTile;
+        set
         {
-            if (tile.Owner != PlayerPrefs.GetString("username"))
-            {
-                tile = null;
-            }
-            else if (tile == selectedTile)
-            {
-                tile = null;
-            }
-            else
-            {
-                if (selectedTile != null)
-                {
-                    StartCoroutine(selectedTile.UnSelectCoroutine());
-                }
-                selectedTile = tile;
-                tilePanelSelected.SetInfoTilePanel(selectedTile);
-                tilePanelSelected.gameObject.SetActive(true);
-                StartCoroutine(selectedTile.SelectCoroutine());
-            }
-        }
+            // Deselect previous tile if exists
+            if (selectedTile != null)
+                StartCoroutine(selectedTile.UnSelectCoroutine());
 
-        if (tile == null)
-        {
+            selectedTile = value;
+
+            // Update info panel and visual selection
             if (selectedTile != null)
             {
-                StartCoroutine(selectedTile.UnSelectCoroutine());
-            }
-            selectedTile = null;
-            tilePanelSelected.gameObject.SetActive(false);
-        }
-    }
-
-
-    // Gère le changement de la tile survolée par la souris 
-    // et met à jour le panneau d'info (tilePanelHover)
-    public void SetHoverTile(Tile tile)
-    {
-
-        if (hoverTile != null)
-        {
-            hoverTile.UnHighlightTile();
-        }
-        hoverTile = tile;
-        if (hoverTile != null)
-        {
-            if (tile.Owner == PlayerPrefs.GetString("username"))
-                hoverTile.HighlightTile();
-            tilePanelHover.SetInfoTilePanel(hoverTile);
-            tilePanelHover.gameObject.SetActive(true);
-        }
-        else
-        {
-            tilePanelHover.gameObject.SetActive(false);
-        }
-
-    }
-
-
-
-
-
-
-
-
-    void Start()
-    {
-        gameManager = GetComponent<GameManager>();
-        camController = Camera.main.GetComponent<CamController>();
-
-        // Setup des boutons généraux
-        buildBtn.onClick.AddListener(() => BuildBtnClick());
-        moveBtn.onClick.AddListener(() => MoveBtnClick());
-        // rallyBtn.onClick.AddListener(() => RallyBtnClick());
-        // dispatchBtn.onClick.AddListener(() => DispatchBtnClick());
-    }
-
-
-
-
-    #region Gestion des boutons
-
-    #region Build
-    private void BuildBtnClick()
-    {
-        // Si on a pas de tile sélectionnée, on ne fait rien
-        if (selectedTile == null) return;
-
-        // On ouvre le panel de construction/upgrade
-        buildPanel.SetupPanel(selectedTile);
-        buildPanel.gameObject.SetActive(true);
-    }
-
-    public void BuildPanelValidate()
-    {
-        // TODO: envoyer la commande de construction au serveur
-    }
-
-    #endregion
-
-    #region Move
-    private void MoveBtnClick()
-    {
-        // Si on a pas de tile sélectionnée, on ne fait rien
-        if (selectedTile == null) return;
-
-        secondSelection = true; // On active le mode de sélection de la deuxième tile
-        
-    }
-    #endregion
-
-    #region Rally
-    #endregion
-
-    #region Dispatch
-    #endregion
-
-    #endregion
-
-
-
-
-
-
-
-    #region update()
-    private void Update()
-    {
-
-        // Vérification supplémentaire pour éviter les conflits avec le drag de la caméra
-        if (
-            Input.GetMouseButtonUp(0) // Si on clique
-            && camController.isDragging == false // Si on est pas en train de bouger la caméra
-            && !EventSystem.current.IsPointerOverGameObject() // Si on n'est pas sur un UI
-        )
-        {
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit touch))
-            {
-                if (!secondSelection){
-                    SetSelectedTile(touch.collider.GetComponent<Tile>());
-                }
-                else{
-                    secondSelectedTile = touch.collider.GetComponent<Tile>();
-                }
+                selectedInfoPanel.SetInfoTilePanel(selectedTile);
+                selectedInfoPanel.gameObject.SetActive(true);
+                StartCoroutine(selectedTile.SelectCoroutine());
             }
             else
             {
-                if (!secondSelection)
-                    // Si on clique en dehors de la carte, on désélectionne la tile
-                    SetSelectedTile(null);
+                selectedInfoPanel.gameObject.SetActive(false);
             }
         }
+    }
 
-        // TODO
-        #region TODO: gestion clavier pour les boutons de construction, de déplacement et de ralliement
+    #region Unity Lifecycle
 
-        // // Simuler une selection de tile et un click sur le bouton de construction avec la touche B
-        // if (Input.GetKeyDown(KeyCode.Q))
-        // {
-        //     if (presenteurCarte.SelectTile == null)
-        //     {
-        //         presenteurCarte.TraiterClick(Input.mousePosition);
-        //         BuildBtnClick();
-        //     }
-        // }
+    private void Start()
+    {
+        // Cache references
+        gameManager = GetComponent<GameManager>();
+        mainCamera = Camera.main;
+        camController = mainCamera.GetComponent<CamController>();
 
-        // // Simuler une selection de tile et un click sur le bouton de déplacement avec la touche E
-        // if (Input.GetKeyDown(KeyCode.E))
-        // {
-        //     if (presenteurCarte.SelectTile == null)
-        //     {
-        //         presenteurCarte.TraiterClick(Input.mousePosition);
-        //         MoveBtnClick();
-        //     }
-        // }
+        // Retrieve current player name
+        playerName = PlayerPrefs.GetString("username");
 
-        // // Simuler une selection de tile et un click sur le bouton de ralliement avec la touche R
-        // if (Input.GetKeyDown(KeyCode.R))
-        // {
-        //     if (presenteurCarte.SelectTile == null)
-        //     {
-        //         presenteurCarte.TraiterClick(Input.mousePosition);
-        //         RallyBtnClick();
-        //     }
-        // }
+        // Wire up button callbacks
+        buildButton.onClick.AddListener(OnBuildButtonClicked);
+        moveButton.onClick.AddListener(OnMoveButtonClicked);
+        rallyButton.onClick.AddListener(OnRallyButtonClicked);
+        dispatchButton.onClick.AddListener(OnDispatchButtonClicked);
+    }
 
-        #endregion
+    private void Update()
+    {
+        HandleMouseClick();
+        HandleMouseHover();
+    }
 
-        // Si la souris est en hover sur une tile
-        if (
-            Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit)
-            && hit.collider.GetComponent<Tile>() != null // Si on est en train de survoler une tile
-            && camController.isDragging == false // Si on est pas en train de bouger la caméra
-            && !EventSystem.current.IsPointerOverGameObject() // Si on n'est pas sur un UI
-            )
+    #endregion
+
+    #region Input Handling
+
+    /// <summary>
+    /// Handles selection/deselection of tiles on mouse click.
+    /// Prevents interaction when dragging camera or over UI.
+    /// </summary>
+    private void HandleMouseClick()
+    {
+        if (!Input.GetMouseButtonUp(0) || camController.isDragging || EventSystem.current.IsPointerOverGameObject())
+            return;
+
+        if (mainCamera.RaycastTile(out Tile hitTile))
         {
-            // Si la tile survolée est différente de la tile actuelle
-            // (pour éviter de faire des appels inutiles)
-            if (hoverTile != hit.collider.GetComponent<Tile>())
-            {
-                SetHoverTile(hit.collider.GetComponent<Tile>());
-            }
+            if (!awaitingSecondSelection)
+                ProcessPrimarySelection(hitTile);
+            else
+                secondSelectedTile = hitTile;
+        }
+        else if (!awaitingSecondSelection)
+        {
+            // Clicked outside any tile: clear selection
+            SelectedTile = null;
+        }
+    }
 
-            tilePanelHover.SetPos(Input.mousePosition);
+    /// <summary>
+    /// Handles hover highlighting and info panel updates.
+    /// </summary>
+    private void HandleMouseHover()
+    {
+        if (mainCamera.RaycastTile(out Tile hitTile) && !camController.isDragging && !EventSystem.current.IsPointerOverGameObject())
+        {
+            if (hoverTile != hitTile)
+                UpdateHoverTile(hitTile);
 
+            hoverInfoPanel.SetPos(Input.mousePosition);
         }
         else if (hoverTile != null)
         {
-            SetHoverTile(null);
+            UpdateHoverTile(null);
         }
     }
 
+    #endregion
 
+    #region Tile Selection Logic
 
+    /// <summary>
+    /// Process primary tile selection: validates ownership and toggles selection.
+    /// </summary>
+    /// <param name="tile">The tile clicked on.</param>
+    private void ProcessPrimarySelection(Tile tile)
+    {
+        if (tile == null || tile.Owner != playerName)
+        {
+            SelectedTile = null;
+            return;
+        }
 
+        // Toggle selection off if clicking the same tile
+        if (tile == selectedTile)
+        {
+            SelectedTile = null;
+            return;
+        }
+
+        SelectedTile = tile;
+    }
+
+    /// <summary>
+    /// Updates the currently hovered tile: highlights and updates info panel.
+    /// </summary>
+    /// <param name="tile">The tile being hovered over.</param>
+    private void UpdateHoverTile(Tile tile)
+    {
+        // Remove highlight from previous hoverTile
+        if (hoverTile != null)
+            hoverTile.UnHighlightTile();
+
+        hoverTile = tile;
+
+        if (hoverTile != null)
+        {
+            if (hoverTile.Owner == playerName)
+                hoverTile.HighlightTile();
+
+            hoverInfoPanel.SetInfoTilePanel(hoverTile);
+            hoverInfoPanel.gameObject.SetActive(true);
+        }
+        else
+        {
+            hoverInfoPanel.gameObject.SetActive(false);
+        }
+    }
 
     #endregion
 
+    #region Button Callbacks
 
+    /// <summary>
+    /// Called when Build button is clicked. Opens build panel on selected tile.
+    /// </summary>
+    private void OnBuildButtonClicked()
+    {
+        if (selectedTile == null || selectedTile.Owner != playerName)
+            return;
 
+        buildPanel.SetupPanel(selectedTile);
+        ShowOnlyPanel(buildPanel.gameObject);
+        SelectedTile = null;
+    }
+
+    /// <summary>
+    /// Called when Move button is clicked. Enters second tile selection mode.
+    /// </summary>
+    private void OnMoveButtonClicked()
+    {
+        if (selectedTile == null)
+            return;
+
+        awaitingSecondSelection = true;
+        // Further handling of second selection can be implemented here.
+    }
+
+    private void OnRallyButtonClicked() { /* TODO: Implement rally action */ }
+    private void OnDispatchButtonClicked() { /* TODO: Implement dispatch action */ }
+
+    #endregion
+
+    #region UI Helpers
+
+    /// <summary>
+    /// Shows the provided panel and hides all other action and info panels.
+    /// </summary>
+    /// <param name="panel">The panel GameObject to show.</param>
+    private void ShowOnlyPanel(GameObject panel)
+    {
+        // Hide info panels
+        selectedInfoPanel.gameObject.SetActive(false);
+        hoverInfoPanel.gameObject.SetActive(false);
+
+        // Hide action panels
+        buildPanel.gameObject.SetActive(false);
+        movePanel.gameObject.SetActive(false);
+        rallyPanel.gameObject.SetActive(false);
+        dispatchPanel.gameObject.SetActive(false);
+
+        // Show requested panel
+        panel.SetActive(true);
+    }
+
+    #endregion
+}
+
+/// <summary>
+/// Extension methods for Camera to raycast and retrieve Tile components.
+/// </summary>
+public static class CameraExtensions
+{
+    /// <summary>
+    /// Raycasts from screen point into world and returns the Tile component if hit.
+    /// </summary>
+    public static bool RaycastTile(this Camera camera, out Tile tile)
+    {
+        var ray = camera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            tile = hit.collider.GetComponent<Tile>();
+            return tile != null;
+        }
+
+        tile = null;
+        return false;
+    }
 }

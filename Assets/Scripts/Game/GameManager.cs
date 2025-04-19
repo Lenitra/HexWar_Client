@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
 {
 
     private ServerClient serverClient; // Le service de communication avec le serveur
+    private GameView gameView; // Le service de communication avec le serveur
     private List<Tile> grid = new List<Tile>(); // Tableau des hexagones
     [SerializeField] private GameObject tilePrefab; // Préfabriqué de la tile
     private int money; // Argent du joueur
@@ -24,6 +25,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         serverClient = GetComponent<ServerClient>();
+        gameView = GetComponent<GameView>();
     }
 
 
@@ -190,6 +192,7 @@ public class GameManager : MonoBehaviour
         if (newMoney != this.money)
         {
             Money = newMoney;
+            gameView.SetMoney(Money);
         }
     }
 

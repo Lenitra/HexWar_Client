@@ -88,6 +88,7 @@ public class BuildPanel : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+
     public void SetupPanel(Tile tile)
     {
         // Activer le bon body
@@ -160,7 +161,7 @@ public class BuildPanel : MonoBehaviour
 
         switch (type.ToLower())
         {
-            case "hq":
+            case "node":
                 index = 0;
                 descr = "Augmente les le niveau maximum des améliorations";
                 lvlMax = lvl >= prices[index].Length;
