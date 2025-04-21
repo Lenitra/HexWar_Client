@@ -290,9 +290,11 @@ public class GameManager : MonoBehaviour
         serverClient.MoveUnits(from, to, units);
     }
 
-    public void MoveUnitsServerResponse()
+    public void MoveUnitsServerResponse(string[] from, string[] to)
     {
-        // TODO : appeler la fonction de l'animation de déplacement des unités depuis le gameView
+        Tile fromTile = GetTileAt(int.Parse(from[0]), int.Parse(from[1]));
+        Tile toTile = GetTileAt(int.Parse(to[0]), int.Parse(to[1]));
+        gameView.DrawPathLine(new Tile[] { fromTile, toTile }); // Appel de l'effet de déplacement sur la tile d'origine et la tile de destination
     }
 
 
@@ -304,9 +306,9 @@ public class GameManager : MonoBehaviour
 
     public void RallyUnitsServerResponse(string[] tileCoords)
     {
-        // TODO: Appeler la fonction de l'animation de rally des unités depuis le gameView
-        // Tile rallyPoint = GameObject.Find("HexObj " + tileCoords[0] + ":" + tileCoords[1]).GetComponent<Tile>();
-        // presenteurCarte.CallAnimationRallyUnits(rallyPoint);
+        // Récupérer la tile de rallye
+        Tile rallyTile = GetTileAt(int.Parse(tileCoords[0]), int.Parse(tileCoords[1]));
+        gameView.ScanEffect(rallyTile, false); // Appel de l'effet de scan sur la tile de rallye
     }
 
 

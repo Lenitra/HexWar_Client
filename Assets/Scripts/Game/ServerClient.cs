@@ -134,7 +134,7 @@ public class ServerClient : MonoBehaviour
             }
             else
             {
-                gameManager.MoveUnitsServerResponse();
+                gameManager.MoveUnitsServerResponse(from, to);
                 updateMap();
             }
         }
