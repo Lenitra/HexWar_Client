@@ -147,7 +147,7 @@ public class BuildPanel : MonoBehaviour
 
     private void ValidateBuild()
     {
-        controller.BuildTile(tileSelected, upgradeType[0]);
+        controller.BuildTile(tileSelected, buildType[buildIndex]);
         gameObject.SetActive(false);
     }
 
