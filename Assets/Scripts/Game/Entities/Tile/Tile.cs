@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 
 
@@ -147,6 +148,10 @@ public class Tile : MonoBehaviour
         return new float[] { px, pz };
     }
 
+    public string Coords()
+    {
+        return "(" + this.X + ", " + this.Y + ")"; 
+    }
     public void SetupTile(Hex hexData)
     {
         if (this.X == int.MaxValue || this.Y == int.MaxValue)

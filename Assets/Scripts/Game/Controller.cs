@@ -109,10 +109,12 @@ public class Controller : MonoBehaviour
 
         if (mainCamera.RaycastTile(out Tile hitTile))
         {
-            if (!awaitingSecondSelection){
+            if (!awaitingSecondSelection)
+            {
                 ProcessPrimarySelection(hitTile);
             }
-            else{
+            else
+            {
                 secondSelectedTile = hitTile;
                 // activation du panneau de déplacement
                 movePanel.SetupPanel(selectedTile, secondSelectedTile);
@@ -219,7 +221,7 @@ public class Controller : MonoBehaviour
     /// </summary>
     private void OnMoveButtonClicked()
     {
-        if (selectedTile == null)
+        if (selectedTile == null || selectedTile.Owner != playerName)
             return;
 
         // Passer en mode de sélection de la deuxième tile
@@ -229,10 +231,21 @@ public class Controller : MonoBehaviour
         gameManager.HighlightMoveTiles(selectedTile);
     }
 
-    private void OnRallyButtonClicked() { /* TODO: Implement rally action */ }
+    private void OnRallyButtonClicked()
+    {
+        if (selectedTile == null || selectedTile.Owner != playerName)
+            return;
+
+        rallyPanel.SetupPanel(gameManager.GetAllPlayerUnits(), selectedTile);
+        ShowOnlyPanel(rallyPanel.gameObject);
+    }
+
     private void OnDispatchButtonClicked() { /* TODO: Implement dispatch action */ }
 
     #endregion
+
+
+
 
     #region Validation des paneaux d'action/panels
 
@@ -244,7 +257,14 @@ public class Controller : MonoBehaviour
         gameManager.BuildTile(tileCoords, type);
         SelectedTile = null;
     }
-
+    public void DestroyTile(Tile tileSelected)
+    {
+        if (selectedTile == null || selectedTile.Owner != playerName)
+            return;
+        string[] tileCoords = { tileSelected.X.ToString(), tileSelected.Y.ToString() };
+        gameManager.DestroyTile(tileCoords);
+        SelectedTile = null;
+    }
     public void MoveTile(Tile origin, Tile destination, int untisCount)
     {
         string[] originCoods = { origin.X.ToString(), origin.Y.ToString() };
@@ -254,8 +274,16 @@ public class Controller : MonoBehaviour
         awaitingSecondSelection = false;
         secondSelectedTile = null;
     }
-    
-        
+
+
+    public void RallyTile(Tile tileSelected)
+    {
+        if (selectedTile == null || selectedTile.Owner != playerName)
+            return;
+        string[] tileCoords = { tileSelected.X.ToString(), tileSelected.Y.ToString() };
+        gameManager.RallyUnits(tileCoords);
+        SelectedTile = null;
+    }
 
     #endregion
 
@@ -280,6 +308,8 @@ public class Controller : MonoBehaviour
         // Show requested panel
         panel.SetActive(true);
     }
+
+
 
     #endregion
 }

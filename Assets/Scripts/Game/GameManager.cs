@@ -198,6 +198,19 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
+    private List<Tile> GetPlayerTiles()
+    {
+        List<Tile> playerTiles = new List<Tile>();
+        foreach (Tile tile in grid)
+        {
+            if (tile.Owner == playerName)
+            {
+                playerTiles.Add(tile);
+            }
+        }
+        return playerTiles;
+    }
+
     private List<Tile> GetAdjacentTiles(Tile tile)
     {
         List<Tile> adjacentTiles = new List<Tile>();
@@ -284,14 +297,15 @@ public class GameManager : MonoBehaviour
 
 
 
-    public void AskServerRallyUnits(string[] tileCoords)
+    public void RallyUnits(string[] tileCoords)
     {
         serverClient.RallyUnits(tileCoords);
     }
 
     public void RallyUnitsServerResponse(string[] tileCoords)
     {
-        Tile rallyPoint = GameObject.Find("HexObj " + tileCoords[0] + ":" + tileCoords[1]).GetComponent<Tile>();
+        // TODO: Appeler la fonction de l'animation de rally des unités depuis le gameView
+        // Tile rallyPoint = GameObject.Find("HexObj " + tileCoords[0] + ":" + tileCoords[1]).GetComponent<Tile>();
         // presenteurCarte.CallAnimationRallyUnits(rallyPoint);
     }
 
@@ -342,6 +356,16 @@ public class GameManager : MonoBehaviour
         {
             tile.UnHighlightTile();
         }
+    }
+
+    public int GetAllPlayerUnits(){
+        int totalUnits = 0;
+        List<Tile> playerTiles = GetPlayerTiles();
+        foreach (Tile tile in playerTiles)
+        {
+            totalUnits += tile.Units;
+        }
+        return totalUnits;
     }
 }
 

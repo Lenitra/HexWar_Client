@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class BuildPanel : MonoBehaviour
 {
@@ -79,11 +80,15 @@ public class BuildPanel : MonoBehaviour
         buildBtnValidate.onClick.AddListener(() => ValidateBuild());
 
         // Setup des boutons d'upgrade
-        // TODO: (ligne commentée ci-dessous) : à faire si on veut pouvoir détruire un bâtiment
-        // upgradeBtnDestroy.onClick.AddListener(() => gridVue.BuildPanelDestroy());
+        upgradeBtnDestroy.onClick.AddListener(() => DestroyBuilding());
         upgradeBtnValidate.onClick.AddListener(() => ValidateUpgrade());
     }
 
+    private void DestroyBuilding()
+    {
+        controller.DestroyTile(tileSelected);
+        ClosePanel();
+    }
 
     private void ClosePanel()
     {
