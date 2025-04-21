@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 /// <summary>
 /// Handles player interactions with tiles: selection, hover, and action panels (build, move, rally, dispatch).
@@ -102,15 +103,23 @@ public class Controller : MonoBehaviour
     /// </summary>
     private void HandleMouseClick()
     {
+        // Check if mouse is clicked and not dragging camera or over UI     
         if (!Input.GetMouseButtonUp(0) || camController.isDragging || EventSystem.current.IsPointerOverGameObject())
             return;
 
         if (mainCamera.RaycastTile(out Tile hitTile))
         {
-            if (!awaitingSecondSelection)
+            if (!awaitingSecondSelection){
                 ProcessPrimarySelection(hitTile);
-            else
+            }
+            else{
                 secondSelectedTile = hitTile;
+                // activation du panneau de déplacement
+                movePanel.SetupPanel(selectedTile, secondSelectedTile);
+                // Appel de la fonction de validation du panneau de déplacement
+                ShowOnlyPanel(movePanel.gameObject);
+                gameManager.UnHighlightAllTiles();
+            }
         }
         else if (!awaitingSecondSelection)
         {
@@ -170,7 +179,7 @@ public class Controller : MonoBehaviour
     private void UpdateHoverTile(Tile tile)
     {
         // Remove highlight from previous hoverTile
-        if (hoverTile != null)
+        if (hoverTile != null && awaitingSecondSelection == false)
             hoverTile.UnHighlightTile();
 
         hoverTile = tile;
@@ -203,7 +212,6 @@ public class Controller : MonoBehaviour
 
         buildPanel.SetupPanel(selectedTile);
         ShowOnlyPanel(buildPanel.gameObject);
-        SelectedTile = null;
     }
 
     /// <summary>
@@ -214,12 +222,40 @@ public class Controller : MonoBehaviour
         if (selectedTile == null)
             return;
 
+        // Passer en mode de sélection de la deuxième tile
         awaitingSecondSelection = true;
-        // Further handling of second selection can be implemented here.
+        // cacher le panneau d'info de la tile sélectionnée
+        selectedInfoPanel.gameObject.SetActive(false);
+        gameManager.HighlightMoveTiles(selectedTile);
     }
 
     private void OnRallyButtonClicked() { /* TODO: Implement rally action */ }
     private void OnDispatchButtonClicked() { /* TODO: Implement dispatch action */ }
+
+    #endregion
+
+    #region Validation des paneaux d'action/panels
+
+    public void BuildTile(Tile tile, string type)
+    {
+        if (selectedTile == null || selectedTile.Owner != playerName)
+            return;
+        string[] tileCoords = { tile.X.ToString(), tile.Y.ToString() };
+        gameManager.BuildTile(tileCoords, type);
+        SelectedTile = null;
+    }
+
+    public void MoveTile(Tile origin, Tile destination, int untisCount)
+    {
+        string[] originCoods = { origin.X.ToString(), origin.Y.ToString() };
+        string[] destinationCoods = { destination.X.ToString(), destination.Y.ToString() };
+        gameManager.MoveUnitsTile(originCoods, destinationCoods, untisCount);
+        SelectedTile = null;
+        awaitingSecondSelection = false;
+        secondSelectedTile = null;
+    }
+    
+        
 
     #endregion
 

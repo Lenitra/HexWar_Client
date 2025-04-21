@@ -30,6 +30,19 @@ public class BuildPanel : MonoBehaviour
 
     [Header("Build Body - Buildings")]
     [SerializeField] private Sprite[] buildSprite;
+
+
+
+    [Space(10)]
+    [Header("Upgrade Body")]
+    [SerializeField] private Button upgradeBtnDestroy;
+    [SerializeField] private Button upgradeBtnValidate;
+    [SerializeField] private TextMeshProUGUI upgradeTextTitle;
+    [SerializeField] private TextMeshProUGUI upgradeTextDescription;
+
+
+    [Header("Upgrade Body - Buildings")]
+    private string[] upgradeType = new string[] { "Node", "Excavateur", "Usine de drones", "Radar" };
     private string[] buildTitles = new string[] {"Node", "Excavateur", "Usine de drones", "Radar" };
     private string[] buildType = new string[] {"Node", "Miner", "Barrack", "Radar" };
     private string[] buildDescriptions = new string[] {
@@ -49,18 +62,7 @@ public class BuildPanel : MonoBehaviour
     };
 
 
-
-    [Space(10)]
-    [Header("Upgrade Body")]
-    [SerializeField] private Button upgradeBtnDestroy;
-    [SerializeField] private Button upgradeBtnValidate;
-    [SerializeField] private TextMeshProUGUI upgradeTextTitle;
-    [SerializeField] private TextMeshProUGUI upgradeTextDescription;
-
-
-    [Header("Upgrade Body - Buildings")]
-    private string[] upgradeType = new string[] { "Node", "Excavateur", "Usine de drones", "Radar" };
-
+    private Tile tileSelected;
 
 
 
@@ -91,6 +93,8 @@ public class BuildPanel : MonoBehaviour
 
     public void SetupPanel(Tile tile)
     {
+        tileSelected = tile;
+
         // Activer le bon body
         if (tile.Type == "")
         {
@@ -98,7 +102,7 @@ public class BuildPanel : MonoBehaviour
             upgradeBody.SetActive(false);
             SetupBuildBody();
         }
-        else
+        else // si il y a déjà une construction sur la tile        
         {
             upgradeBody.SetActive(true);
             buildBody.SetActive(false);
@@ -143,8 +147,8 @@ public class BuildPanel : MonoBehaviour
 
     private void ValidateBuild()
     {
-        // TODO: Envoyer les données au controller
-        // gridVue.BuildPanelRetour(buildType[buildIndex]);
+        controller.BuildTile(tileSelected, upgradeType[0]);
+        gameObject.SetActive(false);
     }
 
     #endregion
@@ -201,8 +205,8 @@ public class BuildPanel : MonoBehaviour
                 }
                 break;
         }
-
-        if ((lvlMax))
+        
+        if (lvlMax)
         {
             upgradeBtnValidate.interactable = false;
             upgradeBtnValidate.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "MAX";
@@ -223,8 +227,8 @@ public class BuildPanel : MonoBehaviour
 
     private void ValidateUpgrade()
     {
-        // TODO: Envoyer les données au controller
-        // gridVue.BuildPanelRetour();
+        controller.BuildTile(tileSelected, upgradeType[0]);
+        ClosePanel();
     }
 
 

@@ -52,6 +52,9 @@ public class TileSelectorRGB : MonoBehaviour
 
     private IEnumerator PulseColorCoroutine()
     {
+        // Applique une couleur par défaut au début
+        meshDeRendu.material.SetColor("_EmissionColor", new Color(1.24487412f, 1.24487412f, 1.24487412f, 1));
+
         while (true)
         {
             Color currentColor = meshDeRendu.material.GetColor("_EmissionColor");

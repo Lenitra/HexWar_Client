@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class MovePanel : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class MovePanel : MonoBehaviour
     [SerializeField] private Transform defenceIcon;
 
 
+    private Tile originTile;
+    private Tile destinationTile;
 
 
     private int unitsMax;
@@ -36,7 +39,7 @@ public class MovePanel : MonoBehaviour
         // Setup des boutons généraux
         
         // TODO: 
-        // closeBtn.onClick.AddListener(gridVue.ClosedPanel);
+        closeBtn.onClick.AddListener(ClosePanel);
 
         // Setup des boutons de déplacement
         validateBtn.onClick.AddListener(ValidateMove);
@@ -48,6 +51,11 @@ public class MovePanel : MonoBehaviour
 
     }
 
+    private void ClosePanel()
+    {
+        gameObject.SetActive(false);
+    
+    }
 
     private void OnInputFieldChange(string value)
     {
@@ -87,6 +95,9 @@ public class MovePanel : MonoBehaviour
 
     public void SetupPanel(Tile origin, Tile destination)
     {
+        originTile = origin;
+        destinationTile = destination;
+        
         // Setup des textes d'informations sur les tuiles
         originTileText.text = TilesInfos(origin);
         destinationTileText.text = TilesInfos(destination);
@@ -124,8 +135,8 @@ public class MovePanel : MonoBehaviour
 
     private void ValidateMove()
     {
-        // TODO: Envoyer les data au controller
-        // gridVue.MovePanelRetour(unitsToMove);
+        controller.MoveTile(originTile, destinationTile, unitsToMove);
+        ClosePanel();
     }
 
 }

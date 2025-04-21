@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     private List<Tile> grid = new List<Tile>(); // Tableau des hexagones
     [SerializeField] private GameObject tilePrefab; // Préfabriqué de la tile
     private int money; // Argent du joueur
+    private string playerName; // Nom du joueur
 
     // Getter et setter pour money
     public int Money
@@ -26,6 +27,20 @@ public class GameManager : MonoBehaviour
     {
         serverClient = GetComponent<ServerClient>();
         gameView = GetComponent<GameView>();
+        playerName = PlayerPrefs.GetString("username");
+    }
+
+
+
+    // Appelée par le polling pour mettre à jour l'argent
+    public void UpdateMoney(string money)
+    {
+        int newMoney = int.Parse(money);
+        if (newMoney != this.money)
+        {
+            Money = newMoney;
+            gameView.SetMoney(Money);
+        }
     }
 
 
@@ -47,7 +62,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-       // Ajouter les hexagones qui sont dans la nouvelle carte mais absents de la map actuelle.
+        // Ajouter les hexagones qui sont dans la nouvelle carte mais absents de la map actuelle.
         CheckAjoutHexes(data.hexMap);
         // Supprimer les hexagones présents dans la map actuelle mais absents de la nouvelle carte.
         CheckSuppressionHexes(data.hexMap);
@@ -112,13 +127,6 @@ public class GameManager : MonoBehaviour
                     UpdateTileAttributes(hex);
                 }
             }
-
-            // TODO: Supprimer le else si vérifié que tout fonctionne.
-            else
-            {
-                Debug.LogError("Tile non trouvée dans la grille lors de la mise à jour des attributs.");
-            }
-
         }
     }
 
@@ -176,30 +184,83 @@ public class GameManager : MonoBehaviour
 
 
 
+    #region Fonction utilitaire pour récupérer des groupes de tiles
 
-
-
-
-
-
-
-
-
-    // Appelée par le polling pour mettre à jour l'argent
-    public void UpdateMoney(string money)
+    private Tile GetTileAt(int x, int y)
     {
-        int newMoney = int.Parse(money);
-        if (newMoney != this.money)
+        foreach (Tile tile in grid)
         {
-            Money = newMoney;
-            gameView.SetMoney(Money);
+            if (tile.X == x && tile.Y == y)
+            {
+                return tile;
+            }
         }
+        return null;
+    }
+
+    private List<Tile> GetAdjacentTiles(Tile tile)
+    {
+        List<Tile> adjacentTiles = new List<Tile>();
+        int x = tile.X;
+        int y = tile.Y;
+
+        // Ajout des hexagones adjacents (en diagonale et en croix)
+        adjacentTiles.Add(GetTileAt(x - 1, y));
+        adjacentTiles.Add(GetTileAt(x + 1, y));
+        adjacentTiles.Add(GetTileAt(x, y - 1));
+        adjacentTiles.Add(GetTileAt(x, y + 1));
+        adjacentTiles.Add(GetTileAt(x + 1, y - 1));
+        adjacentTiles.Add(GetTileAt(x - 1, y + 1));
+
+        // Supprime les hexagones nuls
+        adjacentTiles.RemoveAll(tile => tile == null);
+        return adjacentTiles;
     }
 
 
+    // Récupère les hexagones du joueur
+    // Récupère également toutes les tiles adjacentes aux tiles du joueur
+    private List<Tile> GetValidMoveDestination(Tile originTile)
+    {
+        List<Tile> validTiles = new List<Tile>();
+
+        // Ajoute les hexagones appartement au joueur
+        foreach (Tile tile in grid)
+        {
+            if (tile.Owner == playerName && validTiles.Contains(tile) == false)
+            {
+                validTiles.Add(tile);
+            }
+
+            if (tile.Owner == playerName)
+            {
+
+                // Récupère les hexagones adjacents de tile 
+                List<Tile> adjacentTilesToTile = GetAdjacentTiles(tile);
+                foreach (Tile adjacentTile in adjacentTilesToTile)
+                {
+                    if (!validTiles.Contains(adjacentTile))
+                    {
+                        validTiles.Add(adjacentTile);
+                    }
+                }
+            }
+
+        }
+
+        validTiles.Remove(originTile); // Enlève la tile d'origine de la liste des destinations valides
 
 
-    #region Gestion des actions des tiles
+        return validTiles;
+    }
+
+    #endregion
+
+
+
+
+
+    #region Gestion de l'envoi des panels d'actions des tiles au serveur
 
     public void BuildTile(string[] tileCoords, string type)
     {
@@ -211,14 +272,14 @@ public class GameManager : MonoBehaviour
         serverClient.Destroy(tileCoords);
     }
 
-    public void AskServerMoveUnitsTiles(string[] from, string[] to, int units)
+    public void MoveUnitsTile(string[] from, string[] to, int units)
     {
         serverClient.MoveUnits(from, to, units);
     }
 
     public void MoveUnitsServerResponse()
     {
-        // presenteurCarte.CallAnimationMoveUnits();
+        // TODO : appeler la fonction de l'animation de déplacement des unités depuis le gameView
     }
 
 
@@ -259,12 +320,29 @@ public class GameManager : MonoBehaviour
 
     public void nopePanel(string message)
     {
-        // presenteurHUD.nopePanel(message);
+        // TODO : afficher le panneau d'erreur avec un message
+        // Penser à le récupérer dans les attributs de la classe
     }
 
 
 
+    // Met en surbrillance les hexagones où le joueur peut se déplacer.
+    public void HighlightMoveTiles(Tile originTile)
+    {
+        List<Tile> tiles = GetValidMoveDestination(originTile);
+        foreach (Tile tile in tiles)
+        {
+            tile.HighlightTile();
+        }
+    }
 
+    public void UnHighlightAllTiles()
+    {
+        foreach (Tile tile in grid)
+        {
+            tile.UnHighlightTile();
+        }
+    }
 }
 
 #region Classes de données

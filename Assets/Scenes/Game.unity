@@ -803,7 +803,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24da10078c38282528853207246f96e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 0}
+  controller: {fileID: 137831715}
   closeBtn: {fileID: 1503630257}
   buildBody: {fileID: 104215908}
   upgradeBody: {fileID: 302251422}
@@ -951,6 +951,7 @@ GameObject:
   - component: {fileID: 137831712}
   - component: {fileID: 137831714}
   - component: {fileID: 137831715}
+  - component: {fileID: 137831716}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -1010,16 +1011,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ef8748445025f5439fdaefcf4027e1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilePanelHover: {fileID: 1521858796}
-  tilePanelSelected: {fileID: 1613494891}
-  buildBtn: {fileID: 1247708097}
-  moveBtn: {fileID: 739537340}
-  rallyBtn: {fileID: 1557875152}
-  dispatchBtn: {fileID: 1768232282}
+  hoverInfoPanel: {fileID: 1521858796}
+  selectedInfoPanel: {fileID: 1613494891}
+  buildButton: {fileID: 1247708097}
+  moveButton: {fileID: 739537340}
+  rallyButton: {fileID: 1557875152}
+  dispatchButton: {fileID: 1768232282}
   buildPanel: {fileID: 104215910}
   movePanel: {fileID: 351852588}
   rallyPanel: {fileID: 1731608615}
   dispatchPanel: {fileID: 1707942454}
+--- !u!114 &137831716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 137831708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 910a55e02bfd42748b17cb11e36e94ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  money: {fileID: 33855299}
 --- !u!1 &147434999
 GameObject:
   m_ObjectHideFlags: 0
