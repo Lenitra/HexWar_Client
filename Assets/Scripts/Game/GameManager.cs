@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject tilePrefab; // Préfabriqué de la tile
     private int money; // Argent du joueur
     private string playerName; // Nom du joueur
+    [SerializeField] private ErrorPanel errorPanel;
 
     // Getter et setter pour money
     public int Money
@@ -336,8 +337,7 @@ public class GameManager : MonoBehaviour
 
     public void nopePanel(string message)
     {
-        // TODO : afficher le panneau d'erreur avec un message
-        // Penser à le récupérer dans les attributs de la classe
+        errorPanel.init(message);
     }
 
 
