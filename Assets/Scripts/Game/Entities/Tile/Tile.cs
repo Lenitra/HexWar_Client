@@ -31,7 +31,7 @@ public class Tile : MonoBehaviour
     [SerializeField] private GameObject glow;
     [SerializeField] private GameObject shieldObject;
     [SerializeField] private LineRenderer nodeRadius;
-    
+
 
 
     private GameObject building;
@@ -77,7 +77,10 @@ public class Tile : MonoBehaviour
         set
         {
             lvl = value;
-            SetupNodeRadius();
+            if (type == "node")
+            {
+                SetupNodeRadius(lvl + 1);
+            }
         }
     }
 
@@ -150,7 +153,7 @@ public class Tile : MonoBehaviour
 
     public string Coords()
     {
-        return "(" + this.X + ", " + this.Y + ")"; 
+        return "(" + this.X + ", " + this.Y + ")";
     }
     public void SetupTile(Hex hexData)
     {
@@ -221,49 +224,22 @@ public class Tile : MonoBehaviour
         }
     }
 
-    private void SetupNodeRadius()
+    private void SetupNodeRadius(int radius)
     {
-        // nodeRadius.enabled = false;
-        // if (Type == "node")
-        // {
+        List<Vector3> positions = new List<Vector3>();
+        // Find GameManager instance in scene
+        GameManager gameManager = FindObjectOfType<GameManager>();
 
-        //     nodeRadius.enabled = true;
-        //     nodeRadius.startWidth = 0.1f;
-        //     nodeRadius.endWidth = 0.1f;
-        //     List<Vector3> contour = new List<Vector3>();
-        //     switch (lvl)
-        //     {
-        //         case 1:
-        //             // setup les points de la ligne renderer pour faire un cercle
-        //             contour = GenerateHexOutlinePoints(1);
-        //             nodeRadius.positionCount = contour.Count;
-        //             nodeRadius.SetPositions(contour.ToArray());
-        //             break;
-        //         case 2:
-        //             contour = GenerateHexOutlinePoints(2);
-        //             nodeRadius.positionCount = contour.Count;
-        //             nodeRadius.SetPositions(contour.ToArray());
-        //             break;
-        //         case 3:
-        //             contour = GenerateHexOutlinePoints(3);
-        //             nodeRadius.positionCount = contour.Count;
-        //             nodeRadius.SetPositions(contour.ToArray());
-        //             break;
-        //         case 4:
-        //             contour = GenerateHexOutlinePoints(4);
-        //             nodeRadius.positionCount = contour.Count;
-        //             nodeRadius.SetPositions(contour.ToArray());
-        //             break;
-        //         case 5:
-        //             contour = GenerateHexOutlinePoints(5);
-        //             nodeRadius.positionCount = contour.Count;
-        //             nodeRadius.SetPositions(contour.ToArray());
-        //             break;
-        //         default:
-        //             nodeRadius.positionCount = 0;
-        //             break;
-        //     }
-        // }
+        positions = gameManager.GetTileGroupContour(gameManager.GetTilesInRadius(this, radius));
+
+        nodeRadius.positionCount = positions.Count;
+        nodeRadius.SetPositions(positions.ToArray());
+        nodeRadius.startWidth = 0.1f;
+        nodeRadius.endWidth = 0.1f;
+        nodeRadius.startColor = new Color(1, 1, 1, 1);
+        nodeRadius.endColor = new Color(1, 1, 1, 1);
+        nodeRadius.loop = true;
+        nodeRadius.gameObject.SetActive(true);
     }
 
 
@@ -384,10 +360,50 @@ public class Tile : MonoBehaviour
 
 
 
+void Update()
+{
+    Vector3[] corners = GetCorners();
+
+    for (int i = 0; i < 6; i++)
+    {
+        Debug.DrawLine(corners[i], corners[(i + 1) % 6], UnityEngine.Color.red);
+    }
+}
 
 
 
 
+    #region Systèmes pour le calcul de points dans l'espace
+
+    public Vector3 GetHexCenter()
+    {
+        float[] coords = GetHexCoordinates();
+        return new Vector3(coords[0], this.transform.position.y, coords[1]);
+    }
+
+    public Vector3[] GetCorners(float hexSize = 1f)
+    {
+        Vector3[] corners = new Vector3[6];
+
+        Vector3 center = this.transform.position;
+
+        for (int i = 0; i < 6; i++)
+        {
+            float angleDeg = 60 * i; // 30° offset for flat-topped hexes
+            float angleRad = Mathf.Deg2Rad * angleDeg;
+
+            float x = center.x + Mathf.Cos(angleRad) * hexSize;
+            float z = center.z + Mathf.Sin(angleRad) * hexSize;
+
+            corners[i] = new Vector3(x, -5f, z);
+        }
+
+
+
+        return corners;
+    }
+
+    #endregion
 
 
 
@@ -398,9 +414,9 @@ public class Tile : MonoBehaviour
 
 
     #region Animations et coroutines
-    // TODO : ajouter une animation de destruction de la tile
     public IEnumerator DestructionCoroutine()
     {
+        // TODO : ajouter une animation de destruction de la tile
         yield return new WaitForSeconds(0.5f);
         Destroy(this.gameObject);
     }

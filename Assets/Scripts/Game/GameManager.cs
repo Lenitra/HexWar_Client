@@ -1,6 +1,8 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -268,6 +270,127 @@ public class GameManager : MonoBehaviour
         return validTiles;
     }
 
+
+
+    // TODO: Erreur dans cette méthode, elle ne renvoie pas les bon hex
+    public List<Tile> GetTilesInRadius(Tile centerTile, int radius)
+    {
+        List<Tile> tilesInRadius = new List<Tile>();
+        Vector2Int center = new Vector2Int(centerTile.X, centerTile.Y);
+
+        for (int dq = -radius; dq <= radius; dq++)
+        {
+            for (int dr = Mathf.Max(-radius, -dq - radius); dr <= Mathf.Min(radius, -dq + radius); dr++)
+            {
+                int q = center.x + dq;
+                int r = center.y + dr;
+
+                Tile tile = GetTileAt(q, r);
+                if (tile != null)
+                {
+                    tilesInRadius.Add(tile);
+                }
+            }
+        }
+
+        Debug.Log($"Tiles in radius {radius} around ({center.x}, {center.y}): {tilesInRadius.Count}");
+        return tilesInRadius;
+    }
+
+
+    // TODO: vérifier le bon fonctionnement
+    public List<Vector3> GetTileGroupContour(List<Tile> tileGroup)
+    {
+        HashSet<Vector2Int> groupCoords = new HashSet<Vector2Int>(
+            tileGroup.Select(tile => new Vector2Int(tile.X, tile.Y))
+        );
+
+        HashSet<(Vector3, Vector3)> rawEdges = new HashSet<(Vector3, Vector3)>();
+
+        foreach (Tile tile in tileGroup)
+        {
+            Vector3[] corners = tile.GetCorners();
+
+            for (int i = 0; i < 6; i++)
+            {
+                Vector2Int neighborCoord = GetNeighborAxial(new Vector2Int(tile.X, tile.Y), i);
+
+                if (!groupCoords.Contains(neighborCoord))
+                {
+                    Vector3 a = corners[i];
+                    Vector3 b = corners[(i + 1) % 6];
+                    rawEdges.Add(NormalizeEdge(a, b));
+                }
+            }
+        }
+
+        return OrderEdgePoints(rawEdges);
+    }
+
+
+
+
+    #region Auto-générées
+    private Vector2Int GetNeighborAxial(Vector2Int coord, int direction)
+    {
+        // Directions pour hexagones flat-topped
+        Vector2Int[] directions = new Vector2Int[]
+        {
+        new Vector2Int(+1, 0), new Vector2Int(+1, -1), new Vector2Int(0, -1),
+        new Vector2Int(-1, 0), new Vector2Int(-1, +1), new Vector2Int(0, +1)
+        };
+        return coord + directions[direction];
+    }
+
+    private (Vector3, Vector3) NormalizeEdge(Vector3 a, Vector3 b)
+    {
+        return (a.x < b.x || (Mathf.Approximately(a.x, b.x) && a.z < b.z)) ? (a, b) : (b, a);
+    }
+
+    private List<Vector3> OrderEdgePoints(HashSet<(Vector3, Vector3)> edges)
+    {
+        Dictionary<Vector3, List<Vector3>> edgeMap = new Dictionary<Vector3, List<Vector3>>();
+
+        foreach (var (a, b) in edges)
+        {
+            if (!edgeMap.ContainsKey(a)) edgeMap[a] = new List<Vector3>();
+            if (!edgeMap.ContainsKey(b)) edgeMap[b] = new List<Vector3>();
+
+            edgeMap[a].Add(b);
+            edgeMap[b].Add(a);
+        }
+
+        Vector3 start = edgeMap.First().Key;
+        List<Vector3> ordered = new List<Vector3> { start };
+
+        Vector3 current = start;
+        Vector3 previous = Vector3.negativeInfinity;
+
+        while (true)
+        {
+            var nextPoints = edgeMap[current].Where(p => p != previous).ToList();
+            if (nextPoints.Count == 0) break;
+
+            Vector3 next = nextPoints[0];
+            ordered.Add(next);
+
+            previous = current;
+            current = next;
+
+            if (next == start) break;
+        }
+
+        return ordered;
+    }
+
+
+
+    #endregion
+
+
+
+
+
     #endregion
 
 
@@ -360,7 +483,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public int GetAllPlayerUnits(){
+    public int GetAllPlayerUnits()
+    {
         int totalUnits = 0;
         List<Tile> playerTiles = GetPlayerTiles();
         foreach (Tile tile in playerTiles)
