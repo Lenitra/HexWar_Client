@@ -31,6 +31,9 @@ public class GameManager : MonoBehaviour
         serverClient = GetComponent<ServerClient>();
         gameView = GetComponent<GameView>();
         playerName = PlayerPrefs.GetString("username");
+
+        // On demande au serveur de nous envoyer la carte
+        serverClient.updateMap();
     }
 
 
@@ -271,122 +274,67 @@ public class GameManager : MonoBehaviour
     }
 
 
-
-    // TODO: Erreur dans cette méthode, elle ne renvoie pas les bon hex
-    public List<Tile> GetTilesInRadius(Tile centerTile, int radius)
+    /// <summary>
+    /// Renvoie la liste des coordonnées axiales (q, r) de tous les hexagones
+    /// situés à une distance hexagonale ≤ radius autour de center.
+    /// </summary>
+    /// <param name="center">Coordonnée axiale (q, r) du centre.</param>
+    /// <param name="radius">Rayon en pas hexagonaux.</param>
+    public List<Vector2Int> GetHexesCoordsInRadius(Tile center, int radius)
     {
-        List<Tile> tilesInRadius = new List<Tile>();
-        Vector2Int center = new Vector2Int(centerTile.X, centerTile.Y);
+        var results = new List<Vector2Int>();
 
+        // Pour chaque décalage q de -radius à +radius
         for (int dq = -radius; dq <= radius; dq++)
         {
-            for (int dr = Mathf.Max(-radius, -dq - radius); dr <= Mathf.Min(radius, -dq + radius); dr++)
-            {
-                int q = center.x + dq;
-                int r = center.y + dr;
+            // Pour chaque décalage r dans la plage valide pour garder q + r + s == 0
+            int minDr = Math.Max(-radius, -dq - radius);
+            int maxDr = Math.Min(radius, -dq + radius);
 
-                Tile tile = GetTileAt(q, r);
-                if (tile != null)
-                {
-                    tilesInRadius.Add(tile);
-                }
+            for (int dr = minDr; dr <= maxDr; dr++)
+            {
+                // On a s = -dq - dr mais comme on ne stocke qu'en axial,
+                // on ne l'utilise pas ici.
+                // On ajoute la coordonnée axiale décalée
+                results.Add(new Vector2Int(center.X + dq, center.Y + dr));
             }
         }
+        // Debug.Log("Hexes in radius (" + radius + ") : " + results.Count);
+        return results;
+    }
 
-        Debug.Log($"Tiles in radius {radius} around ({center.x}, {center.y}): {tilesInRadius.Count}");
-        return tilesInRadius;
+    public List<Tile> GetTilesInRadius(Tile center, int radius)
+    {
+        List<Vector2Int> coords = GetHexesCoordsInRadius(center, radius);
+        List<Tile> tiles = new List<Tile>();
+        string msg = "";
+
+        foreach (Vector2Int coord in coords)
+        {
+            Tile tile = GetTileAt(coord.x, coord.y);
+
+            if (tile != null)
+            {
+                msg += tile.ToString() + "\n";
+                tiles.Add(tile);
+            }
+            else
+            {
+                msg += coord.x + "," + coord.y + " : Not Found\n";
+            }
+        }
+        Debug.Log("Tiles in radius (" + radius + ") : " + tiles.Count + "\n" + msg);
+        return tiles;
     }
 
 
-    // TODO: vérifier le bon fonctionnement
+
+
+    // TODO: 
     public List<Vector3> GetTileGroupContour(List<Tile> tileGroup)
     {
-        HashSet<Vector2Int> groupCoords = new HashSet<Vector2Int>(
-            tileGroup.Select(tile => new Vector2Int(tile.X, tile.Y))
-        );
-
-        HashSet<(Vector3, Vector3)> rawEdges = new HashSet<(Vector3, Vector3)>();
-
-        foreach (Tile tile in tileGroup)
-        {
-            Vector3[] corners = tile.GetCorners();
-
-            for (int i = 0; i < 6; i++)
-            {
-                Vector2Int neighborCoord = GetNeighborAxial(new Vector2Int(tile.X, tile.Y), i);
-
-                if (!groupCoords.Contains(neighborCoord))
-                {
-                    Vector3 a = corners[i];
-                    Vector3 b = corners[(i + 1) % 6];
-                    rawEdges.Add(NormalizeEdge(a, b));
-                }
-            }
-        }
-
-        return OrderEdgePoints(rawEdges);
+        return new List<Vector3>();
     }
-
-
-
-
-    #region Auto-générées
-    private Vector2Int GetNeighborAxial(Vector2Int coord, int direction)
-    {
-        // Directions pour hexagones flat-topped
-        Vector2Int[] directions = new Vector2Int[]
-        {
-        new Vector2Int(+1, 0), new Vector2Int(+1, -1), new Vector2Int(0, -1),
-        new Vector2Int(-1, 0), new Vector2Int(-1, +1), new Vector2Int(0, +1)
-        };
-        return coord + directions[direction];
-    }
-
-    private (Vector3, Vector3) NormalizeEdge(Vector3 a, Vector3 b)
-    {
-        return (a.x < b.x || (Mathf.Approximately(a.x, b.x) && a.z < b.z)) ? (a, b) : (b, a);
-    }
-
-    private List<Vector3> OrderEdgePoints(HashSet<(Vector3, Vector3)> edges)
-    {
-        Dictionary<Vector3, List<Vector3>> edgeMap = new Dictionary<Vector3, List<Vector3>>();
-
-        foreach (var (a, b) in edges)
-        {
-            if (!edgeMap.ContainsKey(a)) edgeMap[a] = new List<Vector3>();
-            if (!edgeMap.ContainsKey(b)) edgeMap[b] = new List<Vector3>();
-
-            edgeMap[a].Add(b);
-            edgeMap[b].Add(a);
-        }
-
-        Vector3 start = edgeMap.First().Key;
-        List<Vector3> ordered = new List<Vector3> { start };
-
-        Vector3 current = start;
-        Vector3 previous = Vector3.negativeInfinity;
-
-        while (true)
-        {
-            var nextPoints = edgeMap[current].Where(p => p != previous).ToList();
-            if (nextPoints.Count == 0) break;
-
-            Vector3 next = nextPoints[0];
-            ordered.Add(next);
-
-            previous = current;
-            current = next;
-
-            if (next == start) break;
-        }
-
-        return ordered;
-    }
-
-
-
-    #endregion
-
 
 
 
@@ -494,6 +442,8 @@ public class GameManager : MonoBehaviour
         return totalUnits;
     }
 }
+
+
 
 #region Classes de données
 

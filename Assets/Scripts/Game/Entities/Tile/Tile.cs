@@ -140,6 +140,13 @@ public class Tile : MonoBehaviour
     #endregion
 
 
+    // ToString 
+    public string ToString()
+    {
+        return "Tile: " + this.X + ":" + this.Y + " | Owner: " + this.Owner + " | Type: " + this.Type + " | Lvl: " + this.Lvl;
+    }
+
+
 
     // Convertit les coordonnées d'un hex en coordonnées pixel
     public float[] GetHexCoordinates()
@@ -226,10 +233,17 @@ public class Tile : MonoBehaviour
 
     private void SetupNodeRadius(int radius)
     {
-        List<Vector3> positions = new List<Vector3>();
-        // Find GameManager instance in scene
+        StartCoroutine(NodeRadiusCalc(radius));
+
+    }
+
+    private IEnumerator NodeRadiusCalc(int radius)
+    {
+        yield return new WaitForSeconds(1f);
         GameManager gameManager = FindObjectOfType<GameManager>();
 
+
+        List<Vector3> positions = new List<Vector3>();
         positions = gameManager.GetTileGroupContour(gameManager.GetTilesInRadius(this, radius));
 
         nodeRadius.positionCount = positions.Count;
@@ -241,7 +255,6 @@ public class Tile : MonoBehaviour
         nodeRadius.loop = true;
         nodeRadius.gameObject.SetActive(true);
     }
-
 
 
     private void SetupColor()

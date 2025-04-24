@@ -44,8 +44,8 @@ public class ServerClient : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(pollInterval);
             updateMap();
+            yield return new WaitForSeconds(pollInterval);
         }
     }
 
