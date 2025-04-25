@@ -31,7 +31,21 @@ public class TilePanel : MonoBehaviour
         coordinatesText.text = tile.X + " : " + tile.Y;
 
         string tmp = "";
-        tmp += "Drones : " + tile.Units + "\n";
+        if (tile.Owner == PlayerPrefs.GetString("username"))
+        {
+            tmp += "Drones : " + tile.Units + "\n";
+        }
+        else
+        {
+            if (tile.Units == 0)
+            {
+                tmp += "Drones : ?\n";
+            }
+            else
+            {
+                tmp += "Drones : ~" + tile.Units + "\n";
+            }
+        }
         tmp += "Bat : " + tile.Type + "\n";
         tmp += "Lvl : " + tile.Lvl + "\n";
         descriptionText.text = tmp;
