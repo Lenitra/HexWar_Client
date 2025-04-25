@@ -814,9 +814,9 @@ MonoBehaviour:
   buildTextDescription: {fileID: 583018426}
   buildSpriteRenderer: {fileID: 374204970}
   buildSprite:
-  - {fileID: 21300000, guid: 7e6f0da89a093aa29bf1241d1b35f92e, type: 3}
-  - {fileID: 21300000, guid: fa5aee08fb093a5f7b0ccaf62f97dddf, type: 3}
-  - {fileID: 21300000, guid: 6589ff1e126596bb1b56f3d03b6c6165, type: 3}
+  - {fileID: 21300000, guid: 3fb8f09fd6f65064aaf698b3c7e6a818, type: 3}
+  - {fileID: 21300000, guid: 73be4924ae597f84888275fa79b62785, type: 3}
+  - {fileID: 21300000, guid: 5b8ad1ada535f4f4a8530e43a6bcf34e, type: 3}
   - {fileID: 21300000, guid: 0ce86cb0f0cb8f1609031b2eb125ad12, type: 3}
   upgradeBtnDestroy: {fileID: 2146383289}
   upgradeBtnValidate: {fileID: 552068844}
