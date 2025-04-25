@@ -79,6 +79,21 @@ public class GameManager : MonoBehaviour
 
 
 
+    private void UpdateNodesArea()
+    {
+        // On récupère les hexagones de la carte
+        List<Tile> nodes = new List<Tile>();
+        foreach (Tile tile in grid)
+        {
+            if (tile.Type == "node")
+            {
+                tile.SetupNodeRadius();
+            }
+        }
+
+        
+    }
+
 
 
     // Ajoute les hexagones qui sont présents dans newMap mais absents dans this.hexMap.
@@ -91,6 +106,7 @@ public class GameManager : MonoBehaviour
                 AddTileToGrid(newMap[i]);
             }
         }
+        UpdateNodesArea(); // Met à jour les hexagones de type node
     }
 
 
@@ -116,6 +132,7 @@ public class GameManager : MonoBehaviour
                 RemoveTileToGrid(tile);
             }
         }
+        UpdateNodesArea(); // Met à jour les hexagones de type node
     }
 
 
@@ -330,11 +347,111 @@ public class GameManager : MonoBehaviour
 
 
 
-    // TODO: 
+
+
+
+
+
+
+    /// <summary>
+    /// Retourne le contour (enveloppe convexe) du groupe de tiles,
+    /// projeté sur le plan XZ et remonté à la hauteur moyenne des tiles.
+    /// </summary>
     public List<Vector3> GetTileGroupContour(List<Tile> tileGroup)
     {
-        return new List<Vector3>();
+        // 1) Récupère tous les coins de chaque tile
+        var points = new List<Vector3>();
+        foreach (var tile in tileGroup)
+            points.AddRange(tile.GetCorners());
+
+        // 2) Calcule l'enveloppe convexe sur le plan XZ
+        var hull = ComputeHullOnGround(points);
+
+        // 3) Debug
+        Debug.Log(
+            $"Points bruts : {points.Count}\n" +
+            $"Sommets du contour : {hull.Count}\n" +
+            $"Niveau (lvl) : {tileGroup[0].Lvl}"
+        );
+
+        return hull;
     }
+
+    /// <summary>
+    /// Enveloppe convexe d'un nuage de Vector3 projeté en 2D (XZ).
+    /// Le résultat est remonté à la hauteur moyenne Y.
+    /// </summary>
+    private static List<Vector3> ComputeHullOnGround(List<Vector3> points3D)
+    {
+        if (points3D == null || points3D.Count <= 1)
+            return new List<Vector3>(points3D);
+
+        // Projection en XZ et tri lexicographique
+        var pts = points3D
+            .Select(p => new Vector2(p.x, p.z))
+            .Distinct()
+            .OrderBy(p => p.x)
+            .ThenBy(p => p.y)
+            .ToList();
+
+        if (pts.Count <= 1)
+            return new List<Vector3>(points3D);
+
+        // Construction de la lower hull
+        var lower = new List<Vector2>();
+        foreach (var p in pts)
+        {
+            while (lower.Count >= 2 && Cross(lower[lower.Count - 2], lower[lower.Count - 1], p) <= 0)
+                lower.RemoveAt(lower.Count - 1);
+            lower.Add(p);
+        }
+
+        // Construction de la upper hull
+        var upper = new List<Vector2>();
+        for (int i = pts.Count - 1; i >= 0; i--)
+        {
+            var p = pts[i];
+            while (upper.Count >= 2 && Cross(upper[upper.Count - 2], upper[upper.Count - 1], p) <= 0)
+                upper.RemoveAt(upper.Count - 1);
+            upper.Add(p);
+        }
+
+        // Fusion des deux chaînes (sans doubler les extrémités)
+        lower.RemoveAt(lower.Count - 1);
+        upper.RemoveAt(upper.Count - 1);
+        var hull2D = lower.Concat(upper).ToList();
+
+        // Calcul de la hauteur Y moyenne
+        float avgY = points3D.Average(p => p.y);
+
+        // Reprojection en 3D (X, avgY, Z)
+        var hull3D = hull2D
+            .Select(p2 => new Vector3(p2.x, avgY, p2.y))
+            .ToList();
+
+        return hull3D;
+    }
+
+    /// <summary>
+    /// Produit scalaire (2D) de (OA × OB) pour tester l’orientation.
+    /// </summary>
+    private static float Cross(Vector2 O, Vector2 A, Vector2 B)
+    {
+        return (A.x - O.x) * (B.y - O.y)
+             - (A.y - O.y) * (B.x - O.x);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

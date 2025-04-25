@@ -10025,6 +10025,9 @@ MonoBehaviour:
   titleText: {fileID: 626096293}
   coordinatesText: {fileID: 15526070}
   descriptionText: {fileID: 1546738829}
+  buildButton: {fileID: 0}
+  moveButton: {fileID: 0}
+  rallyButton: {fileID: 0}
 --- !u!224 &1521858797
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10577,6 +10580,9 @@ MonoBehaviour:
   titleText: {fileID: 1531170048}
   coordinatesText: {fileID: 490008473}
   descriptionText: {fileID: 1186791769}
+  buildButton: {fileID: 1247708097}
+  moveButton: {fileID: 739537340}
+  rallyButton: {fileID: 1557875152}
 --- !u!223 &1613494892
 Canvas:
   m_ObjectHideFlags: 0

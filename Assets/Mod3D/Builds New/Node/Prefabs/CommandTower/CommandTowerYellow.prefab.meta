@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 92788332d37e53548b51b766bea3eb83
+timeCreated: 1456835576
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 57223
+  packageName: 'Scifi RTS Series: Command Tower'
+  packageVersion: 1.0
+  assetPath: Assets/ScifiRTSSeriesCommandTower/Prefabs/CommandTower/CommandTowerYellow.prefab
+  uploadId: 411841

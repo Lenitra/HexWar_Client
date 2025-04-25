@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b978c5e1317bc7f41adc074d86f805ca
+timeCreated: 1436109046
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 14963
+  packageName: 'Scifi RTS Series: Resource Units'
+  packageVersion: 1.2
+  assetPath: Assets/SciFi RTS Series Resource Units/FBX/ResourceCollector/Materials/ResourceCollectorWhite.mat
+  uploadId: 412141

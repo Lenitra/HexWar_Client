@@ -41,6 +41,11 @@ public class Tile : MonoBehaviour
 
 
     #region Getters & Setters
+    public float GridGap
+    {
+        get { return gridGap; }
+    }
+
     public int X
     {
         get { return x; }
@@ -77,9 +82,9 @@ public class Tile : MonoBehaviour
         set
         {
             lvl = value;
-            if (type == "node")
+            if (Type == "node")
             {
-                SetupNodeRadius(lvl + 1);
+                SetupNodeRadius();
             }
         }
     }
@@ -141,7 +146,7 @@ public class Tile : MonoBehaviour
 
 
     // ToString 
-    public string ToString()
+    public override string ToString()
     {
         return "Tile: " + this.X + ":" + this.Y + " | Owner: " + this.Owner + " | Type: " + this.Type + " | Lvl: " + this.Lvl;
     }
@@ -162,6 +167,8 @@ public class Tile : MonoBehaviour
     {
         return "(" + this.X + ", " + this.Y + ")";
     }
+
+
     public void SetupTile(Hex hexData)
     {
         if (this.X == int.MaxValue || this.Y == int.MaxValue)
@@ -169,8 +176,8 @@ public class Tile : MonoBehaviour
             this.X = hexData.x;
             this.Y = hexData.y;
             this.Owner = hexData.owner;
-            this.Type = hexData.type;
             this.Lvl = hexData.lvl;
+            this.Type = hexData.type;
             this.Color = hexData.color;
             this.Units = hexData.units;
             this.Protect = hexData.protect;
@@ -231,22 +238,29 @@ public class Tile : MonoBehaviour
         }
     }
 
-    private void SetupNodeRadius(int radius)
+    public void SetupNodeRadius()
     {
-        StartCoroutine(NodeRadiusCalc(radius));
+        StartCoroutine(NodeRadiusCalc());
 
     }
 
-    private IEnumerator NodeRadiusCalc(int radius)
+    private IEnumerator NodeRadiusCalc()
     {
         yield return new WaitForSeconds(1f);
-        GameManager gameManager = FindObjectOfType<GameManager>();
+        GameManager gameManager = FindFirstObjectByType<GameManager>();
 
 
         List<Vector3> positions = new List<Vector3>();
-        positions = gameManager.GetTileGroupContour(gameManager.GetTilesInRadius(this, radius));
+        positions = gameManager.GetTileGroupContour(gameManager.GetTilesInRadius(this, Lvl));
+        // Transformer les positions en coordonnées locales
+        for (int i = 0; i < positions.Count; i++)
+        {
+            positions[i] = this.transform.InverseTransformPoint(positions[i]);
+        }
 
         nodeRadius.positionCount = positions.Count;
+
+
         nodeRadius.SetPositions(positions.ToArray());
         nodeRadius.startWidth = 0.1f;
         nodeRadius.endWidth = 0.1f;
@@ -260,6 +274,7 @@ public class Tile : MonoBehaviour
     private void SetupColor()
     {
         Material material = meshDeRendu.material;
+        Material nodeRadiusMaterial = nodeRadius.material;
 
         // Forcer le matériau en mode Fadedd
         material.SetFloat("_Mode", 2); // 2 correspond à Fade dans le shader standard
@@ -312,10 +327,9 @@ public class Tile : MonoBehaviour
             material.SetColor("_Color", ownerColor);
             material.SetColor("_EmissionColor", ownerColor);
 
-            // Ajuster la position et l'échelle du mesh pour la tile possédée
-            Transform baseTransform = meshDeRendu.transform;
-            // baseTransform.localScale = new Vector3(baseTransform.localScale.x, baseTransform.localScale.y, 2f);
-            // baseTransform.localPosition = new Vector3(baseTransform.localPosition.x, -0.126f, baseTransform.localPosition.z);
+            nodeRadiusMaterial.SetColor("_Color", ownerColor);
+            // Ajouter de l'intensité à la couleur d'émission pour le nodeRadius
+            nodeRadiusMaterial.SetColor("_EmissionColor", ownerColor * 2f);
 
         }
     }
@@ -331,6 +345,7 @@ public class Tile : MonoBehaviour
         {
             case "node":
                 index = 0;
+                SetupNodeRadius();
                 break;
             case "miner":
                 index = 1;
@@ -373,15 +388,15 @@ public class Tile : MonoBehaviour
 
 
 
-void Update()
-{
-    Vector3[] corners = GetCorners();
+// void Update()
+// {
+//     Vector3[] corners = GetCorners();
 
-    for (int i = 0; i < 6; i++)
-    {
-        Debug.DrawLine(corners[i], corners[(i + 1) % 6], UnityEngine.Color.red);
-    }
-}
+//     for (int i = 0; i < 6; i++)
+//     {
+//         Debug.DrawLine(corners[i], corners[(i + 1) % 6], UnityEngine.Color.red);
+//     }
+// }
 
 
 
@@ -394,11 +409,12 @@ void Update()
         return new Vector3(coords[0], this.transform.position.y, coords[1]);
     }
 
+
     public Vector3[] GetCorners(float hexSize = 1f)
     {
         Vector3[] corners = new Vector3[6];
 
-        Vector3 center = this.transform.position;
+        Vector3 center = transform.position;
 
         for (int i = 0; i < 6; i++)
         {
@@ -408,12 +424,27 @@ void Update()
             float x = center.x + Mathf.Cos(angleRad) * hexSize;
             float z = center.z + Mathf.Sin(angleRad) * hexSize;
 
-            corners[i] = new Vector3(x, -5f, z);
+            corners[i] = new Vector3(x, -4.95f, z);
+
+            // transformer le point en coordonnées world
+            // corners[i] = this.transform.TransformPoint(corners[i]);
         }
 
-
-
         return corners;
+    }
+
+    // Revoie les tuples de coordonnées des coins d'un hexagone pour le dessin de la ligne
+    public List<Vector3[]> GetEdges()
+    {
+        List<Vector3[]> segments = new List<Vector3[]>();
+        Vector3[] corners = GetCorners();
+
+        for (int i = 0; i < 6; i++)
+        {
+            segments.Add(new Vector3[] { corners[i], corners[(i + 1) % 6] });
+        }
+
+        return segments;
     }
 
     #endregion

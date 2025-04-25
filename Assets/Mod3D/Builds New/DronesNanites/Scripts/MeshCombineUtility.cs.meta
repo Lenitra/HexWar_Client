@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b41647a71ea6cc64dab1fab5b43227cd
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 14963
+  packageName: 'Scifi RTS Series: Resource Units'
+  packageVersion: 1.2
+  assetPath: Assets/SciFi RTS Series Resource Units/Scripts/MeshCombineUtility.cs
+  uploadId: 412141

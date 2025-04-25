@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c1f43bca05a119c43a64848369fef578
+timeCreated: 1436109070
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 14963
+  packageName: 'Scifi RTS Series: Resource Units'
+  packageVersion: 1.2
+  assetPath: Assets/SciFi RTS Series Resource Units/FBX/Mine/Materials/MineWhite.mat
+  uploadId: 412141

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e4899a6f6fa7b23449e7640191100823
+timeCreated: 1456834996
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 57223
+  packageName: 'Scifi RTS Series: Command Tower'
+  packageVersion: 1.0
+  assetPath: Assets/ScifiRTSSeriesCommandTower/FBX/CommandTower/Materials/CommandTowerGrey.mat
+  uploadId: 411841

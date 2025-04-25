@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ec22f1ec2e1222a4fafdea3dda455208
+timeCreated: 1456835569
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 57223
+  packageName: 'Scifi RTS Series: Command Tower'
+  packageVersion: 1.0
+  assetPath: Assets/ScifiRTSSeriesCommandTower/Prefabs/CommandTower/CommandTowerGrey.prefab
+  uploadId: 411841

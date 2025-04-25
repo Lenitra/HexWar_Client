@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b8618528cc9d06347b78de83dc1d14ec
+timeCreated: 1436109469
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 14963
+  packageName: 'Scifi RTS Series: Resource Units'
+  packageVersion: 1.2
+  assetPath: Assets/SciFi RTS Series Resource Units/Prefabs/ResourceLifter/ResourceLifterWhite.prefab
+  uploadId: 412141

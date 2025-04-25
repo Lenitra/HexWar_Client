@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2056fac2edfc08d4ca038a530ba4ba1b
+timeCreated: 1436109384
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 14963
+  packageName: 'Scifi RTS Series: Resource Units'
+  packageVersion: 1.2
+  assetPath: Assets/SciFi RTS Series Resource Units/Prefabs/Refinery/RefineryWhite.prefab
+  uploadId: 412141

@@ -92,6 +92,8 @@ public class BuildPanel : MonoBehaviour
 
     private void ClosePanel()
     {
+        controller.SelectedTile = null;
+        tileSelected = null;
         gameObject.SetActive(false);
     }
 
@@ -153,7 +155,7 @@ public class BuildPanel : MonoBehaviour
     private void ValidateBuild()
     {
         controller.BuildTile(tileSelected, buildType[buildIndex]);
-        gameObject.SetActive(false);
+        ClosePanel();
     }
 
     #endregion

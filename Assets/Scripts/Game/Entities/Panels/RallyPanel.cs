@@ -28,6 +28,8 @@ public class RallyPanel : MonoBehaviour
 
     private void close()
     {
+        controller.SelectedTile = null;
+        tileToRally = null;
         gameObject.SetActive(false);
     }
 

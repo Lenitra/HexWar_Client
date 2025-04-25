@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cb81526502dfcf54b8109889d39c8c94
+timeCreated: 1436109339
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 14963
+  packageName: 'Scifi RTS Series: Resource Units'
+  packageVersion: 1.2
+  assetPath: Assets/SciFi RTS Series Resource Units/Prefabs/Mine/MineUpgradeWhite.prefab
+  uploadId: 412141

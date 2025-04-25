@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f75db77e0bb6ec14f88c890bc40efbc8
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 14963
+  packageName: 'Scifi RTS Series: Resource Units'
+  packageVersion: 1.2
+  assetPath: Assets/SciFi RTS Series Resource Units/Scripts/CombineChildren.cs
+  uploadId: 412141

@@ -38,7 +38,6 @@ public class MovePanel : MonoBehaviour
 
         // Setup des boutons généraux
         
-        // TODO: 
         closeBtn.onClick.AddListener(ClosePanel);
 
         // Setup des boutons de déplacement
@@ -53,6 +52,9 @@ public class MovePanel : MonoBehaviour
 
     private void ClosePanel()
     {
+        controller.SelectedTile = null;
+        originTile = null;
+        destinationTile = null;
         gameObject.SetActive(false);
     
     }

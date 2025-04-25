@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b3348f49450e46e44a6cfb9ccaaec564
+timeCreated: 1436109089
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 14963
+  packageName: 'Scifi RTS Series: Resource Units'
+  packageVersion: 1.2
+  assetPath: Assets/SciFi RTS Series Resource Units/FBX/Refinery/Materials/RefineryWhite.mat
+  uploadId: 412141

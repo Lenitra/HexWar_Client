@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 816acb1d571b72749a0de876c447f957
+timeCreated: 1436109594
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 14963
+  packageName: 'Scifi RTS Series: Resource Units'
+  packageVersion: 1.2
+  assetPath: Assets/SciFi RTS Series Resource Units/Prefabs/Mine/MinePlatformWhite.prefab
+  uploadId: 412141

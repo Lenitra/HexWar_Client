@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using TMPro;
-using System;
 
 /// <summary>
 /// Handles player interactions with tiles: selection, hover, and action panels (build, move, rally, dispatch).
@@ -43,7 +41,7 @@ public class Controller : MonoBehaviour
     /// Currently selected tile by the player.
     /// Setting this property will handle visual feedback and info panel.
     /// </summary>
-    private Tile SelectedTile
+    public Tile SelectedTile
     {
         get => selectedTile;
         set
@@ -117,7 +115,7 @@ public class Controller : MonoBehaviour
             {
                 secondSelectedTile = hitTile;
                 // activation du panneau de déplacement
-                movePanel.SetupPanel(selectedTile, secondSelectedTile);
+                movePanel.SetupPanel(SelectedTile, secondSelectedTile);
                 // Appel de la fonction de validation du panneau de déplacement
                 ShowOnlyPanel(movePanel.gameObject);
                 gameManager.UnHighlightAllTiles();
@@ -165,7 +163,7 @@ public class Controller : MonoBehaviour
         }
 
         // Toggle selection off if clicking the same tile
-        if (tile == selectedTile)
+        if (tile == SelectedTile)
         {
             SelectedTile = null;
             return;
@@ -209,10 +207,10 @@ public class Controller : MonoBehaviour
     /// </summary>
     private void OnBuildButtonClicked()
     {
-        if (selectedTile == null || selectedTile.Owner != playerName)
+        if (SelectedTile == null || SelectedTile.Owner != playerName)
             return;
 
-        buildPanel.SetupPanel(selectedTile);
+        buildPanel.SetupPanel(SelectedTile);
         ShowOnlyPanel(buildPanel.gameObject);
     }
 
@@ -221,22 +219,22 @@ public class Controller : MonoBehaviour
     /// </summary>
     private void OnMoveButtonClicked()
     {
-        if (selectedTile == null || selectedTile.Owner != playerName)
+        if (SelectedTile == null || SelectedTile.Owner != playerName)
             return;
 
         // Passer en mode de sélection de la deuxième tile
         awaitingSecondSelection = true;
         // cacher le panneau d'info de la tile sélectionnée
         selectedInfoPanel.gameObject.SetActive(false);
-        gameManager.HighlightMoveTiles(selectedTile);
+        gameManager.HighlightMoveTiles(SelectedTile);
     }
 
     private void OnRallyButtonClicked()
     {
-        if (selectedTile == null || selectedTile.Owner != playerName)
+        if (SelectedTile == null || SelectedTile.Owner != playerName)
             return;
 
-        rallyPanel.SetupPanel(gameManager.GetAllPlayerUnits(), selectedTile);
+        rallyPanel.SetupPanel(gameManager.GetAllPlayerUnits(), SelectedTile);
         ShowOnlyPanel(rallyPanel.gameObject);
     }
 
@@ -251,7 +249,7 @@ public class Controller : MonoBehaviour
 
     public void BuildTile(Tile tile, string type)
     {
-        if (selectedTile == null || selectedTile.Owner != playerName)
+        if (SelectedTile == null || SelectedTile.Owner != playerName)
             return;
         string[] tileCoords = { tile.X.ToString(), tile.Y.ToString() };
         gameManager.BuildTile(tileCoords, type);
@@ -259,7 +257,7 @@ public class Controller : MonoBehaviour
     }
     public void DestroyTile(Tile tileSelected)
     {
-        if (selectedTile == null || selectedTile.Owner != playerName)
+        if (SelectedTile == null || SelectedTile.Owner != playerName)
             return;
         string[] tileCoords = { tileSelected.X.ToString(), tileSelected.Y.ToString() };
         gameManager.DestroyTile(tileCoords);
@@ -278,7 +276,7 @@ public class Controller : MonoBehaviour
 
     public void RallyTile(Tile tileSelected)
     {
-        if (selectedTile == null || selectedTile.Owner != playerName)
+        if (SelectedTile == null || SelectedTile.Owner != playerName)
             return;
         string[] tileCoords = { tileSelected.X.ToString(), tileSelected.Y.ToString() };
         gameManager.RallyUnits(tileCoords);
