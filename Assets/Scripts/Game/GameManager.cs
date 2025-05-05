@@ -307,10 +307,19 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    // TODO: modifier pour renvoyer la même que le calcul du serveur
     private int DistanceBetweenTiles(Tile tile1, Tile tile2)
     {
-        return Mathf.Max(Mathf.Abs(tile1.X - tile2.X), Mathf.Abs(tile1.Y - tile2.Y));
+        int x1 = tile1.X;
+        int y1 = tile1.Y;
+        int x2 = tile2.X;
+        int y2 = tile2.Y;
+                return Math.Max(
+            Math.Abs(x1 - x2),
+            Math.Max(
+                Math.Abs(y1 - y2),
+                Math.Abs((-x1 - y1 + x2 + y2))
+            )
+        );
     }
 
 
