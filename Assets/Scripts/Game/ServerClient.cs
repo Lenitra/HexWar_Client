@@ -61,7 +61,7 @@ public class ServerClient : MonoBehaviour
     IEnumerator GetGameState()
     {
         float startTime = Time.time;
-        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/get_hex/" + PlayerPrefs.GetString("username"));
+        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/get_hex/" + PlayerPrefs.GetString("username"));
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success)
@@ -110,7 +110,7 @@ public class ServerClient : MonoBehaviour
 
     IEnumerator MoveUnitsCoro(string[] from, string[] to, int units)
     {
-        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/move_units");
+        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/move_units");
         // origin = request.form.get("origin") # format "x:y"
         // destination = request.form.get("destination") # format "x:y"
         // units = int(request.form.get("units"))
@@ -155,7 +155,7 @@ public class ServerClient : MonoBehaviour
 
     IEnumerator BuildCoro(string[] tileCoords, string type)
     {
-        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/buildbat");
+        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/buildbat");
         request.method = "POST";
         request.SetRequestHeader("Content-Type", "application/json");
         request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{\"x\":" + tileCoords[0] + ",\"y\":" + tileCoords[1] + ",\"type\":\"" + type + "\"}"));
@@ -193,7 +193,7 @@ public class ServerClient : MonoBehaviour
 
     IEnumerator DestroyCoro(string[] tileCoords)
     {
-        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/destroy");
+        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/destroy");
         request.method = "POST";
         request.SetRequestHeader("Content-Type", "application/json");
         request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes( "{\"x\":" + tileCoords[0] + ",\"y\":" + tileCoords[1] + "}"));
@@ -229,7 +229,7 @@ public class ServerClient : MonoBehaviour
 
     IEnumerator RallyUnitsCoro(string[] tileCoords)
     {
-        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/rally");
+        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/rally");
         request.method = "POST";
         request.SetRequestHeader("Content-Type", "application/json");
         request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{\"x\":" + tileCoords[0] + ",\"y\":" + tileCoords[1] + "}"));
@@ -266,7 +266,7 @@ public class ServerClient : MonoBehaviour
 
     IEnumerator DispatchUnitsCoro()
     {
-        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/dispatch");
+        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/dispatch");
         request.method = "POST";
         request.SetRequestHeader("Content-Type", "application/json");
         request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{}"));
@@ -305,7 +305,7 @@ public class ServerClient : MonoBehaviour
 
     private IEnumerator GetPriceCoroutine(string build, int lvl, Action<int> onComplete)
     {
-        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/get_price/" + build + "/" + lvl);
+        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/get_price/" + build + "/" + lvl);
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success)

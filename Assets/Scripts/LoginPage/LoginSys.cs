@@ -30,7 +30,7 @@ public class LoginSys : MonoBehaviour
         StartCoroutine(checkVersion());
 
         // Ajouter un listener au bouton d'inscription pour ouvrir l'URL d'inscription dans le navigateur par défaut
-        registerButton.onClick.AddListener(() => Application.OpenURL(DataManager.Instance.GetData("serverIP") + "/login"));
+        registerButton.onClick.AddListener(() => Application.OpenURL(DataManager.Instance.GetData("serverIP") + "/api/login"));
 
         // Ajouter un listener au bouton de sortie pour quitter l'application
         exitButton.onClick.AddListener(() => Application.Quit());
@@ -85,7 +85,7 @@ public class LoginSys : MonoBehaviour
 
 #if UNITY_EDITOR
         Debug.Log("Mode éditeur");
-        string url = DataManager.Instance.GetData("serverIP") + "/get-version";
+        string url = DataManager.Instance.GetData("serverIP") + "/api/get-version";
         string version = Application.version;
 
 
@@ -117,7 +117,7 @@ public class LoginSys : MonoBehaviour
         }
 #else
 
-        string url = DataManager.Instance.GetData("serverIP") + "/get-version";
+        string url = DataManager.Instance.GetData("serverIP") + "/api/get-version";
         string version = Application.version;
 
 
@@ -166,7 +166,7 @@ public class LoginSys : MonoBehaviour
     // Coroutine pour envoyer la requête POST au serveur Flask
     IEnumerator Login(string username, string password)
     {
-        string url = DataManager.Instance.GetData("serverIP") + "/game-login";
+        string url = DataManager.Instance.GetData("serverIP") + "/api/game-login";
 
         // Création des données JSON à envoyer
         string jsonData = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
