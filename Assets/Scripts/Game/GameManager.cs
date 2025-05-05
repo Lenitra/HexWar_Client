@@ -277,7 +277,9 @@ public class GameManager : MonoBehaviour
                 {
                     if (!validTiles.Contains(adjacentTile))
                     {
-                        validTiles.Add(adjacentTile);
+                        if (CheckInNodeArea(adjacentTile)){
+                            validTiles.Add(adjacentTile);
+                        }
                     }
                 }
             }
@@ -288,6 +290,27 @@ public class GameManager : MonoBehaviour
 
 
         return validTiles;
+    }
+
+    private bool CheckInNodeArea(Tile tile)
+    {
+        foreach (Tile node in grid)
+        {
+            if (node.Type == "node")
+            {
+                if (DistanceBetweenTiles(tile, node) <= node.Lvl)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // TODO: modifier pour renvoyer la même que le calcul du serveur
+    private int DistanceBetweenTiles(Tile tile1, Tile tile2)
+    {
+        return Mathf.Max(Mathf.Abs(tile1.X - tile2.X), Mathf.Abs(tile1.Y - tile2.Y));
     }
 
 
