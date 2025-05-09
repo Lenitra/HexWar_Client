@@ -5,6 +5,9 @@ using System;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+
+
 
 
 public class ServerClient : MonoBehaviour
@@ -196,7 +199,7 @@ public class ServerClient : MonoBehaviour
         UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/destroy");
         request.method = "POST";
         request.SetRequestHeader("Content-Type", "application/json");
-        request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes( "{\"x\":" + tileCoords[0] + ",\"y\":" + tileCoords[1] + "}"));
+        request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{\"x\":" + tileCoords[0] + ",\"y\":" + tileCoords[1] + "}"));
         request.downloadHandler = new DownloadHandlerBuffer();
         yield return request.SendWebRequest();
         // debug the response
@@ -296,18 +299,21 @@ public class ServerClient : MonoBehaviour
     }
 
 
-
-
-    public void GetPrice(string build, int lvl, Action<int> onComplete)
+    public void GetBuildPrices()
     {
-        StartCoroutine(GetPriceCoroutine(build, lvl, onComplete));
+        StartCoroutine(GetBuildPricesCoroutine());
     }
 
-    private IEnumerator GetPriceCoroutine(string build, int lvl, Action<int> onComplete)
+    private IEnumerator GetBuildPricesCoroutine()
     {
-        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/get_price/" + build + "/" + lvl);
-        yield return request.SendWebRequest();
 
+        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/game-handshake-post-login/bat-stats");
+        request.method = "POST";
+        request.SetRequestHeader("Content-Type", "application/json");
+        request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{}"));
+        request.downloadHandler = new DownloadHandlerBuffer();
+
+        yield return request.SendWebRequest();
         if (request.result == UnityWebRequest.Result.Success)
         {
             if (request.downloadHandler.text.ToLower().StartsWith("error : Veillez vous (re)connecter"))
@@ -320,8 +326,7 @@ public class ServerClient : MonoBehaviour
             }
             else
             {
-                int price = int.Parse(request.downloadHandler.text);
-                onComplete?.Invoke(price);
+                gameManager.handshakeResponse_BatStats(request.downloadHandler.text);
             }
         }
         else
@@ -332,10 +337,16 @@ public class ServerClient : MonoBehaviour
 
 
 
+
+
     void OnApplicationQuit()
     {
         StopAllCoroutines();
     }
+
+
+
+
 
 
 }

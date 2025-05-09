@@ -32,8 +32,19 @@ public class GameManager : MonoBehaviour
         gameView = GetComponent<GameView>();
         playerName = PlayerPrefs.GetString("username");
 
-        // On demande au serveur de nous envoyer la carte
-        serverClient.updateMap();
+        // Permet de récupérer les prix de construction, le wiki,...
+        // appel des routes /api/game-handshake-post-login/xxx
+        loadData();
+
+        // // On demande au serveur de nous envoyer la carte
+        // serverClient.updateMap();
+    }
+
+
+    private void loadData()
+    {
+        serverClient.GetBuildPrices();
+        // serverClient.GetWiki();
     }
 
 
@@ -590,12 +601,46 @@ public class GameManager : MonoBehaviour
         }
         return totalUnits;
     }
+#region retour des données du serveur du handshake
+    public void handshakeResponse_BatStats(string response)
+    {
+        // Exemple de réponse :
+        // {"build_prices":[{"build":"barracks","levels":[{"lvl":1,"production":1,"cost":100},{"lvl":2,"production":2,"cost":200}]}]}
+        BuildPricesResponse data = JsonUtility.FromJson<BuildPricesResponse>(response);
+        if (data == null)
+        {
+            Debug.LogError("Erreur de désérialisation du JSON");
+            return;
+        }
+
+        foreach (BuildWrapper build in data.build_prices)
+        {
+            foreach (LevelInfo level in build.levels)
+            {
+                Debug.Log($"Batiment : {build.build}, Niveau : {level.lvl}, Production : {level.production}, Coût : {level.cost}");
+            }
+        }
+    }
+
+    public void handshakeResponse_Wiki(string response)
+    {
+
+    }
+
+#endregion
 }
 
 
 
-#region Classes de données
 
+
+
+
+
+
+
+#region Classes de données
+#region Tiles
 [Serializable]
 public class GameData
 {
@@ -632,5 +677,33 @@ public class Hex
         return dict;
     }
 }
+
+#endregion
+
+#region Stats des batiments
+
+[Serializable]
+public class BuildPricesResponse
+{
+    public BuildWrapper[] build_prices;
+}
+
+[Serializable]
+public class BuildWrapper
+{
+    public string build;
+    public LevelInfo[] levels;
+}
+
+[Serializable]
+public class LevelInfo
+{
+    public int lvl;
+    public int production;
+    public int cost;
+}
+
+
+#endregion
 
 #endregion
