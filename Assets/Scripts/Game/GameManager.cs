@@ -624,13 +624,15 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        // On récupère les prix de construction
         foreach (BuildWrapper build in data.build_prices)
         {
             foreach (LevelInfo level in build.levels)
             {
-                Debug.Log($"Batiment : {build.build}, Niveau : {level.lvl}, Production : {level.production}, Coût : {level.cost}");
+                Debug.Log("Batiment : " + build.build + " - Niveau : " + level.lvl + " - Production : " + level.production + " - Prix : " + level.cost);
             }
         }
+
         handshakeOk();
     }
 
