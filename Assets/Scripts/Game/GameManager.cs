@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject loadingScreen;
     private int handshakeCount = 0; // Compteur de handshake
-    private int handshakeMax = 3; // Nombre de handshake avant d'afficher le jeu
+    private int handshakeMax = 1; // Nombre de handshake avant d'afficher le jeu
 
 
     // Getter et setter pour money

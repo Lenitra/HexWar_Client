@@ -85,7 +85,7 @@ public class LoginSys : MonoBehaviour
 
 #if UNITY_EDITOR
         Debug.Log("Mode éditeur");
-        string url = DataManager.Instance.GetData("serverIP") + "/api/get-version";
+        string url = DataManager.Instance.GetData("serverIP") + "/api/get_version";
         string version = Application.version;
 
 
@@ -117,7 +117,7 @@ public class LoginSys : MonoBehaviour
         }
 #else
 
-        string url = DataManager.Instance.GetData("serverIP") + "/api/get-version";
+        string url = DataManager.Instance.GetData("serverIP") + "/api/get_version";
         string version = Application.version;
 
 
@@ -166,7 +166,7 @@ public class LoginSys : MonoBehaviour
     // Coroutine pour envoyer la requête POST au serveur Flask
     IEnumerator Login(string username, string password)
     {
-        string url = DataManager.Instance.GetData("serverIP") + "/api/game-login";
+        string url = DataManager.Instance.GetData("serverIP") + "/api/game_login";
         Debug.Log("URL: " + url);
         // Création des données JSON à envoyer
         string jsonData = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";

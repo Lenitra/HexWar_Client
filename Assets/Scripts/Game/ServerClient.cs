@@ -307,7 +307,7 @@ public class ServerClient : MonoBehaviour
     private IEnumerator GetBuildPricesCoroutine()
     {
 
-        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/game-handshake-post-login/bat-stats");
+        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/game_handshake_post_login/bat_stats");
         request.method = "POST";
         request.SetRequestHeader("Content-Type", "application/json");
         request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{}"));
@@ -337,6 +337,40 @@ public class ServerClient : MonoBehaviour
 
 
 
+    public void GetWikiData()
+    {
+        StartCoroutine(GetWikiDataCoroutine());
+    }
+
+    private IEnumerator GetWikiDataCoroutine()
+    {
+        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/game_handshake_post_login/wiki");
+        request.method = "POST";
+        request.SetRequestHeader("Content-Type", "application/json");
+        request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{}"));
+        request.downloadHandler = new DownloadHandlerBuffer();
+
+        yield return request.SendWebRequest();
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            if (request.downloadHandler.text.ToLower().StartsWith("error : Veillez vous (re)connecter"))
+            {
+                SceneManager.LoadScene("Home");
+            }
+            else if (request.downloadHandler.text.ToLower().StartsWith("error : "))
+            {
+                gameManager.nopePanel(request.downloadHandler.text.Substring(8));
+            }
+            else
+            {
+                gameManager.handshakeResponse_Wiki(request.downloadHandler.text);
+            }
+        }
+        else
+        {
+            Debug.LogError("Error: " + request.error);
+        }
+    }
 
 
     void OnApplicationQuit()
