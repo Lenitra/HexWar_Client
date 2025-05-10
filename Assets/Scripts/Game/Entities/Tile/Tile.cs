@@ -246,7 +246,7 @@ public class Tile : MonoBehaviour
 
     private IEnumerator NodeRadiusCalc()
     {
-        yield return new WaitForSeconds(1f);
+        yield return null;
         GameManager gameManager = FindFirstObjectByType<GameManager>();
 
 
@@ -255,6 +255,7 @@ public class Tile : MonoBehaviour
         // Transformer les positions en coordonnées locales
         for (int i = 0; i < positions.Count; i++)
         {
+            yield return null;
             positions[i] = this.transform.InverseTransformPoint(positions[i]);
         }
 
@@ -386,17 +387,6 @@ public class Tile : MonoBehaviour
     }
 
 
-
-
-// void Update()
-// {
-//     Vector3[] corners = GetCorners();
-
-//     for (int i = 0; i < 6; i++)
-//     {
-//         Debug.DrawLine(corners[i], corners[(i + 1) % 6], UnityEngine.Color.red);
-//     }
-// }
 
 
 

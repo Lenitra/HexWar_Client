@@ -167,7 +167,7 @@ public class LoginSys : MonoBehaviour
     IEnumerator Login(string username, string password)
     {
         string url = DataManager.Instance.GetData("serverIP") + "/api/game-login";
-
+        Debug.Log("URL: " + url);
         // Création des données JSON à envoyer
         string jsonData = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
         byte[] postData = System.Text.Encoding.UTF8.GetBytes(jsonData);

@@ -15,6 +15,11 @@ public class GameManager : MonoBehaviour
     private string playerName; // Nom du joueur
     [SerializeField] private ErrorPanel errorPanel;
 
+    [SerializeField] private GameObject loadingScreen;
+    private int handshakeCount = 0; // Compteur de handshake
+    private int handshakeMax = 3; // Nombre de handshake avant d'afficher le jeu
+
+
     // Getter et setter pour money
     public int Money
     {
@@ -102,7 +107,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        
+
     }
 
 
@@ -288,7 +293,8 @@ public class GameManager : MonoBehaviour
                 {
                     if (!validTiles.Contains(adjacentTile))
                     {
-                        if (CheckInNodeArea(adjacentTile)){
+                        if (CheckInNodeArea(adjacentTile))
+                        {
                             validTiles.Add(adjacentTile);
                         }
                     }
@@ -324,13 +330,13 @@ public class GameManager : MonoBehaviour
         int y1 = tile1.Y;
         int x2 = tile2.X;
         int y2 = tile2.Y;
-                return Math.Max(
-            Math.Abs(x1 - x2),
-            Math.Max(
-                Math.Abs(y1 - y2),
-                Math.Abs((-x1 - y1 + x2 + y2))
-            )
-        );
+        return Math.Max(
+    Math.Abs(x1 - x2),
+    Math.Max(
+        Math.Abs(y1 - y2),
+        Math.Abs((-x1 - y1 + x2 + y2))
+    )
+);
     }
 
 
@@ -383,7 +389,6 @@ public class GameManager : MonoBehaviour
                 msg += coord.x + "," + coord.y + " : Not Found\n";
             }
         }
-        Debug.Log("Tiles in radius (" + radius + ") : " + tiles.Count + "\n" + msg);
         return tiles;
     }
 
@@ -410,12 +415,6 @@ public class GameManager : MonoBehaviour
         // 2) Calcule l'enveloppe convexe sur le plan XZ
         var hull = ComputeHullOnGround(points);
 
-        // 3) Debug
-        Debug.Log(
-            $"Points bruts : {points.Count}\n" +
-            $"Sommets du contour : {hull.Count}\n" +
-            $"Niveau (lvl) : {tileGroup[0].Lvl}"
-        );
 
         return hull;
     }
@@ -601,7 +600,19 @@ public class GameManager : MonoBehaviour
         }
         return totalUnits;
     }
-#region retour des données du serveur du handshake
+
+
+
+    #region retour des données du serveur du handshake
+
+    public void handshakeOk(){
+                handshakeCount++;
+        if (handshakeCount >= handshakeMax)
+        {
+            loadingScreen.SetActive(false);
+        }
+    }
+
     public void handshakeResponse_BatStats(string response)
     {
         // Exemple de réponse :
@@ -620,14 +631,19 @@ public class GameManager : MonoBehaviour
                 Debug.Log($"Batiment : {build.build}, Niveau : {level.lvl}, Production : {level.production}, Coût : {level.cost}");
             }
         }
+        handshakeOk();
     }
 
     public void handshakeResponse_Wiki(string response)
     {
-
+        
+        handshakeOk();
     }
 
-#endregion
+    #endregion
+    
+    
+
 }
 
 

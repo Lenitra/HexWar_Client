@@ -72,13 +72,25 @@ public class DataManager : MonoBehaviour
         dataDictionary.Clear();
     }
 
+    // Méthode pour ajouter une nouvelle chaîne de caractères
+    public void UpdateData(string key, string value)
+    {
+        if (!dataDictionary.ContainsKey(key))
+        {
+            dataDictionary.Add(key, value);
+        }
+        else
+        {
+            dataDictionary[key] = value;
+        }
+    }
+
 
     // Méthode pour initialiser les données en fonction de la langue sélectionnée
     void initalise(string lang="fr"){
         dataDictionary.Clear();
         dataDictionary.Add("serverIP", "https://nyxsimperium.com");
         if (lang == "fr"){
-            dataDictionary.Add("", "");
             dataDictionary.Add("build", "Construire");
             dataDictionary.Add("upgrade", "Améliorer");
             dataDictionary.Add("moveUnits", "Déplacer/Attaquer");
