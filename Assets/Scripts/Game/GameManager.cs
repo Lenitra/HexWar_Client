@@ -618,20 +618,25 @@ public class GameManager : MonoBehaviour
         // Exemple de réponse :
         // {"build_prices":[{"build":"barracks","levels":[{"lvl":1,"production":1,"cost":100},{"lvl":2,"production":2,"cost":200}]}]}
         BuildPricesResponse data = JsonUtility.FromJson<BuildPricesResponse>(response);
-        if (data == null)
+        if (data == null || data.ToString() == "")
         {
             Debug.LogError("Erreur de désérialisation du JSON");
             return;
         }
-
+        Debug.Log("Réponse du serveur : " + response);
         // On récupère les prix de construction
-        foreach (BuildWrapper build in data.build_prices)
+        List<BuildWrapper> builds = data.builds_data.build_prices;
+        foreach (BuildWrapper build in builds)
         {
-            foreach (LevelInfo level in build.levels)
+            string buildName = build.build;
+            List<LevelInfo> levels = build.levels;
+            foreach (LevelInfo level in levels)
             {
-                Debug.Log("Batiment : " + build.build + " - Niveau : " + level.lvl + " - Production : " + level.production + " - Prix : " + level.cost);
+                Debug.Log("Build : " + buildName + ", Level : " + level.lvl + ", Cost : " + level.cost);
             }
         }
+        // On peut maintenant afficher les prix de construction dans le menu de construction
+        
 
         handshakeOk();
     }
@@ -703,24 +708,29 @@ public class Hex
 [Serializable]
 public class BuildPricesResponse
 {
-    public BuildWrapper[] build_prices;
+    public BuildsData builds_data;
+}
+
+[Serializable]
+public class BuildsData
+{
+    public List<BuildWrapper> build_prices;
 }
 
 [Serializable]
 public class BuildWrapper
 {
     public string build;
-    public LevelInfo[] levels;
+    public List<LevelInfo> levels;
 }
 
 [Serializable]
 public class LevelInfo
 {
+    public int cost;
     public int lvl;
     public int production;
-    public int cost;
 }
-
 
 #endregion
 
