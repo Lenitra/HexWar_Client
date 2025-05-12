@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class DataManager : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class DataManager : MonoBehaviour
             if (_instance == null)
             {
                 // Recherche d'une instance existante dans la scène
-                _instance = FindObjectOfType<DataManager>();
+                _instance = FindFirstObjectByType<DataManager>();
 
                 // Si aucune instance n'est trouvée, on en crée une
                 if (_instance == null)
@@ -36,6 +37,15 @@ public class DataManager : MonoBehaviour
         }
     }
 
+    public void DebugData()
+    {
+        String msg = "";
+        foreach (KeyValuePair<string, string> entry in dataDictionary)
+        {
+            msg += entry.Key + " : " + entry.Value + "\n";
+        }
+        Debug.Log(msg);
+    }
 
 
     // Initialisation
@@ -88,7 +98,7 @@ public class DataManager : MonoBehaviour
 
     // Méthode pour initialiser les données en fonction de la langue sélectionnée
     void initalise(string lang="fr"){
-        dataDictionary.Clear();
+        // dataDictionary.Clear();
         dataDictionary.Add("serverIP", "https://nyxsimperium.com");
         if (lang == "fr"){
             dataDictionary.Add("build", "Construire");

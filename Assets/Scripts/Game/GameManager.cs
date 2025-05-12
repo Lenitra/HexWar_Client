@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.UI;
+using Unity.Android.Gradle.Manifest;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject loadingScreen;
     private int handshakeCount = 0; // Compteur de handshake
-    private int handshakeMax = 1; // Nombre de handshake avant d'afficher le jeu
+    private bool loadedMap = false; // Indique si la carte est chargée
 
 
     // Getter et setter pour money
@@ -42,7 +43,7 @@ public class GameManager : MonoBehaviour
         loadData();
 
         // // On demande au serveur de nous envoyer la carte
-        // serverClient.updateMap();
+        serverClient.updateMap();
     }
 
 
@@ -91,14 +92,17 @@ public class GameManager : MonoBehaviour
 
         // Mettre à jour les attributs des tiles.
         UpdateHexesAttributes(data.hexMap);
+        if (loadedMap == false)
+        {
+            loadedMap = true; // La carte est chargée
+            handshakeOk(false); // On incrémente le compteur de handshake
+        }
     }
 
 
 
     private void UpdateNodesArea()
     {
-        // On récupère les hexagones de la carte
-        List<Tile> nodes = new List<Tile>();
         foreach (Tile tile in grid)
         {
             if (tile.Type == "node")
@@ -106,8 +110,6 @@ public class GameManager : MonoBehaviour
                 tile.SetupNodeRadius();
             }
         }
-
-
     }
 
 
@@ -602,54 +604,76 @@ public class GameManager : MonoBehaviour
     }
 
 
+    private Tile GetNodeTile()
+    {
+        foreach (Tile tile in grid)
+        {
+            if (tile.Type == "node")
+            {
+                return tile;
+            }
+        }
+        return null;
+    }
+
 
     #region retour des données du serveur du handshake
 
-    public void handshakeOk(){
-                handshakeCount++;
-        if (handshakeCount >= handshakeMax)
+    public void handshakeOk(bool incrCounter = true)
+    {
+        if (incrCounter == true)
+        {
+            handshakeCount++;
+        }
+        if (handshakeCount >= 1 && loadedMap == true)
         {
             loadingScreen.SetActive(false);
+            float x = 0;
+            float y = 0;
+            Tile nodeTile = GetNodeTile();
+            x = nodeTile.GetHexCoordinates()[0];
+            y = nodeTile.GetHexCoordinates()[1] - 6;
+            // From the main camera, move to the tile
+            Camera.main.GetComponent<CamController>().moveCamToTile(x, y, false);
         }
     }
 
     public void handshakeResponse_BatStats(string response)
     {
         // Exemple de réponse :
-        // {"build_prices":[{"build":"barracks","levels":[{"lvl":1,"production":1,"cost":100},{"lvl":2,"production":2,"cost":200}]}]}
-        BuildPricesResponse data = JsonUtility.FromJson<BuildPricesResponse>(response);
-        if (data == null || data.ToString() == "")
+        Debug.Log(response);
+        BuildDataCollection data = JsonUtility.FromJson<BuildDataCollection>(response);
+        if (data == null || data.build_data == null || data.build_data.Count == 0)
         {
-            Debug.LogError("Erreur de désérialisation du JSON");
+            Debug.LogError("Erreur de désérialisation du JSON ou build_data vide");
             return;
         }
         Debug.Log("Réponse du serveur : " + response);
-        // On récupère les prix de construction
-        List<BuildWrapper> builds = data.builds_data.build_prices;
-        foreach (BuildWrapper build in builds)
+
+        // On récupère les données de chaque bâtiment
+        List<BuildData> builds = data.build_data;
+        foreach (BuildData build in builds)
         {
             string buildName = build.build;
             List<LevelInfo> levels = build.levels;
             foreach (LevelInfo level in levels)
             {
-                Debug.Log("Build : " + buildName + ", Level : " + level.lvl + ", Cost : " + level.cost);
+                // Stockage via votre DataManager
+                string key = $"{buildName}_{level.lvl}_cost";
+                DataManager.Instance.UpdateData(key, level.cost.ToString());
             }
         }
-        // On peut maintenant afficher les prix de construction dans le menu de construction
-        
-
         handshakeOk();
     }
 
     public void handshakeResponse_Wiki(string response)
     {
-        
         handshakeOk();
     }
 
     #endregion
-    
-    
+
+
 
 }
 
@@ -706,32 +730,34 @@ public class Hex
 #region Stats des batiments
 
 [Serializable]
-public class BuildPricesResponse
+public class BuildDataCollection
 {
-    public BuildsData builds_data;
+    // Le nom doit correspondre EXACTEMENT à la clé "build_data" dans le JSON
+    public List<BuildData> build_data;
 }
 
 [Serializable]
-public class BuildsData
+public class BuildData
 {
-    public List<BuildWrapper> build_prices;
-}
-
-[Serializable]
-public class BuildWrapper
-{
+    // Correspond à la clé "build" (nom du bâtiment)
     public string build;
+
+    // Correspond à la clé "levels" (liste des niveaux)
     public List<LevelInfo> levels;
 }
 
 [Serializable]
 public class LevelInfo
 {
-    public int cost;
+    // Correspond à "lvl"
     public int lvl;
-    public int production;
-}
 
+    // Correspond à "production"
+    public int production;
+
+    // Correspond à "cost"
+    public int cost;
+}
 #endregion
 
 #endregion

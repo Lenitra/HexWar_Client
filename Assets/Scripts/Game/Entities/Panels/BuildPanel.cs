@@ -44,32 +44,53 @@ public class BuildPanel : MonoBehaviour
 
     [Header("Upgrade Body - Buildings")]
     private string[] upgradeType = new string[] { "Node", "Excavateur", "Usine de drones", "Radar" };
-    private string[] buildTitles = new string[] {"Node", "Excavateur", "Usine de drones", "Radar" };
-    private string[] buildType = new string[] {"Node", "Miner", "Barrack", "Radar" };
+    private string[] buildTitles = new string[] { "Node", "Excavateur", "Usine de drones", "Radar" };
+    private string[] buildType = new string[] { "Node", "Miner", "Barrack", "Radar" };
     private string[] buildDescriptions = new string[] {
         "Permet de gérer un secteur",
         "Génère des nanites",
         "Construit des drones",
         "Augmente portée de vision de l'hexagone"
     };
+    private Tile tileSelected;
 
 
     // Prix des upgrades dans lordre : QG, Excavateur, Usine de drones, Radar
-    private string[][] prices = new string[][] {
-        new string[] { "0", "500", "1500", "3000", "5000" }, // HQ
-        new string[] { "75", "300", "500", "800", "1500" }, // Miner
-        new string[] { "150", "300", "500", "800", "1500" }, // Barrack
-        new string[] { "100", "300", "500", "800", "1500" } // Radar
-    };
+    // private string[][] prices = new string[][] {
+    //     new string[] { "0", "500", "1500", "3000", "5000" }, // HQ
+    //     new string[] { "75", "300", "500", "800", "1500" }, // Miner
+    //     new string[] { "150", "300", "500", "800", "1500" }, // Barrack
+    //     new string[] { "100", "300", "500", "800", "1500" } // Radar
+    // };
 
+    // Prix des upgrades dans lordre : QG, Excavateur, Usine de drones, Radarprivate static readonly string[] buildsOrder = { "node", "miner", "barrack", "radar" };
+    private static readonly string[] buildsOrder = { "node", "miner", "barrack", "radar" };
+    private string[][] prices = new string[buildsOrder.Length][];
 
-    private Tile tileSelected;
+    private void Init()
+    {
+        for (int buildIndex = 0; buildIndex < buildsOrder.Length; buildIndex++)
+        {
+            prices[buildIndex] = new string[5];
 
+            for (int lvlIndex = 0; lvlIndex < prices[buildIndex].Length; lvlIndex++)
+            {
+                // on veut les niveaux 1 à 5, pas -1 à 3
+                int level = lvlIndex + 1;
+                string key = $"{buildsOrder[buildIndex]}_{level}_cost";
+                prices[buildIndex][lvlIndex] = DataManager.Instance.GetData(key);
+
+                Debug.Log($"{key} = {prices[buildIndex][lvlIndex]}");
+
+            }
+        }
+    }
 
 
     private void Start()
     {
-        // TODO: Récupération des prix des bâtiments depuis le serveur pour la construction et l'upgrade
+
+
 
         // Setup des boutons généraux
         closeBtn.onClick.AddListener(ClosePanel);
@@ -100,6 +121,11 @@ public class BuildPanel : MonoBehaviour
 
     public void SetupPanel(Tile tile)
     {
+        if (prices[0] == null)
+        {
+            Init();
+        }
+        
         tileSelected = tile;
 
         // Activer le bon body
@@ -212,7 +238,7 @@ public class BuildPanel : MonoBehaviour
                 }
                 break;
         }
-        
+
         if (lvlMax)
         {
             upgradeBtnValidate.interactable = false;
