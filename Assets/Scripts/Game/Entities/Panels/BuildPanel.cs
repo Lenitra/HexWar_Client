@@ -111,6 +111,7 @@ public class BuildPanel : MonoBehaviour
         ClosePanel();
     }
 
+
     private void ClosePanel()
     {
         controller.SelectedTile = null;
@@ -125,7 +126,7 @@ public class BuildPanel : MonoBehaviour
         {
             Init();
         }
-        
+
         tileSelected = tile;
 
         // Activer le bon body
