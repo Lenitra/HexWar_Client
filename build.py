@@ -39,7 +39,7 @@ unity_command = [
     "-executeMethod",
     "BuildAutomation.BuildAllPlatforms",
 ]
-
+print("Build en cours...")
 try:
     result = subprocess.run(
         unity_command,
