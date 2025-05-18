@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
+using NUnit.Framework;
 
 
 
@@ -341,6 +342,11 @@ public class Tile : MonoBehaviour
 
     private void SetupType()
     {
+        if (this.type.ToLower() != "node")
+        {
+            nodeRadius.gameObject.SetActive(false);
+        }
+        
         int index = -1;
         switch (this.type.ToLower())
         {

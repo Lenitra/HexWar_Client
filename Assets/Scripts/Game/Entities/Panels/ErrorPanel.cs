@@ -30,7 +30,6 @@ public class ErrorPanel : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape)){
             closeBtnClick();
         }
-        // on press enter 
         if (Input.GetKeyDown(KeyCode.Return)){
             closeBtnClick();
         }
