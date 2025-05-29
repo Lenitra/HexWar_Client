@@ -16,7 +16,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ErrorPanel errorPanel;
 
     [SerializeField] private GameObject loadingScreen;
+    [SerializeField] private Slider loadingSlider;
     private int handshakeCount = 0; // Compteur de handshake
+    private const int HANDSHAKE_COUNT = 1; // Nombre de handshakes à attendre avant de charger la carte
     private bool loadedMap = false; // Indique si la carte est chargée
 
 
@@ -623,8 +625,9 @@ public class GameManager : MonoBehaviour
         if (incrCounter == true)
         {
             handshakeCount++;
+            loadingSlider.value = (float)handshakeCount / HANDSHAKE_COUNT;
         }
-        if (handshakeCount >= 1 && loadedMap == true)
+        if (handshakeCount >= HANDSHAKE_COUNT && loadedMap == true)
         {
             loadingScreen.SetActive(false);
             float x = 0;

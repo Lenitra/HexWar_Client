@@ -83,9 +83,12 @@ public class Tile : MonoBehaviour
         set
         {
             lvl = value;
-            if (Type == "node")
+            if (Type == "node" && lvl > 0)
             {
                 SetupNodeRadius();
+            } else if (nodeRadius.gameObject.activeSelf)
+            {
+                nodeRadius.gameObject.SetActive(false);
             }
         }
     }
@@ -248,6 +251,13 @@ public class Tile : MonoBehaviour
     private IEnumerator NodeRadiusCalc()
     {
         yield return null;
+
+        if (Lvl <= 0 || Type.ToLower() != "node")
+        {
+            nodeRadius.gameObject.SetActive(false);
+            yield break;
+        }
+
         GameManager gameManager = FindFirstObjectByType<GameManager>();
 
 
@@ -331,7 +341,7 @@ public class Tile : MonoBehaviour
 
             nodeRadiusMaterial.SetColor("_Color", ownerColor);
             // Ajouter de l'intensité à la couleur d'émission pour le nodeRadius
-            nodeRadiusMaterial.SetColor("_EmissionColor", ownerColor * 2f);
+            nodeRadiusMaterial.SetColor("_EmissionColor", ownerColor * 1f);
 
         }
     }
@@ -365,6 +375,7 @@ public class Tile : MonoBehaviour
                 break;
             default:
                 index = -1;
+                nodeRadius.gameObject.SetActive(false);
                 break;
         }
 
@@ -377,6 +388,7 @@ public class Tile : MonoBehaviour
         else
         {
             Destroy(building);
+            nodeRadius.gameObject.SetActive(false);
         }
 
     }
