@@ -39,11 +39,11 @@ public class TilePanel : MonoBehaviour
         {
             if (tile.Units == 0)
             {
-                tmp += "Drones : ?\n";
+                tmp += "Drones : 0+\n";
             }
             else
             {
-                tmp += "Drones : ~" + tile.Units + "\n";
+                tmp += "Drones : " + tile.Units + "+\n";
             }
         }
         tmp += "Bat : " + tile.Type + "\n";

@@ -12,6 +12,7 @@ public class LoginSys : MonoBehaviour
     [SerializeField] private TMP_InputField LOGINpasswordInput;
     [SerializeField] private Toggle LOGINrememberToggle;
     [SerializeField] private Button LOGINbutton;
+    [SerializeField] private GameObject LOGINloading;
 
     [SerializeField] private Button registerButton;
     [SerializeField] private Button exitButton;
@@ -30,10 +31,10 @@ public class LoginSys : MonoBehaviour
         StartCoroutine(checkVersion());
 
         // Ajouter un listener au bouton d'inscription pour ouvrir l'URL d'inscription dans le navigateur par défaut
-        registerButton.onClick.AddListener(() => Application.OpenURL(DataManager.Instance.GetData("serverIP") + "/api/login"));
+        registerButton.onClick.AddListener(() => Application.OpenURL(DataManager.Instance.GetData("serverIP") + "/login"));
 
         // Ajouter un listener au bouton de sortie pour quitter l'application
-        exitButton.onClick.AddListener(() => Application.Quit());
+        // exitButton.onClick.AddListener(() => Application.Quit());
 
 
         // Focus par défaut sur le champ de nom d'utilisateur
@@ -158,7 +159,7 @@ public class LoginSys : MonoBehaviour
     // Méthode pour démarrer le processus de connexion
     public void StartLogin(string username, string password)
     {
-        // LOGINloading.gameObject.SetActive(true);
+        LOGINloading.gameObject.SetActive(true);
         StartCoroutine(Login(username, password));
     }
 
@@ -185,19 +186,20 @@ public class LoginSys : MonoBehaviour
         if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
         {
             Debug.LogError("Erreur de connexion: " + request.error);
+            StartCoroutine(ShakeUI());
         }
         else
         {
             // Traitement de la réponse du serveur
             string responseText = request.downloadHandler.text;
             Debug.Log("Réponse du serveur: " + responseText);
-            // LOGINloading.gameObject.SetActive(false);
+            LOGINloading.gameObject.SetActive(false);
 
-            if (responseText == "NOPE")
+            if (responseText.StartsWith("error :"))
             {
                 // Connexion échouée
                 Debug.Log("Connexion échouée");
-                StartCoroutine(shakeUI());
+                StartCoroutine(ShakeUI());
             }
             else
             {
@@ -249,17 +251,17 @@ public class LoginSys : MonoBehaviour
     }
 
     // Coroutine pour l'effet de shake sur le bouton de connexion en cas d'échec de connexion
-    IEnumerator shakeUI()
+    private IEnumerator ShakeUI()
     {
         LOGINpasswordInput.text = "";
-        Vector3 initialPos = LOGINbutton.GetComponent<RectTransform>().localPosition; // Correction de la déclaration
-        RectTransform rectTransform = LOGINbutton.GetComponent<RectTransform>(); // Stockage du RectTransform pour éviter de le rappeler plusieurs fois
+        Vector3 initialPos = LOGINbutton.GetComponent<RectTransform>().localPosition; // Récupérer la position initiale du RectTransform
+        RectTransform rectTransform = LOGINbutton.GetComponent<RectTransform>(); 
 
         for (int i = 0; i < 7; i++)
         {
-            rectTransform.localPosition = initialPos + new Vector3(5, 0, 0);
+            rectTransform.localPosition = initialPos + new Vector3(10, 0, 0);
             yield return new WaitForSeconds(0.05f);
-            rectTransform.localPosition = initialPos - new Vector3(5, 0, 0); // Ajout d'un déplacement inverse pour l'effet de shake
+            rectTransform.localPosition = initialPos - new Vector3(10, 0, 0); // Ajout d'un déplacement inverse pour l'effet de shake
             yield return new WaitForSeconds(0.05f);
         }
 
