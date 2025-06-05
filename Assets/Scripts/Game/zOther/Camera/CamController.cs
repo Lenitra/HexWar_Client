@@ -39,6 +39,10 @@ public class CamController : MonoBehaviour
         }
 
         HandleZoom();
+        if (Input.touchCount == 1)
+        {
+            HandleTouchDrag();
+        }
         HandleMouseDrag();
         HandleKeyboardMovement();
     }
@@ -100,9 +104,6 @@ public class CamController : MonoBehaviour
 
     private void HandleMouseDrag()
     {
-        // Pour éviter de gérer le drag souris quand il y a des touches tactiles actives
-        if (Input.touchCount > 0)
-            return;
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -155,6 +156,50 @@ public class CamController : MonoBehaviour
             {
                 ResetDrag();
 
+            }
+        }
+    }
+
+    private void HandleTouchDrag()
+    {
+        Touch touch = Input.GetTouch(0);
+
+        if (IsTouchOverUI(touch))
+        {
+            isDragging = false;
+            initialMousePosition = touch.position;
+            lastMousePosition = touch.position;
+            return;
+        }
+
+        if (touch.phase == TouchPhase.Began)
+        {
+            initialMousePosition = touch.position;
+            lastMousePosition = touch.position;
+        }
+        else if (touch.phase == TouchPhase.Moved)
+        {
+            if (!isDragging && Vector3.Distance(touch.position, initialMousePosition) > dragThreshold)
+            {
+                isDragging = true;
+            }
+
+            if (isDragging)
+            {
+                Vector3 touchDelta = touch.deltaPosition;
+                Vector3 right = mainCam.transform.right;
+                Vector3 forward = Vector3.Cross(right, Vector3.up);
+                Vector3 deltaPosition = (right * touchDelta.x + forward * touchDelta.y) * 0.01f;
+                transform.position -= new Vector3(deltaPosition.x, 0, deltaPosition.z);
+
+                lastMousePosition = touch.position;
+            }
+        }
+        else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+        {
+            if (isDragging)
+            {
+                ResetDrag();
             }
         }
     }
