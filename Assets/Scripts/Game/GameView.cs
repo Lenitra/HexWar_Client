@@ -9,6 +9,7 @@ public class GameView : MonoBehaviour
     
     [Header("HUD")]
     [SerializeField] private TextMeshProUGUI money; // Argent du joueur   
+    [SerializeField] private TextMeshProUGUI playerName; // Argent du joueur   
 
     [Header("Game effects")]
     [SerializeField] private GameObject sphereScanner; // Sphere scanner prefab
@@ -16,6 +17,11 @@ public class GameView : MonoBehaviour
     [SerializeField] private LineRenderer prefabLine; // Prefab de la ligne de déplacement des drones
 
 
+
+    void Awake()
+    {
+        playerName.text = PlayerPrefs.GetString("username");
+    }
 
 
     public void SetMoney(int value)
