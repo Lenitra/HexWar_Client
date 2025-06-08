@@ -1,6 +1,9 @@
+using System.Collections;
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Vector2 = UnityEngine.Vector2;
 
 /// <summary>
 /// Handles player interactions with tiles: selection, hover, and action panels (build, move, rally, dispatch).
@@ -11,31 +14,42 @@ public class Controller : MonoBehaviour
     private GameManager gameManager;
     private CamController camController;
     private Camera mainCamera;
-
-    // --- Player data ---
     private string playerName;
 
+
     // --- Tile selection state ---
-    private Tile hoverTile;
     private Tile selectedTile;
-    private bool awaitingSecondSelection;
     private Tile secondSelectedTile;
+    private bool moveMode = false;
+
 
     [Header("Tile Info Panels")]
     [SerializeField] private TilePanel hoverInfoPanel;
-    [SerializeField] private TilePanel selectedInfoPanel;
 
-    [Header("Action Buttons")]
-    [SerializeField] private Button buildButton;
-    [SerializeField] private Button moveButton;
-    [SerializeField] private Button rallyButton;
-    [SerializeField] private Button dispatchButton;
 
-    [Header("Action Panels")]
+
+    // [Header("Action Panels")]
     [SerializeField] private BuildPanel buildPanel;
     [SerializeField] private MovePanel movePanel;
-    [SerializeField] private RallyPanel rallyPanel;
-    [SerializeField] private DispatchPanel dispatchPanel;
+
+
+
+    [Header("Timing Thresholds (seconds)")]
+    private readonly float tapThreshold = 0.3f;
+    private readonly float doubleTapMaxDelay = 0.25f;
+    private readonly float longPressThreshold = 0.5f;
+
+    [Header("Drag Detection (pixels)")]
+    private readonly float dragThreshold = 10f;
+    private float pressStartTime;
+    private Vector2 pressStartPos;
+    private bool isDragging;
+    private bool longPressTriggered;
+
+    private bool awaitingDoubleTap;
+    private float lastTapTime;
+    private Coroutine tapCoroutine;
+
 
     /// <summary>
     /// Currently selected tile by the player.
@@ -46,27 +60,37 @@ public class Controller : MonoBehaviour
         get => selectedTile;
         set
         {
-            // Deselect previous tile if exists
-            if (selectedTile != null)
-                StartCoroutine(selectedTile.UnSelectCoroutine());
-
-            selectedTile = value;
-
-            // Update info panel and visual selection
             if (selectedTile != null)
             {
-                selectedInfoPanel.SetInfoTilePanel(selectedTile);
-                selectedInfoPanel.gameObject.SetActive(true);
-                StartCoroutine(selectedTile.SelectCoroutine());
+                // Deselect previous tile
+                selectedTile.UnSelect();
+            }
+
+
+            if (selectedTile == value)
+            {
+                selectedTile = null;
             }
             else
             {
-                selectedInfoPanel.gameObject.SetActive(false);
+                selectedTile = value;
+            }
+
+
+            if (selectedTile != null)
+            {
+                // Select new tile
+                selectedTile.Select();
+                hoverInfoPanel.gameObject.SetActive(true);
+                hoverInfoPanel.SetInfoTilePanel(selectedTile);
+            }
+            else
+            {
+                // Hide info panel if no tile is selected
+                hoverInfoPanel.gameObject.SetActive(false);
             }
         }
     }
-
-    #region Unity Lifecycle
 
     private void Start()
     {
@@ -77,168 +101,145 @@ public class Controller : MonoBehaviour
 
         // Retrieve current player name
         playerName = PlayerPrefs.GetString("username");
-
-        // Wire up button callbacks
-        buildButton.onClick.AddListener(OnBuildButtonClicked);
-        moveButton.onClick.AddListener(OnMoveButtonClicked);
-        rallyButton.onClick.AddListener(OnRallyButtonClicked);
-        dispatchButton.onClick.AddListener(OnDispatchButtonClicked);
     }
 
-    private void Update()
+
+
+
+
+    #region Gestion Inputs
+    void Update()
     {
-        HandleMouseClick();
-        HandleMouseHover();
-    }
-
-    #endregion
-
-    #region Input Handling
-
-    /// <summary>
-    /// Handles selection/deselection of tiles on mouse click.
-    /// Prevents interaction when dragging camera or over UI.
-    /// </summary>
-    private void HandleMouseClick()
-    {
-        // Check if mouse is clicked and not dragging camera or over UI     
-        if (!Input.GetMouseButtonUp(0) || camController.isDragging || EventSystem.current.IsPointerOverGameObject())
-            return;
-
-        if (mainCamera.RaycastTile(out Tile hitTile))
+        // On press start
+        if (Input.GetMouseButtonDown(0))
         {
-            if (!awaitingSecondSelection)
+            pressStartTime = Time.time;
+            pressStartPos = Input.mousePosition;
+            isDragging = false;
+            longPressTriggered = false;
+        }
+
+        // While holding
+        if (Input.GetMouseButton(0))
+        {
+            // Detect drag
+            if (!isDragging && Vector2.Distance(Input.mousePosition, pressStartPos) > dragThreshold)
             {
-                ProcessPrimarySelection(hitTile);
+                isDragging = true;
+                CancelTapDetection();
+                return;
+            }
+
+            if (isDragging) return;
+
+            // Long press detection
+            if (!longPressTriggered && Time.time - pressStartTime >= longPressThreshold)
+            {
+                longPressTriggered = true;
+                CancelTapDetection();
+                LongPress(GetTileUnderMouse());
+                return;
+            }
+        }
+
+        // On release
+        if (Input.GetMouseButtonUp(0))
+        {
+            if (isDragging || longPressTriggered)
+            {
+                // Reset flags for next cycle
+                isDragging = false;
+                return;
+            }
+
+            float pressDuration = Time.time - pressStartTime;
+            if (pressDuration > tapThreshold)
+                return;
+
+            // Tap logic
+            if (awaitingDoubleTap && Time.time - lastTapTime <= doubleTapMaxDelay)
+            {
+                // Double tap detected
+                CancelTapDetection();
+                TwoTap(GetTileUnderMouse());
+                return;
             }
             else
             {
-                secondSelectedTile = hitTile;
-                // activation du panneau de déplacement
-                movePanel.SetupPanel(SelectedTile, secondSelectedTile);
-                // Appel de la fonction de validation du panneau de déplacement
-                ShowOnlyPanel(movePanel.gameObject);
-                gameManager.UnHighlightAllTiles();
+                // First tap: wait for possible second tap
+                awaitingDoubleTap = true;
+                lastTapTime = Time.time;
+                tapCoroutine = StartCoroutine(WaitForDoubleTap());
             }
         }
-        else if (!awaitingSecondSelection)
-        {
-            // Clicked outside any tile: clear selection
-            SelectedTile = null;
-        }
     }
 
-    /// <summary>
-    /// Handles hover highlighting and info panel updates.
-    /// </summary>
-    private void HandleMouseHover()
+    private IEnumerator WaitForDoubleTap()
     {
-        if (mainCamera.RaycastTile(out Tile hitTile) && !camController.isDragging && !EventSystem.current.IsPointerOverGameObject())
+        yield return new WaitForSeconds(doubleTapMaxDelay);
+        if (awaitingDoubleTap)
         {
-            if (hoverTile != hitTile)
-                UpdateHoverTile(hitTile);
-
-            hoverInfoPanel.SetPos(Input.mousePosition);
+            Debug.Log("Single Tap");
+            OneTap(GetTileUnderMouse());
         }
-        else if (hoverTile != null)
-        {
-            UpdateHoverTile(null);
-        }
+        awaitingDoubleTap = false;
+        tapCoroutine = null;
     }
+
+    private void CancelTapDetection()
+    {
+        if (tapCoroutine != null)
+        {
+            StopCoroutine(tapCoroutine);
+            tapCoroutine = null;
+        }
+        awaitingDoubleTap = false;
+    }
+
+    private Tile GetTileUnderMouse()
+    {
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            return null;
+
+        Tile tile;
+        if (mainCamera.RaycastTile(out tile))
+        {
+            return tile;
+        }
+        return null;
+    }
+
 
     #endregion
 
-    #region Tile Selection Logic
 
-    /// <summary>
-    /// Process primary tile selection: validates ownership and toggles selection.
-    /// </summary>
-    /// <param name="tile">The tile clicked on.</param>
-    private void ProcessPrimarySelection(Tile tile)
+
+
+
+
+    #region Gestion des interactions avec les tiles
+
+    private void OneTap(Tile tile)
     {
-        if (tile == null || tile.Owner != playerName)
-        {
-            SelectedTile = null;
-            return;
-        }
-
-        // Toggle selection off if clicking the same tile
-        if (tile == SelectedTile)
-        {
-            SelectedTile = null;
-            return;
-        }
-
         SelectedTile = tile;
     }
 
-    /// <summary>
-    /// Updates the currently hovered tile: highlights and updates info panel.
-    /// </summary>
-    /// <param name="tile">The tile being hovered over.</param>
-    private void UpdateHoverTile(Tile tile)
+    private void TwoTap(Tile tile)
     {
-        // Remove highlight from previous hoverTile
-        if (hoverTile != null && awaitingSecondSelection == false)
-            hoverTile.UnHighlightTile();
-
-        hoverTile = tile;
-
-        if (hoverTile != null)
-        {
-            if (hoverTile.Owner == playerName)
-                hoverTile.HighlightTile();
-
-            hoverInfoPanel.SetInfoTilePanel(hoverTile);
-            hoverInfoPanel.gameObject.SetActive(true);
-        }
-        else
-        {
-            hoverInfoPanel.gameObject.SetActive(false);
-        }
+        if (tile == null)
+            return;
+        SelectedTile = tile;
+        ShowOnlyPanel(movePanel.gameObject);
+        Debug.Log("Two Tap on Tile: " + tile.X + ", " + tile.Y);
     }
 
-    #endregion
-
-    #region Button Callbacks
-
-    /// <summary>
-    /// Called when Build button is clicked. Opens build panel on selected tile.
-    /// </summary>
-    private void OnBuildButtonClicked()
-    {
-        if (SelectedTile == null || SelectedTile.Owner != playerName)
+    private void LongPress(Tile tile)
+    { 
+        if (tile == null)
             return;
 
-        buildPanel.SetupPanel(SelectedTile);
-        ShowOnlyPanel(buildPanel.gameObject);
+        Debug.Log("Long Press on Tile: " + tile.X + ", " + tile.Y);
     }
-
-    /// <summary>
-    /// Called when Move button is clicked. Enters second tile selection mode.
-    /// </summary>
-    private void OnMoveButtonClicked()
-    {
-        if (SelectedTile == null || SelectedTile.Owner != playerName)
-            return;
-
-        // Passer en mode de sélection de la deuxième tile
-        awaitingSecondSelection = true;
-        // cacher le panneau d'info de la tile sélectionnée
-        selectedInfoPanel.gameObject.SetActive(false);
-        gameManager.HighlightMoveTiles(SelectedTile);
-    }
-
-    private void OnRallyButtonClicked()
-    {
-        if (SelectedTile == null || SelectedTile.Owner != playerName)
-            return;
-
-        rallyPanel.SetupPanel(gameManager.GetAllPlayerUnits(), SelectedTile);
-        ShowOnlyPanel(rallyPanel.gameObject);
-    }
-
-    private void OnDispatchButtonClicked() { /* TODO: Implement dispatch action */ }
 
     #endregion
 
@@ -269,7 +270,6 @@ public class Controller : MonoBehaviour
         string[] destinationCoods = { destination.X.ToString(), destination.Y.ToString() };
         gameManager.MoveUnitsTile(originCoods, destinationCoods, untisCount);
         SelectedTile = null;
-        awaitingSecondSelection = false;
         secondSelectedTile = null;
     }
 
@@ -294,32 +294,26 @@ public class Controller : MonoBehaviour
     private void ShowOnlyPanel(GameObject panel)
     {
         // Hide info panels
-        selectedInfoPanel.gameObject.SetActive(false);
-        hoverInfoPanel.gameObject.SetActive(false);
+        // selectedInfoPanel.gameObject.SetActive(false);
+        // hoverInfoPanel.gameObject.SetActive(false);
 
-        // Hide action panels
-        buildPanel.gameObject.SetActive(false);
-        movePanel.gameObject.SetActive(false);
-        rallyPanel.gameObject.SetActive(false);
-        dispatchPanel.gameObject.SetActive(false);
+        // // Hide action panels
+        // buildPanel.gameObject.SetActive(false);
+        // movePanel.gameObject.SetActive(false);
+        // rallyPanel.gameObject.SetActive(false);
+        // dispatchPanel.gameObject.SetActive(false);
 
         // Show requested panel
         panel.SetActive(true);
     }
-
-
-
     #endregion
 }
 
 /// <summary>
-/// Extension methods for Camera to raycast and retrieve Tile components.
+/// Méthodes d'extension pour Camera afin de faire un raycast et récupérer les composants Tile.
 /// </summary>
 public static class CameraExtensions
 {
-    /// <summary>
-    /// Raycasts from screen point into world and returns the Tile component if hit.
-    /// </summary>
     public static bool RaycastTile(this Camera camera, out Tile tile)
     {
         var ray = camera.ScreenPointToRay(Input.mousePosition);

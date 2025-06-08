@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using System;
 using NUnit.Framework;
+using Unity.VisualScripting;
 
 
 
@@ -405,6 +406,16 @@ public class Tile : MonoBehaviour
     }
 
 
+
+    public void Select()
+    {
+        StartCoroutine(SelectCoroutine());
+    }
+
+    public void UnSelect()
+    {
+        StartCoroutine(UnSelectCoroutine());
+    }
 
 
 

@@ -95,6 +95,7 @@ public class MovePanel : MonoBehaviour
 
 
 
+    // TODO: On a plus la destination
     public void SetupPanel(Tile origin, Tile destination)
     {
         originTile = origin;
