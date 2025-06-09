@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -49,6 +51,7 @@ public class Controller : MonoBehaviour
     private bool awaitingDoubleTap;
     private float lastTapTime;
     private Coroutine tapCoroutine;
+    private bool startedOverUI = false;
 
 
     /// <summary>
@@ -108,8 +111,13 @@ public class Controller : MonoBehaviour
 
 
     #region Gestion Inputs
+
     void Update()
     {
+        if (EventSystem.current != null && IsPointerOverUI())
+        {
+            return;
+        }
         // On press start
         if (Input.GetMouseButtonDown(0))
         {
@@ -161,7 +169,7 @@ public class Controller : MonoBehaviour
             {
                 // Double tap detected
                 CancelTapDetection();
-                TwoTap(GetTileUnderMouse());
+                DoubleTap(GetTileUnderMouse());
                 return;
             }
             else
@@ -174,8 +182,10 @@ public class Controller : MonoBehaviour
         }
     }
 
+
     private IEnumerator WaitForDoubleTap()
     {
+
         yield return new WaitForSeconds(doubleTapMaxDelay);
         if (awaitingDoubleTap)
         {
@@ -186,6 +196,7 @@ public class Controller : MonoBehaviour
         tapCoroutine = null;
     }
 
+
     private void CancelTapDetection()
     {
         if (tapCoroutine != null)
@@ -195,6 +206,7 @@ public class Controller : MonoBehaviour
         }
         awaitingDoubleTap = false;
     }
+
 
     private Tile GetTileUnderMouse()
     {
@@ -222,23 +234,34 @@ public class Controller : MonoBehaviour
     private void OneTap(Tile tile)
     {
         SelectedTile = tile;
+        Debug.Log("One Tap on Tile: " + tile.X + ", " + tile.Y);
     }
 
-    private void TwoTap(Tile tile)
+    private void DoubleTap(Tile tile)
     {
-        if (tile == null)
-            return;
-        SelectedTile = tile;
+        if (tile == null) return;
+
+        if (SelectedTile != tile)
+        {
+            SelectedTile = tile;
+        }
+
         ShowOnlyPanel(movePanel.gameObject);
-        Debug.Log("Two Tap on Tile: " + tile.X + ", " + tile.Y);
+        movePanel.SetupPanel(tile);
     }
 
     private void LongPress(Tile tile)
-    { 
+    {
         if (tile == null)
             return;
 
-        Debug.Log("Long Press on Tile: " + tile.X + ", " + tile.Y);
+        if (SelectedTile != tile)
+        {
+            SelectedTile = tile;
+        }
+        ShowOnlyPanel(buildPanel.gameObject);
+        buildPanel.SetupPanel(tile);
+
     }
 
     #endregion
@@ -286,7 +309,17 @@ public class Controller : MonoBehaviour
     #endregion
 
     #region UI Helpers
+    private bool IsPointerOverUI()
+    {
+        PointerEventData eventData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
 
+        List<RaycastResult> raycastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, raycastResults);
+        return raycastResults.Count > 0;
+    }
     /// <summary>
     /// Shows the provided panel and hides all other action and info panels.
     /// </summary>

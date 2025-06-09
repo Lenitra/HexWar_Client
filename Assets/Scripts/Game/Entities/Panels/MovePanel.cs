@@ -18,8 +18,6 @@ public class MovePanel : MonoBehaviour
     [Header("Informations visuelles")]
     [SerializeField] private TextMeshProUGUI originTileText;
     [SerializeField] private TextMeshProUGUI destinationTileText;
-    [SerializeField] private Transform attackIcon;
-    [SerializeField] private Transform defenceIcon;
 
 
     private Tile originTile;
@@ -95,31 +93,15 @@ public class MovePanel : MonoBehaviour
 
 
 
-    // TODO: On a plus la destination
-    public void SetupPanel(Tile origin, Tile destination)
+    public void SetupPanel(Tile origin)
     {
-        originTile = origin;
-        destinationTile = destination;
         
         // Setup des textes d'informations sur les tuiles
         originTileText.text = TilesInfos(origin);
-        destinationTileText.text = TilesInfos(destination);
-
-        if (origin.Owner == destination.Owner)
-        {
-            attackIcon.gameObject.SetActive(false);
-            defenceIcon.gameObject.SetActive(true);
-        }
-        else
-        {
-            attackIcon.gameObject.SetActive(true);
-            defenceIcon.gameObject.SetActive(false);
-        }
 
         // Setup des inputs
         slider.maxValue = origin.Units;
         slider.value = 0;
-
 
         unitsMax = origin.Units;
         unitsToMove = 0;
