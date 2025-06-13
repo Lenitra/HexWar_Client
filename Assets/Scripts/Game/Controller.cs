@@ -21,7 +21,6 @@ public class Controller : MonoBehaviour
 
     // --- Tile selection state ---
     private Tile selectedTile;
-    private Tile secondSelectedTile;
     private bool moveMode = false;
 
 
@@ -51,7 +50,9 @@ public class Controller : MonoBehaviour
     private bool awaitingDoubleTap;
     private float lastTapTime;
     private Coroutine tapCoroutine;
-    private bool startedOverUI = false;
+    
+
+    private int unitsToMove = 0; // Nombre d'unités à déplacer
 
 
     /// <summary>
@@ -233,20 +234,40 @@ public class Controller : MonoBehaviour
 
     private void OneTap(Tile tile)
     {
+        if (moveMode)
+        {
+            if (gameManager.GetValidMoveDestination(SelectedTile).Contains(tile))
+            {
+                MoveUnits(SelectedTile, tile, unitsToMove);
+                gameManager.UnHighlightAllTiles();
+                moveMode = false;
+                return;
+            }
+            else
+            {
+                Debug.LogWarning("Invalid tile for movement.");
+            }
+        }
         SelectedTile = tile;
-        Debug.Log("One Tap on Tile: " + tile.X + ", " + tile.Y);
     }
 
     private void DoubleTap(Tile tile)
     {
         if (tile == null) return;
+        // Todo: Check si la tile appartient au joueur et si elle a des unités
+
+        if (tile.Owner != playerName && tile.Units <= 0)
+        {
+            Debug.LogWarning("Tile does not belong to the player.");
+            return;
+        }
 
         if (SelectedTile != tile)
         {
             SelectedTile = tile;
         }
 
-        ShowOnlyPanel(movePanel.gameObject);
+        movePanel.gameObject.SetActive(true);
         movePanel.SetupPanel(tile);
     }
 
@@ -259,7 +280,7 @@ public class Controller : MonoBehaviour
         {
             SelectedTile = tile;
         }
-        ShowOnlyPanel(buildPanel.gameObject);
+        buildPanel.gameObject.SetActive(true);
         buildPanel.SetupPanel(tile);
 
     }
@@ -279,6 +300,7 @@ public class Controller : MonoBehaviour
         gameManager.BuildTile(tileCoords, type);
         SelectedTile = null;
     }
+
     public void DestroyTile(Tile tileSelected)
     {
         if (SelectedTile == null || SelectedTile.Owner != playerName)
@@ -287,13 +309,23 @@ public class Controller : MonoBehaviour
         gameManager.DestroyTile(tileCoords);
         SelectedTile = null;
     }
-    public void MoveTile(Tile origin, Tile destination, int untisCount)
+
+    public void ValidateMovePanel(Tile origin, int unitsCount)
+    {
+        unitsToMove = unitsCount;
+        gameManager.HighlightMoveTiles(origin);
+        moveMode = true;
+
+    }
+    
+
+    private void MoveUnits(Tile origin, Tile destination, int untisCount)
     {
         string[] originCoods = { origin.X.ToString(), origin.Y.ToString() };
         string[] destinationCoods = { destination.X.ToString(), destination.Y.ToString() };
         gameManager.MoveUnitsTile(originCoods, destinationCoods, untisCount);
+        Debug.Log($"Moving {untisCount} units from ({origin.X}, {origin.Y}) to ({destination.X}, {destination.Y})");
         SelectedTile = null;
-        secondSelectedTile = null;
     }
 
 
@@ -320,10 +352,8 @@ public class Controller : MonoBehaviour
         EventSystem.current.RaycastAll(eventData, raycastResults);
         return raycastResults.Count > 0;
     }
-    /// <summary>
-    /// Shows the provided panel and hides all other action and info panels.
-    /// </summary>
-    /// <param name="panel">The panel GameObject to show.</param>
+
+
     private void ShowOnlyPanel(GameObject panel)
     {
         // Hide info panels

@@ -17,11 +17,9 @@ public class MovePanel : MonoBehaviour
 
     [Header("Informations visuelles")]
     [SerializeField] private TextMeshProUGUI originTileText;
-    [SerializeField] private TextMeshProUGUI destinationTileText;
 
 
     private Tile originTile;
-    private Tile destinationTile;
 
 
     private int unitsMax;
@@ -50,13 +48,11 @@ public class MovePanel : MonoBehaviour
 
     private void ClosePanel()
     {
-        controller.SelectedTile = null;
         originTile = null;
-        destinationTile = null;
         gameObject.SetActive(false);
-    
     }
 
+    // Syncro avec le input field
     private void OnInputFieldChange(string value)
     {
         if (value == "")
@@ -82,7 +78,7 @@ public class MovePanel : MonoBehaviour
         }
     }
 
-
+    // Syncro avec le slider
     private void OnSliderChange(float value)
     {
         int units = (int)value;
@@ -120,7 +116,7 @@ public class MovePanel : MonoBehaviour
 
     private void ValidateMove()
     {
-        controller.MoveTile(originTile, destinationTile, unitsToMove);
+        controller.ValidateMovePanel(originTile, unitsToMove);
         ClosePanel();
     }
 

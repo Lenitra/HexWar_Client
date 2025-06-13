@@ -275,7 +275,7 @@ public class GameManager : MonoBehaviour
 
     // Récupère les hexagones du joueur
     // Récupère également toutes les tiles adjacentes aux tiles du joueur
-    private List<Tile> GetValidMoveDestination(Tile originTile)
+    public List<Tile> GetValidMoveDestination(Tile originTile)
     {
         List<Tile> validTiles = new List<Tile>();
 
