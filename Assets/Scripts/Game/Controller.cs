@@ -312,10 +312,16 @@ public class Controller : MonoBehaviour
 
     public void ValidateMovePanel(Tile origin, int unitsCount)
     {
+        if (unitsCount <= 0)
+        {
+            moveMode = false;
+            gameManager.UnHighlightAllTiles();
+            SelectedTile = null;
+            return;
+        }
         unitsToMove = unitsCount;
         gameManager.HighlightMoveTiles(origin);
         moveMode = true;
-
     }
     
 
