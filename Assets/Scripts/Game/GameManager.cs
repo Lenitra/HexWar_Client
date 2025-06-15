@@ -705,6 +705,7 @@ public class Hex
     public int units;
     public string type;
     public string owner;
+    public string owner_id;
     public string color;
     public string protect;
 

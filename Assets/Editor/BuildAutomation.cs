@@ -11,9 +11,7 @@ public class BuildAutomation
 
 
         // Définir les chemins de sortie pour chaque plateforme
-        string zipPath = "";
         string basePath = "Builds";
-        string linuxPath = Path.Combine(basePath, "Linux");
         string windowsPath = Path.Combine(basePath, "Windows");
         string androidPath = Path.Combine(basePath, "Android");
 
@@ -41,13 +39,7 @@ public class BuildAutomation
             options = BuildOptions.None // Modifier en fonction des besoins, par exemple, BuildOptions.Development
         };
 
-        // Construire pour Linux
-        options.target = BuildTarget.StandaloneLinux64;
-        options.locationPathName = Path.Combine(linuxPath, $"NyxsImperium.x86_64");
-        Directory.CreateDirectory(linuxPath); // Assurer que le dossier existe
-        BuildPipeline.BuildPlayer(options);
-        // Ajouter le fichier /update.sh sans le dossier linux
-        File.Copy("Assets/Editor/update.sh", Path.Combine(linuxPath, "update.sh"));
+
 
 
         // Construire pour Windows
@@ -58,21 +50,20 @@ public class BuildAutomation
         // Ajouter le fichier /update.bat sans le dossier windows
         File.Copy("Assets/Editor/update.bat", Path.Combine(windowsPath, "update.bat"));
 
-        // Construire pour Android
+        // Construire pour Android en .apk
         options.target = BuildTarget.Android;
         options.locationPathName = Path.Combine(androidPath, $"NyxsImperium.apk");
         Directory.CreateDirectory(androidPath); // Assurer que le dossier existe
         BuildPipeline.BuildPlayer(options);
-        // Ajouter le fichier /update.sh sans le dossier android
 
 
 
-        // Chemins de sortie pour les builds
-        string linuxZipPath = Path.Combine(basePath, $"NyxsImperium_{version}_linux.zip");
+
+
+        // Chemins de sortie pour compression des builds
         string windowsZipPath = Path.Combine(basePath, $"NyxsImperium_{version}_windows.zip");
 
         // Compresser le dossier Linux et Windows en les plaçant dans le dossier 'Builds' (basePath)
-        ZipFile.CreateFromDirectory(linuxPath, linuxZipPath);
         ZipFile.CreateFromDirectory(windowsPath, windowsZipPath);
 
 
