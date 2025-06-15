@@ -58,9 +58,15 @@ public class BuildAutomation
         // Ajouter le fichier /update.bat sans le dossier windows
         File.Copy("Assets/Editor/update.bat", Path.Combine(windowsPath, "update.bat"));
 
+        // Construire pour Android
+        options.target = BuildTarget.Android;
+        options.locationPathName = Path.Combine(androidPath, $"NyxsImperium.apk");
+        Directory.CreateDirectory(androidPath); // Assurer que le dossier existe
+        BuildPipeline.BuildPlayer(options);
+        // Ajouter le fichier /update.sh sans le dossier android
 
 
-        
+
         // Chemins de sortie pour les builds
         string linuxZipPath = Path.Combine(basePath, $"NyxsImperium_{version}_linux.zip");
         string windowsZipPath = Path.Combine(basePath, $"NyxsImperium_{version}_windows.zip");

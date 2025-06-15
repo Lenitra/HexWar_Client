@@ -10,9 +10,9 @@ using UnityEngine.SceneManagement;
 
 public class LoginController : MonoBehaviour
 {
-    public event Action<PlayerProfile> OnSignedInUnity;
-    public event Action<PlayerProfile> OnSignedInBackend;
-    public event Action<string> OnConnectingError;
+    public event Action OnSignedInUnity;
+    public event Action OnSignedInBackend;
+    public event Action OnConnectingError;
     public PlayerProfile PlayerProfile => playerProfile;
 
     private PlayerProfile playerProfile = new PlayerProfile();
@@ -20,11 +20,15 @@ public class LoginController : MonoBehaviour
 
     private string idToken;
 
-    private async void Awake()
+    private async void Start()
     {
+        AutoConnect();
         await UnityServices.InitializeAsync();
         PlayerAccountService.Instance.SignedIn += SignedIn;
     }
+
+
+    #region Connexion basique avec unity
 
 
     // Valide la connexion avec le service d'authentification de Unity
@@ -35,7 +39,7 @@ public class LoginController : MonoBehaviour
             // Connexion avec le service d'authentification de Unity
             string sessionToken = PlayerAccountService.Instance.AccessToken;
             await SignInWithUnityAsync(sessionToken);
-            SignedInUnity(playerProfile);
+            SignedInUnity();
 
             // Une fois connecté, on récupère le token du backend à patir du token d'authentification de Unity
             idToken = AuthenticationService.Instance.AccessToken;
@@ -68,15 +72,8 @@ public class LoginController : MonoBehaviour
 
             if (request.result == UnityWebRequest.Result.Success)
             {
-                string token = request.downloadHandler.text;
-                token = token.Trim(); // enlève les espaces, \n, etc.
-                token = token.Replace("\"", ""); // enlève des guillemets éventuels
-
-
-                Debug.Log("idToken validated by backend. Response: " + token);
-                PlayerPrefs.SetString("auth_token", token);
-                PlayerPrefs.Save();
-                SignedInBackend(playerProfile);
+                ExtractAndSaveDataFromServerAuthResponseInPlayerPrefs(request.downloadHandler.text);
+                SignedInBackend();
             }
             else
             {
@@ -85,28 +82,6 @@ public class LoginController : MonoBehaviour
             }
         }
     }
-
-
-    private void ConnectingError(string error)
-    {
-        AuthenticationService.Instance.SignOut();
-        PlayerPrefs.DeleteKey("auth_token");
-        PlayerPrefs.Save();
-    }
-
-    private void SignedInUnity(PlayerProfile profile)
-    {
-        playerProfile = profile;
-        OnSignedInUnity?.Invoke(playerProfile);
-    }
-
-    private void SignedInBackend(PlayerProfile profile)
-    {
-        playerProfile = profile;
-        OnSignedInBackend?.Invoke(playerProfile);
-    }
-
-
 
 
     public async Task InitSignIn()
@@ -123,7 +98,7 @@ public class LoginController : MonoBehaviour
         playerProfile.playerInfo = playerInfo;
         playerProfile.Name = name;
 
-        OnSignedInUnity?.Invoke(playerProfile);
+        OnSignedInUnity?.Invoke();
     }
 
 
@@ -133,6 +108,149 @@ public class LoginController : MonoBehaviour
     {
         public string idToken;
     }
+
+    #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #region Connexion automatique avec le token du backend
+    private void AutoConnect()
+    {
+        // Vérifie si le joueur est déjà connecté
+        if (CheckAlreadyConnectedInfos())
+        {
+            Debug.Log("Le joueur est déjà connecté avec un token d'authentification, on tente de se connecter automatiquement.");
+            SignedInUnity();
+            // Si oui, on se connecte avec le token du backend
+            CheckAndRefreshToken();
+        }
+    }
+
+
+    private bool CheckAlreadyConnectedInfos()
+    {
+        // Vérifie si les PlayerPrefs contiennent un token d'authentification, l'id et le username
+        // et si le token est valide
+        if (!PlayerPrefs.HasKey("auth_token") ||
+            string.IsNullOrEmpty(PlayerPrefs.GetString("auth_token")) ||
+            !PlayerPrefs.HasKey("user_id") ||
+            string.IsNullOrEmpty(PlayerPrefs.GetString("user_id")) ||
+            !PlayerPrefs.HasKey("username") ||
+            string.IsNullOrEmpty(PlayerPrefs.GetString("username")))
+        {
+            Debug.Log("Aucun token d'authentification trouvé, le joueur n'est pas connecté.");
+            return false;
+        }
+
+        return true;
+
+    }
+
+    private async void CheckAndRefreshToken()
+    {
+        try
+        {
+            string backendUrl = DataManager.Instance.GetData("serverIP") + "/api/auth/token-connexion";
+            UnityWebRequest request = UnityWebRequest.Get(backendUrl);
+
+            request.SetRequestHeader("X-Auth-Token", "Bearer " + PlayerPrefs.GetString("auth_token"));
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            await request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                ExtractAndSaveDataFromServerAuthResponseInPlayerPrefs(request.downloadHandler.text);
+                SignedInBackend();
+            }
+            else
+            {
+                Debug.LogError($"Error during token connexion: {request.error}");
+                ConnectingError($"Error during token connexion: {request.error}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("Error during sign-in: " + ex.Message);
+            ConnectingError($"Error during sign-in: {ex.Message}");
+        }
+    }
+
+
+    #endregion
+
+
+
+
+    // return jsonify(f"{backend_token}:|:{player_id}:|:{user['username']}"), 200
+    private void ExtractAndSaveDataFromServerAuthResponseInPlayerPrefs(string response)
+    {
+        // Sépare la chaîne de caractères en utilisant ":|:" comme délimiteur
+        string[] data = response.Split(new string[] { ":|:" }, StringSplitOptions.None);
+
+        // Vérifie si la réponse contient les trois parties attendues
+        if (data.Length == 3)
+        {
+            string backendToken = data[0].Trim();
+            backendToken = backendToken.Replace("\"", "");
+            backendToken = backendToken.Trim();
+
+            string playerId = data[1].Trim();
+            playerId = playerId.Replace("\"", "");
+            playerId = playerId.Trim();
+
+
+            string username = data[2].Trim();
+            username = username.Replace("\"", "");
+            username = username.Trim();
+
+
+            // Enregistre les données dans PlayerPrefs
+            PlayerPrefs.SetString("auth_token", backendToken);
+            PlayerPrefs.SetString("user_id", playerId);
+            PlayerPrefs.SetString("username", username);
+            PlayerPrefs.Save();
+
+            Debug.Log($"Data saved: auth_token={backendToken}, user_id={playerId}, username={username}");
+        }
+        else
+        {
+            Debug.LogError("Invalid response format from server authentication.");
+        }
+    }
+    
+
+
+    private void ConnectingError(string error)
+    {
+        AuthenticationService.Instance.SignOut();
+        PlayerPrefs.DeleteKey("auth_token");
+        PlayerPrefs.Save();
+    }
+
+    private void SignedInUnity()
+    {
+        OnSignedInUnity?.Invoke();
+    }
+
+    private void SignedInBackend()
+    {
+        OnSignedInBackend?.Invoke();
+    }
+
+
+
 
 
 

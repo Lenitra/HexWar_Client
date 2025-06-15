@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -8,17 +9,16 @@ public class UILogin : MonoBehaviour
     [SerializeField] private GameObject connectingPanel;
     [SerializeField] private LoginController loginController;
 
-    private PlayerProfile playerProfile;
 
     private void OnEnable()
     {
         loginButton.onClick.AddListener(LoginButtonPressed);
         loginController.OnSignedInUnity += LoginController_OnSignedInUnity;
         loginController.OnSignedInBackend += LoginController_OnSignedInBackend;
-        loginController.OnConnectingError += (error) =>
+        loginController.OnConnectingError += () =>
         {
             connectingPanel.SetActive(false);
-            Debug.LogError($"Login error: {error}");
+            Debug.LogError($"Login error resetting login controller");
         };
     }
 
@@ -34,17 +34,18 @@ public class UILogin : MonoBehaviour
         await loginController.InitSignIn();
     }
 
-    private void LoginController_OnSignedInUnity(PlayerProfile profile)
+    private void LoginController_OnSignedInUnity()
     {
         connectingPanel.SetActive(true);
     }
 
 
-    private void LoginController_OnSignedInBackend(PlayerProfile profile)
+    private void LoginController_OnSignedInBackend()
     {
         connectingPanel.SetActive(false);
-        string msg = $"Welcome {profile.Name}!";
-        msg += $"\nPlayer ID: {profile.playerInfo.Id}";
+        string msg = $"Welcome {PlayerPrefs.GetString("username")}!";
+        msg += $"\nPlayer ID: {PlayerPrefs.GetString("user_id")}";
+        msg += $"\nAuth Token: {PlayerPrefs.GetString("auth_token")}";
         Debug.Log(msg);
         SceneManager.LoadScene("Game");
     }

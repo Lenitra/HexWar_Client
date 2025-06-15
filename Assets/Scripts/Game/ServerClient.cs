@@ -64,19 +64,10 @@ public class ServerClient : MonoBehaviour
     {
         float startTime = Time.time;
 
-        string token = PlayerPrefs.GetString("auth_token", null);
-        Debug.Log("Token JWT: " + token);
-        if (string.IsNullOrEmpty(token))
-        {
-            Debug.LogWarning("Token JWT manquant. Redirection vers login.");
-            SceneManager.LoadScene("Home");
-            yield break;
-        }
-
         string url = DataManager.Instance.GetData("serverIP") + "/api/get_hex";
         UnityWebRequest request = UnityWebRequest.Get(url);
 
-        request.SetRequestHeader("X-Auth-Token", "Bearer " + token);
+        request.SetRequestHeader("X-Auth-Token", "Bearer " + PlayerPrefs.GetString("auth_token"));
         request.SetRequestHeader("Content-Type", "application/json");
 
         yield return request.SendWebRequest();
@@ -137,7 +128,10 @@ public class ServerClient : MonoBehaviour
         request.SetRequestHeader("Content-Type", "application/json");
         request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{\"originX\":\"" + from[0] + "\",\"originY\":\"" + from[1] + "\",\"destinationX\":\"" + to[0] + "\",\"destinationY\":\"" + to[1] + "\",\"units\":" + units + "}"));
         request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("X-Auth-Token", "Bearer " + PlayerPrefs.GetString("auth_token"));
+        request.SetRequestHeader("Content-Type", "application/json");
 
+        yield return request.SendWebRequest();
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success)
