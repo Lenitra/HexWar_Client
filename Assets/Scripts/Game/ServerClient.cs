@@ -60,39 +60,48 @@ public class ServerClient : MonoBehaviour
         StartCoroutine(GetGameState());
     }
 
-
     IEnumerator GetGameState()
     {
         float startTime = Time.time;
-        UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/get_hex/" + PlayerPrefs.GetString("username"));
+
+        string token = PlayerPrefs.GetString("auth_token", null);
+        Debug.Log("Token JWT: " + token);
+        if (string.IsNullOrEmpty(token))
+        {
+            Debug.LogWarning("Token JWT manquant. Redirection vers login.");
+            SceneManager.LoadScene("Home");
+            yield break;
+        }
+
+        string url = DataManager.Instance.GetData("serverIP") + "/api/get_hex";
+        UnityWebRequest request = UnityWebRequest.Get(url);
+
+        request.SetRequestHeader("X-Auth-Token", "Bearer " + token);
+        request.SetRequestHeader("Content-Type", "application/json");
+
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success)
         {
-            if (request.downloadHandler.text.ToLower().StartsWith("error : Veillez vous (re)connecter"))
+            string response = request.downloadHandler.text.ToLower();
+
+            if (response.StartsWith("error : veuillez vous (re)connecter"))
             {
                 SceneManager.LoadScene("Home");
             }
-            else if (request.downloadHandler.text.ToLower().StartsWith("error : "))
+            else if (response.StartsWith("error : "))
             {
-                gameManager.nopePanel(request.downloadHandler.text.Substring(8));
+                gameManager.nopePanel(response.Substring(8));
             }
             else
             {
-                string hexes = request.downloadHandler.text;
-                // delete characters jusqu'à la première virgule
-                hexes = hexes.Substring(hexes.IndexOf(",") + 1);
-                // supprimer le dernier caractère
-                hexes = hexes.Remove(hexes.Length - 1, 1);
-                hexes = hexes.Remove(hexes.Length - 1, 1);
+                string raw = request.downloadHandler.text;
 
+                string hexes = raw.Substring(raw.IndexOf(",") + 1);
+                hexes = hexes.Remove(hexes.Length - 2, 2); // supprimer deux derniers caractères
 
-
-                string money = request.downloadHandler.text;
-                // garder les caractères jusqu'à la première virgule
-                money = money.Substring(0, money.IndexOf(","));
-                // garder uniquement les chiffres
-                money = new string(money.Where(char.IsDigit).ToArray());
+                string money = new string(raw.Substring(0, raw.IndexOf(","))
+                                        .Where(char.IsDigit).ToArray());
 
                 gameManager.UpdateMoney(money);
                 gameManager.SetupTiles(hexes);
@@ -100,9 +109,15 @@ public class ServerClient : MonoBehaviour
         }
         else
         {
-            Debug.Log("Error: " + request.error);
+            Debug.LogError("Erreur de requête: " + request.error);
+            if (request.responseCode == 401)
+            {
+                Debug.LogWarning("Token invalide ou expiré. Redirection.");
+                SceneManager.LoadScene("Home");
+            }
         }
     }
+
 
 
 
