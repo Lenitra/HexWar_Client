@@ -203,7 +203,7 @@ public class CamController : MonoBehaviour
 
     #region Fonctions annexes (déplacement programmatique)
 
-    public void moveCamToTile(float x, float z, bool delay = true)
+    public void MoveCamToTile(float x, float z, bool delay = true)
     {
         Vector3 offset = new Vector3(0f, 0f, -4f);
         Vector3 targetPos = new Vector3(x, 10f, z) + offset;

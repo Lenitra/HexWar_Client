@@ -13,6 +13,7 @@ public class Tile : MonoBehaviour
     private int y = int.MaxValue;
     [SerializeField] private int units = 0;
     [SerializeField] private string owner = "";
+    [SerializeField] private string owner_id = "";
     [SerializeField] private int lvl = 0;
     [SerializeField] private string type = "";
     [SerializeField] private string color = "0|0|0";
@@ -75,6 +76,15 @@ public class Tile : MonoBehaviour
         }
     }
 
+    public string Owner_id
+    {
+        get { return owner_id; }
+        set
+        {
+            owner_id = value;
+        }
+    }
+
     public int Lvl
     {
         get { return lvl; }
@@ -84,7 +94,8 @@ public class Tile : MonoBehaviour
             if (Type == "node" && lvl > 0)
             {
                 SetupNodeRadius();
-            } else if (nodeRadius.gameObject.activeSelf)
+            }
+            else if (nodeRadius.gameObject.activeSelf)
             {
                 nodeRadius.gameObject.SetActive(false);
             }
@@ -178,6 +189,7 @@ public class Tile : MonoBehaviour
             this.X = hexData.x;
             this.Y = hexData.y;
             this.Owner = hexData.owner;
+            this.Owner_id = hexData.owner_id;
             this.Lvl = hexData.lvl;
             this.Type = hexData.type;
             this.Color = hexData.color;

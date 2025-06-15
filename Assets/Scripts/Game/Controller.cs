@@ -50,7 +50,7 @@ public class Controller : MonoBehaviour
     private bool awaitingDoubleTap;
     private float lastTapTime;
     private Coroutine tapCoroutine;
-    
+
 
     private int unitsToMove = 0; // Nombre d'unités à déplacer
 
@@ -245,20 +245,27 @@ public class Controller : MonoBehaviour
             }
             else
             {
+                if (SelectedTile == tile)
+                {
+                    SelectedTile = null;
+                }
                 Debug.LogWarning("Invalid tile for movement.");
+                return;
             }
         }
-        SelectedTile = tile;
+        else
+        {
+            SelectedTile = tile;
+        }
     }
 
     private void DoubleTap(Tile tile)
     {
-        if (tile == null) return;
-        // Todo: Check si la tile appartient au joueur et si elle a des unités
+        if (tile == null || moveMode) return;
 
-        if (tile.Owner != playerName && tile.Units <= 0)
+        if (tile.Owner != playerName || tile.Units <= 0)
         {
-            Debug.LogWarning("Tile does not belong to the player.");
+            Debug.LogWarning("Tile cannot be selected for unit movement.");
             return;
         }
 
@@ -273,8 +280,8 @@ public class Controller : MonoBehaviour
 
     private void LongPress(Tile tile)
     {
-        if (tile == null)
-            return;
+        if (tile == null || moveMode) return;
+
 
         if (SelectedTile != tile)
         {
@@ -323,7 +330,7 @@ public class Controller : MonoBehaviour
         gameManager.HighlightMoveTiles(origin);
         moveMode = true;
     }
-    
+
 
     private void MoveUnits(Tile origin, Tile destination, int untisCount)
     {

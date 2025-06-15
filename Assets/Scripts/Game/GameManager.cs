@@ -630,13 +630,11 @@ public class GameManager : MonoBehaviour
         if (handshakeCount >= HANDSHAKE_COUNT && loadedMap == true)
         {
             loadingScreen.SetActive(false);
-            float x = 0;
-            float y = 0;
             Tile nodeTile = GetNodeTile();
-            x = nodeTile.GetHexCoordinates()[0];
-            y = nodeTile.GetHexCoordinates()[1] - 6;
+            float x = nodeTile.GetHexCoordinates()[0];
+            float y = nodeTile.GetHexCoordinates()[1] - 6;
             // From the main camera, move to the tile
-            Camera.main.GetComponent<CamController>().moveCamToTile(x, y, false);
+            Camera.main.GetComponent<CamController>().MoveCamToTile(x, y, false);
         }
     }
 
@@ -720,6 +718,7 @@ public class Hex
             {"lvl", lvl},
             {"units", units},
             {"type", type},
+            {"owner_id", owner_id},
             {"owner", owner},
             {"color", color},
             {"protect", false}

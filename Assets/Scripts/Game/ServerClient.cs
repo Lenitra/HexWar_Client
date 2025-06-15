@@ -4,8 +4,6 @@ using UnityEngine.Networking;
 using System;
 using UnityEngine.SceneManagement;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 
 
@@ -132,7 +130,6 @@ public class ServerClient : MonoBehaviour
         request.SetRequestHeader("Content-Type", "application/json");
 
         yield return request.SendWebRequest();
-        yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success)
         {
@@ -169,6 +166,7 @@ public class ServerClient : MonoBehaviour
     {
         UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/buildbat");
         request.method = "POST";
+        request.SetRequestHeader("X-Auth-Token", "Bearer " + PlayerPrefs.GetString("auth_token"));
         request.SetRequestHeader("Content-Type", "application/json");
         request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{\"x\":" + tileCoords[0] + ",\"y\":" + tileCoords[1] + ",\"type\":\"" + type + "\"}"));
         request.downloadHandler = new DownloadHandlerBuffer();
@@ -207,6 +205,7 @@ public class ServerClient : MonoBehaviour
     {
         UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/destroy");
         request.method = "POST";
+        request.SetRequestHeader("X-Auth-Token", "Bearer " + PlayerPrefs.GetString("auth_token"));
         request.SetRequestHeader("Content-Type", "application/json");
         request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{\"x\":" + tileCoords[0] + ",\"y\":" + tileCoords[1] + "}"));
         request.downloadHandler = new DownloadHandlerBuffer();
@@ -243,6 +242,7 @@ public class ServerClient : MonoBehaviour
     {
         UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/rally");
         request.method = "POST";
+        request.SetRequestHeader("X-Auth-Token", "Bearer " + PlayerPrefs.GetString("auth_token"));
         request.SetRequestHeader("Content-Type", "application/json");
         request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{\"x\":" + tileCoords[0] + ",\"y\":" + tileCoords[1] + "}"));
         request.downloadHandler = new DownloadHandlerBuffer();
@@ -280,6 +280,7 @@ public class ServerClient : MonoBehaviour
     {
         UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/dispatch");
         request.method = "POST";
+        request.SetRequestHeader("X-Auth-Token", "Bearer " + PlayerPrefs.GetString("auth_token"));
         request.SetRequestHeader("Content-Type", "application/json");
         request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{}"));
         request.downloadHandler = new DownloadHandlerBuffer();
@@ -318,6 +319,7 @@ public class ServerClient : MonoBehaviour
 
         UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/game_handshake_post_login/bat_stats");
         request.method = "POST";
+        request.SetRequestHeader("X-Auth-Token", "Bearer " + PlayerPrefs.GetString("auth_token"));
         request.SetRequestHeader("Content-Type", "application/json");
         request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{}"));
         request.downloadHandler = new DownloadHandlerBuffer();
@@ -355,6 +357,7 @@ public class ServerClient : MonoBehaviour
     {
         UnityWebRequest request = UnityWebRequest.Get(DataManager.Instance.GetData("serverIP") + "/api/game_handshake_post_login/wiki");
         request.method = "POST";
+        request.SetRequestHeader("X-Auth-Token", "Bearer " + PlayerPrefs.GetString("auth_token"));
         request.SetRequestHeader("Content-Type", "application/json");
         request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{}"));
         request.downloadHandler = new DownloadHandlerBuffer();

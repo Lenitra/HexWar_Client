@@ -2691,9 +2691,6 @@ MonoBehaviour:
   slider: {fileID: 302067950}
   maxBtn: {fileID: 1465952737}
   originTileText: {fileID: 992048541}
-  destinationTileText: {fileID: 318561165}
-  attackIcon: {fileID: 1449921666}
-  defenceIcon: {fileID: 713916638}
 --- !u!1 &352575752
 GameObject:
   m_ObjectHideFlags: 0
@@ -7141,7 +7138,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5346100724837058328, guid: 49e26901d9378864eb72602b5640eeae, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5346100724837058328, guid: 49e26901d9378864eb72602b5640eeae, type: 3}
       propertyPath: m_AnchorMin.x
@@ -7233,11 +7230,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5346219031244991380, guid: 49e26901d9378864eb72602b5640eeae, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5346219031244991380, guid: 49e26901d9378864eb72602b5640eeae, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7856465087718029224, guid: 49e26901d9378864eb72602b5640eeae, type: 3}
       propertyPath: m_TextStyleHashCode
@@ -7752,12 +7749,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canMove: 1
-  moveSpeed: 10
-  dragThreshold: 5
+  panSpeed: 0.12
+  panDragThreshold: 40
   zoomSpeed: 10
   minZoom: 5
   maxZoom: 29
-  isDragging: 0
 --- !u!114 &963194231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9409,7 +9405,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1356933683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11955,15 +11951,15 @@ RectTransform:
   m_GameObject: {fileID: 1624193707}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 24.868519}
-  m_LocalScale: {x: 0.95647997, y: 0.95647997, z: 0.95647997}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.4, y: 1.4, z: 1.4}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1422543231}
   m_Father: {fileID: 1356933686}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 215.20834, y: -47.824097}
+  m_AnchoredPosition: {x: 357.17, y: -138.9}
   m_SizeDelta: {x: 400, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1624193709
@@ -15449,5 +15445,5 @@ SceneRoots:
   - {fileID: 476380760}
   - {fileID: 348806190}
   - {fileID: 1521858797}
-  - {fileID: 1356933686}
   - {fileID: 1613494890}
+  - {fileID: 1356933686}
