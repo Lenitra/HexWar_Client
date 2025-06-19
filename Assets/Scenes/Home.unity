@@ -770,7 +770,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 353831771}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -26}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -778,8 +778,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -7.984741, y: 2.9699993}
-  m_SizeDelta: {x: 15.970449, y: 5.940001}
+  m_AnchoredPosition: {x: -4.614929, y: 2.2699986}
+  m_SizeDelta: {x: 9.23018, y: 4.540004}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &353831773
 MonoBehaviour:
@@ -828,8 +828,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 109.4
-  m_fontSizeBase: 109.4
+  m_fontSize: 80
+  m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1716,8 +1716,8 @@ Canvas:
   m_GameObject: {fileID: 995636805}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 1319413289}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -2128,11 +2128,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7915447191496294183, guid: 8c6a38a37f170eb4d9f596035ee772e3, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 444.4
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 7915447191496294183, guid: 8c6a38a37f170eb4d9f596035ee772e3, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 93.3
+      value: 85
       objectReference: {fileID: 0}
     - target: {fileID: 7915447191496294183, guid: 8c6a38a37f170eb4d9f596035ee772e3, type: 3}
       propertyPath: m_LocalScale.x
@@ -2273,8 +2273,8 @@ Canvas:
   m_GameObject: {fileID: 1121819882}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 1319413289}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -3272,7 +3272,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -122.8}
+  m_AnchoredPosition: {x: 0, y: -122.79999}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1408639216
@@ -3322,8 +3322,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 109.4
-  m_fontSizeBase: 109.4
+  m_fontSize: 80
+  m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

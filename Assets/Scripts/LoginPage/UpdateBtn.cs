@@ -34,17 +34,19 @@ public class UpdateBtn : MonoBehaviour
 
     public void UpdateGame()
     {
-#if UNITY_EDITOR
-            debugText.text = "Impossible de mettre à jour en mode éditeur.";
-            return;
-#endif
-        // Vérifier la plateforme : Windows, MacOS, Linux
         if (platform == "")
         {
+            debugText.text = "Plateforme non supportée pour la mise à jour automatique.";
             return;
         }
 
+        // Afficher un message de démarrage
+        debugText.text = "Démarrage de la mise à jour...";
+        // Lancer la coroutine de téléchargement et mise à jour
         StartCoroutine(DownloadAndUpdate());
+        // Désactiver le bouton pour éviter les clics multiples
+        GetComponent<Button>().interactable = false;
+        
     }
 
     IEnumerator DownloadAndUpdate()

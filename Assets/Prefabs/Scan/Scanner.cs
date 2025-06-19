@@ -15,7 +15,7 @@ public class Scanner : MonoBehaviour
 
     void Start()
     {
-        scannableRenderers = FindObjectsOfType<Renderer>();
+        scannableRenderers = FindObjectsByType<Renderer>(FindObjectsSortMode.None);
 
         foreach (var rend in scannableRenderers)
         {

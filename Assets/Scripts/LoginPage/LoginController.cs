@@ -25,6 +25,14 @@ public class LoginController : MonoBehaviour
         AutoConnect();
         await UnityServices.InitializeAsync();
         PlayerAccountService.Instance.SignedIn += SignedIn;
+
+        OnConnectingError += () =>
+        {
+            PlayerAccountService.Instance.SignedIn -= SignedIn;
+            PlayerPrefs.DeleteKey("auth_token");
+            PlayerPrefs.Save();
+            SceneManager.LoadScene("Login");
+        };
     }
 
 

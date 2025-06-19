@@ -312,7 +312,7 @@ public class Tile : MonoBehaviour
         if (string.IsNullOrEmpty(owner))
         {
             // Tile non possédée : couleur noire avec alpha à 0.75 pour un effet de fade
-            Color fadeColor = new Color(0f, 0f, 0f, 0f);
+            Color fadeColor = new Color(0f, 0f, 0f, 0.9f); // alpha = 0.75 pour fade
             material.SetColor("_Color", fadeColor);
             material.SetColor("_EmissionColor", fadeColor);
 
@@ -366,7 +366,7 @@ public class Tile : MonoBehaviour
         {
             nodeRadius.gameObject.SetActive(false);
         }
-        
+
         int index = -1;
         switch (this.type.ToLower())
         {
