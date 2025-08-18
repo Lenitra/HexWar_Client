@@ -169,7 +169,7 @@ public class LoginController : MonoBehaviour
     {
         try
         {
-            string backendUrl = DataManager.Instance.GetData("serverIP") + "/auth/token-connexion";
+            string backendUrl = DataManager.Instance.GetData("serverIP") + "/auth/unity-connexion";
             UnityWebRequest request = UnityWebRequest.Get(backendUrl);
 
             request.SetRequestHeader("X-Auth-Token", "Bearer " + PlayerPrefs.GetString("auth_token"));
