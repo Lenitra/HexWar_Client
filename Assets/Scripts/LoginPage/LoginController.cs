@@ -53,7 +53,7 @@ public class LoginController : MonoBehaviour
             idToken = AuthenticationService.Instance.AccessToken;
 
             // Envoi du token d'authentification de Unity au backend pour obtenir un token backend
-            string backendUrl = DataManager.Instance.GetData("serverIP") + "/api/auth/unity-idtoken";
+            string backendUrl = DataManager.Instance.GetData("serverIP") + "/auth/unity-connexion";
             await SendIdTokenToBackend(backendUrl);
 
         }
@@ -169,7 +169,7 @@ public class LoginController : MonoBehaviour
     {
         try
         {
-            string backendUrl = DataManager.Instance.GetData("serverIP") + "/auth/unity-connexion";
+            string backendUrl = DataManager.Instance.GetData("serverIP") + "/auth/token-refresh";
             UnityWebRequest request = UnityWebRequest.Get(backendUrl);
 
             request.SetRequestHeader("X-Auth-Token", "Bearer " + PlayerPrefs.GetString("auth_token"));

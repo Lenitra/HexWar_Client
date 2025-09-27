@@ -113,13 +113,13 @@ public class DataManager : MonoBehaviour
             dataDictionary.Add("minerInfos4", "Génère 3¤ -> 4¤ par heure. Fonctionne jusqu'à 6h en AFK.");
             dataDictionary.Add("minerInfos5", "Génère 4¤ -> 5¤ par heure. Fonctionne jusqu'à 6h en AFK.");
 
-            dataDictionary.Add("hq", "QG");
-            dataDictionary.Add("hqDescription", "Permet de pouvoir construire et améliorer des bâtiments");
-            dataDictionary.Add("hqInfos1", "Permet de pouvoir construire et améliorer des bâtiments au niveau 1.");
-            dataDictionary.Add("hqInfos2", "Permet de pouvoir construire et améliorer des bâtiments au niveau 1 -> 2.");
-            dataDictionary.Add("hqInfos3", "Permet de pouvoir construire et améliorer des bâtiments au niveau 2 -> 3.");
-            dataDictionary.Add("hqInfos4", "Permet de pouvoir construire et améliorer des bâtiments au niveau 3 -> 4.");
-            dataDictionary.Add("hqInfos5", "Permet de pouvoir construire et améliorer des bâtiments au niveau 4 -> 5.");
+            dataDictionary.Add("node", "QG");
+            dataDictionary.Add("nodeDescription", "Permet de pouvoir construire et améliorer des bâtiments");
+            dataDictionary.Add("nodeInfos1", "Permet de pouvoir construire et améliorer des bâtiments au niveau 1.");
+            dataDictionary.Add("nodeInfos2", "Permet de pouvoir construire et améliorer des bâtiments au niveau 1 -> 2.");
+            dataDictionary.Add("nodeInfos3", "Permet de pouvoir construire et améliorer des bâtiments au niveau 2 -> 3.");
+            dataDictionary.Add("nodeInfos4", "Permet de pouvoir construire et améliorer des bâtiments au niveau 3 -> 4.");
+            dataDictionary.Add("nodeInfos5", "Permet de pouvoir construire et améliorer des bâtiments au niveau 4 -> 5.");
 
             dataDictionary.Add("barrack", "Usine de drones");
             dataDictionary.Add("barrackDescription", "Permet de générer des unités.");
