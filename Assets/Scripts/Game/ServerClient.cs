@@ -44,7 +44,7 @@ public class ServerClient : MonoBehaviour
     {
         while (true)
         {
-            // updateMap();
+            UpdateMap();
             yield return new WaitForSeconds(this.pollInterval);
         }
     }
@@ -88,6 +88,38 @@ public class ServerClient : MonoBehaviour
 
 
 
+    private void UpdateMap()
+    {
+        StartCoroutine(UpdateMapCoro());
+    }
+
+    IEnumerator UpdateMapCoro()
+    {
+        string url = DataManager.Instance.GetData("serverIP") + "/tiles/";
+        UnityWebRequest request = UnityWebRequest.Get(url);
+        request.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString("auth_token"));
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            string json = request.downloadHandler.text;
+            json = "{\"tiles\":" + json + "}";
+            Debug.Log(json);
+            MapApi mapData = JsonUtility.FromJson<MapApi>(json);
+            TileApi[] tiles = mapData.tiles;
+            gameManager.UpdateMap(tiles);
+        }
+        else
+        {
+            Debug.LogError("Erreur de requête: " + request.error);
+            if (request.responseCode == 401)
+            {
+                Debug.LogWarning("Token invalide ou expiré. Redirection.");
+                SceneManager.LoadScene("Home");
+            }
+        }
+    }
+
 }
 
 
@@ -103,4 +135,28 @@ public class PlayerInfoApi
     public string last_activity;
     public int power;
     public string no_calc_power_end;
+}
+
+
+// Classe pour désérialiser les infos de la carte
+[Serializable]
+public class MapApi
+{
+    public TileApi[] tiles;
+}
+
+
+
+// Classe pour désérialiser les infos des tiles
+[Serializable]
+public class TileApi
+{
+    public int id;
+    public int user_id;
+    public int x;
+    public int y;
+    public int lvl;
+    public string build;
+    public int drone;
+    public DateTime shield;
 }

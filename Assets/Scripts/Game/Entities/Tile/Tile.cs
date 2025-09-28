@@ -5,7 +5,7 @@ using UnityEngine;
 
 
 
-
+[Serializable]
 public class Tile : MonoBehaviour
 {
 
@@ -24,6 +24,8 @@ public class Tile : MonoBehaviour
 
 
 
+
+
     [Header("Attributs calculés")]
     [SerializeField] private string color = "#000000";
     [SerializeField] private bool hasShield = false;
@@ -37,7 +39,7 @@ public class Tile : MonoBehaviour
 
     [Header("Elements enfants")]
     [SerializeField] private MeshRenderer meshDeRenduObject;
-    [SerializeField] private GameObject glowObject;
+    [SerializeField] private GameObject borderParentObject;
     [SerializeField] private GameObject shieldObject;
     [SerializeField] private LineRenderer nodeRadiusObject;
 
@@ -48,5 +50,40 @@ public class Tile : MonoBehaviour
     private readonly float selectElevation = 1f;
 
 
+
+    // Getters
+    public int GetId() { return id; }
+    public int GetUserId() { return user_id; }  
+    public int GetX() { return x; }
+    public int GetY() { return y; }
+    public int GetLevel() { return lvl; }
+    public string GetBuild() { return build; }
+    public int GetDrone() { return drone; }
+    public DateTime GetShield() { return shield; }
+
+
+    // Initialisation de la tile avec les données du serveur
+    internal void SetData(TileApi tileApi)
+    {
+        if (tileApi == null)
+        {
+            Debug.LogError("TileApi est null");
+            return;
+        }
+
+        if (this.id == int.MinValue || this.x == int.MinValue || this.y == int.MinValue)
+        {
+            this.transform.position = new Vector3(tileApi.x * (1 + gridGap), 0, tileApi.y * (1 + gridGap));
+        }
+
+        this.id = tileApi.id;
+        this.user_id = tileApi.user_id;
+        this.x = tileApi.x;
+        this.y = tileApi.y;
+        this.lvl = tileApi.lvl;
+        this.build = tileApi.build;
+        this.drone = tileApi.drone;
+        this.shield = tileApi.shield;
+    }
 
 }
