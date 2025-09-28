@@ -1,12 +1,12 @@
-using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class GameView : MonoBehaviour
 {
-    
+
     [Header("HUD")]
     [SerializeField] private TextMeshProUGUI money; // Argent du joueur   
     [SerializeField] private TextMeshProUGUI power; // Puissance du joueur
@@ -68,10 +68,10 @@ public class GameView : MonoBehaviour
 
 
     #region Dessin d'une ligne de déplacement de drones
-        public void DrawPathLine(Tile[] move)
-        {
-            StartCoroutine(AnimationMoveUnits(move));
-        }
+    public void DrawPathLine(Tile[] move)
+    {
+        StartCoroutine(AnimationMoveUnits(move));
+    }
 
 
     private IEnumerator AnimationMoveUnits(Tile[] move)
@@ -84,8 +84,8 @@ public class GameView : MonoBehaviour
 
 
 
-        #endregion
+    #endregion
 
 
 
-    }
+}

@@ -63,7 +63,7 @@ public class ServerClient : MonoBehaviour
 
     IEnumerator GetPlayerInfoCoro()
     {
-        string url = DataManager.Instance.GetData("serverIP") + "/user";
+        string url = DataManager.Instance.GetData("serverIP") + "/user/";
         UnityWebRequest request = UnityWebRequest.Get(url);
         request.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString("auth_token"));
         yield return request.SendWebRequest();
