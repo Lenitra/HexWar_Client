@@ -108,7 +108,6 @@ public class Tile : MonoBehaviour
         // Appliquer la couleur à la tile
         if (ColorUtility.TryParseHtmlString(color, out Color unityColor))
         {
-            Debug.Log("Changement de l'albedo de la tile ID " + id + " en " + color);
             meshDeRenduObject.material.color = unityColor;
         }
         else
