@@ -80,32 +80,32 @@ public class CamController : MonoBehaviour
             transform.position += new Vector3(delta.x, 0f, delta.z);
         }
 
-        // 2. PAN SOURIS (clic gauche drag, pas sur UI)
-        if (Input.GetMouseButtonDown(0) && !IsPointerOverUI())
-        {
-            lastMousePosition = Input.mousePosition;
-            isDragging = true;
-        }
-        if (Input.GetMouseButton(0) && isDragging)
-        {
-            Vector3 mouseDelta = Input.mousePosition - lastMousePosition;
+        // // 2. PAN SOURIS (clic gauche drag, pas sur UI)
+        // if (Input.GetMouseButtonDown(0) && !IsPointerOverUI())
+        // {
+        //     lastMousePosition = Input.mousePosition;
+        //     isDragging = true;
+        // }
+        // if (Input.GetMouseButton(0) && isDragging)
+        // {
+        //     Vector3 mouseDelta = Input.mousePosition - lastMousePosition;
 
-            // Directions caméra
-            Vector3 right = mainCam.transform.right;
-            Vector3 forward = Vector3.Cross(right, Vector3.up);
+        //     // Directions caméra
+        //     Vector3 right = mainCam.transform.right;
+        //     Vector3 forward = Vector3.Cross(right, Vector3.up);
 
-            right.y = 0f; forward.y = 0f;
-            right.Normalize(); forward.Normalize();
+        //     right.y = 0f; forward.y = 0f;
+        //     right.Normalize(); forward.Normalize();
 
-            Vector3 delta = (right * mouseDelta.x + forward * mouseDelta.y) * (mousePanSpeed * Time.deltaTime);
-            transform.position -= new Vector3(delta.x, 0f, delta.z);
+        //     Vector3 delta = (right * mouseDelta.x + forward * mouseDelta.y) * (mousePanSpeed * Time.deltaTime);
+        //     transform.position -= new Vector3(delta.x, 0f, delta.z);
 
-            lastMousePosition = Input.mousePosition;
-        }
-        if (Input.GetMouseButtonUp(0))
-        {
-            isDragging = false;
-        }
+        //     lastMousePosition = Input.mousePosition;
+        // }
+        // if (Input.GetMouseButtonUp(0))
+        // {
+        //     isDragging = false;
+        // }
     }
     #endregion
 
@@ -251,7 +251,8 @@ public class CamController : MonoBehaviour
         }
     }
 
-    #region Déplacement programmatique (inchangé)
+
+    #region Déplacement programmatique 
     public void MoveCamToTile(float x, float z, bool delay = true)
     {
         Vector3 offset = new Vector3(0f, 0f, -4f);

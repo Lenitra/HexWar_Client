@@ -87,8 +87,9 @@ public class ServerClient : MonoBehaviour
     #endregion
 
 
+    #region Récupération des infos de la carte
 
-    private void UpdateMap()
+    public void UpdateMap()
     {
         StartCoroutine(UpdateMapCoro());
     }
@@ -104,7 +105,6 @@ public class ServerClient : MonoBehaviour
         {
             string json = request.downloadHandler.text;
             json = "{\"tiles\":" + json + "}";
-            Debug.Log(json);
             MapApi mapData = JsonUtility.FromJson<MapApi>(json);
             TileApi[] tiles = mapData.tiles;
             gameManager.UpdateMap(tiles);
@@ -119,6 +119,39 @@ public class ServerClient : MonoBehaviour
             }
         }
     }
+    #endregion
+
+    #region Récupération des infos des utilisateurs
+    public void GetUser(int userId)
+    {
+        StartCoroutine(GetUserCoro(userId));
+    }
+
+    IEnumerator GetUserCoro(int userId)
+    {
+
+        string url = DataManager.Instance.GetData("serverIP") + "/user/" + userId;
+        UnityWebRequest request = UnityWebRequest.Get(url);
+        request.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString("auth_token"));
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            string json = request.downloadHandler.text;
+            User user = JsonUtility.FromJson<User>(json);
+            gameManager.users[user.id] = user;
+        }
+        else
+        {
+            Debug.LogError("Erreur de requête: " + request.error);
+            if (request.responseCode == 401)
+            {
+                Debug.LogWarning("Token invalide ou expiré. Redirection.");
+                SceneManager.LoadScene("Home");
+            }
+        }
+    }
+    #endregion
 
 }
 
@@ -135,6 +168,15 @@ public class PlayerInfoApi
     public string last_activity;
     public int power;
     public string no_calc_power_end;
+}
+
+public class User
+{
+    public int id;
+    public string username;
+    public string color;
+    public DateTime last_activity;
+    public int power;
 }
 
 

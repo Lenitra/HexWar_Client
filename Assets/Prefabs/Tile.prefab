@@ -469,14 +469,10 @@ MonoBehaviour:
   lvl: 0
   build: 
   drone: 0
-  color: '#000000'
-  hasShield: 0
+  color: 
   owner: 
-  buildPrefabs:
-  - {fileID: 7045272022778445211, guid: 0f1a4e845a739404caaa20732b96c018, type: 3}
-  - {fileID: 4658149910198274641, guid: fd9e966b44871bf41aa5bd5c37597f61, type: 3}
-  - {fileID: 2362558958986253731, guid: 796a4fa5bdc5fe744b1b1fd294908283, type: 3}
-  - {fileID: 6886433730322779250, guid: 340bc1730567232419a217292437ddeb, type: 3}
+  hasShield: 0
+  buildPrefabs: []
   meshDeRenduObject: {fileID: 5337106218765478654}
   borderParentObject: {fileID: 1527403685534955587}
   shieldObject: {fileID: 1579995590187990904}
