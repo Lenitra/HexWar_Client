@@ -90,7 +90,6 @@ public class UpdateBtn : MonoBehaviour
             yield break;
         }
 
-        // Debug.Log("Téléchargement terminé !");
 
         // Extraire le contenu du zip
         ZipFile.ExtractToDirectory(downloadedZipPath, extractionPath);

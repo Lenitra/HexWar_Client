@@ -1,11 +1,11 @@
 using System;
+using System.Collections;
 using System.Threading.Tasks;
-using UnityEngine;
-using UnityEngine.Networking;
 using Unity.Services.Authentication;
 using Unity.Services.Authentication.PlayerAccounts;
 using Unity.Services.Core;
-using System.Collections;
+using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
 public class LoginController : MonoBehaviour
@@ -80,7 +80,7 @@ public class LoginController : MonoBehaviour
 
             if (request.result == UnityWebRequest.Result.Success)
             {
-                ExtractAndSaveDataFromServerAuthResponseInPlayerPrefs(request.downloadHandler.text);
+                SaveJWTInPlayerPrefs(request.downloadHandler.text);
                 SignedInBackend();
             }
             else
@@ -172,14 +172,14 @@ public class LoginController : MonoBehaviour
             string backendUrl = DataManager.Instance.GetData("serverIP") + "/auth/token-refresh";
             UnityWebRequest request = UnityWebRequest.Get(backendUrl);
 
-            request.SetRequestHeader("X-Auth-Token", "Bearer " + PlayerPrefs.GetString("auth_token"));
+            request.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString("auth_token"));
             request.SetRequestHeader("Content-Type", "application/json");
 
             await request.SendWebRequest();
 
             if (request.result == UnityWebRequest.Result.Success)
             {
-                ExtractAndSaveDataFromServerAuthResponseInPlayerPrefs(request.downloadHandler.text);
+                SaveJWTInPlayerPrefs(request.downloadHandler.text);
                 SignedInBackend();
             }
             else
@@ -201,43 +201,19 @@ public class LoginController : MonoBehaviour
 
 
 
-    // return jsonify(f"{backend_token}:|:{player_id}:|:{user['username']}"), 200
-    private void ExtractAndSaveDataFromServerAuthResponseInPlayerPrefs(string response)
+    // return JSONResponse(content=backend_token, status_code=200)
+    private void SaveJWTInPlayerPrefs(string response)
     {
-        // Sépare la chaîne de caractères en utilisant ":|:" comme délimiteur
-        string[] data = response.Split(new string[] { ":|:" }, StringSplitOptions.None);
+        Debug.Log("Response from server authentication: " + response);
+        // Enleve les guillemets autour du token si présents
+        response = response.Trim('"');
 
-        // Vérifie si la réponse contient les trois parties attendues
-        if (data.Length == 3)
-        {
-            string backendToken = data[0].Trim();
-            backendToken = backendToken.Replace("\"", "");
-            backendToken = backendToken.Trim();
-
-            string playerId = data[1].Trim();
-            playerId = playerId.Replace("\"", "");
-            playerId = playerId.Trim();
-
-
-            string username = data[2].Trim();
-            username = username.Replace("\"", "");
-            username = username.Trim();
-
-
-            // Enregistre les données dans PlayerPrefs
-            PlayerPrefs.SetString("auth_token", backendToken);
-            PlayerPrefs.SetString("user_id", playerId);
-            PlayerPrefs.SetString("username", username);
-            PlayerPrefs.Save();
-
-            Debug.Log($"Data saved: auth_token={backendToken}, user_id={playerId}, username={username}");
-        }
-        else
-        {
-            Debug.LogError("Invalid response format from server authentication.");
-        }
+        // Enregistre les données dans PlayerPrefs
+        PlayerPrefs.SetString("auth_token", response);
+        PlayerPrefs.Save();
     }
-    
+
+
 
 
     private void ConnectingError(string error)

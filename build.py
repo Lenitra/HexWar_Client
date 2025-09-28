@@ -118,57 +118,59 @@ password = input(
 os.system('cls' if os.name == 'nt' else 'clear')
 print("Build OK")
 print("Archives OK")
-print("Mise à jour du dépôt sur le serveur...")
 
-# Chemin du fichier local et chemin sur le VPS
-local_files = os.listdir(OUTPUT_PATH)
-remote_dir = "/root/HexWar_Builds"
 
-# Création d'un client SSH
-ssh_client = paramiko.SSHClient()
-ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+# print("Mise à jour du dépôt sur le serveur...")
 
-try:
-    # Connexion au serveur
-    ssh_client.connect(
-        hostname=hostname, port=port, username=username, password=password
-    )
+# # Chemin du fichier local et chemin sur le VPS
+# local_files = os.listdir(OUTPUT_PATH)
+# remote_dir = "/root/HexWar_Builds"
 
-    # Ouverture d'une session SFTP
-    sftp_client = ssh_client.open_sftp()
+# # Création d'un client SSH
+# ssh_client = paramiko.SSHClient()
+# ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-    try:
-        # Se placer dans le répertoire distant
-        sftp_client.chdir(remote_dir)
-    except IOError:
-        # Si le dossier n'existe pas, on le crée
-        sftp_client.mkdir(remote_dir)
-        sftp_client.chdir(remote_dir)
+# try:
+#     # Connexion au serveur
+#     ssh_client.connect(
+#         hostname=hostname, port=port, username=username, password=password
+#     )
 
-    # Nettoyer le contenu du dossier distant (uniquement les fichiers)
-    for file in sftp_client.listdir():
-        remote_file = os.path.join(remote_dir, file)
-        try:
-            sftp_client.remove(remote_file)
-            print(f"Fichier {remote_file} supprimé sur le serveur.")
-        except Exception as e:
-            print(f"Impossible de supprimer {remote_file} : {e}")
+#     # Ouverture d'une session SFTP
+#     sftp_client = ssh_client.open_sftp()
 
-    # Upload des fichiers
-    for f in local_files:
-        local_path = os.path.join(OUTPUT_PATH, f)
-        remote_path = f  # Puisqu'on est déjà dans remote_dir
-        if os.path.isfile(local_path):
-            sftp_client.put(local_path, remote_path)
-            print(f"Fichier {local_path} uploadé avec succès dans {remote_dir}.")
+#     try:
+#         # Se placer dans le répertoire distant
+#         sftp_client.chdir(remote_dir)
+#     except IOError:
+#         # Si le dossier n'existe pas, on le crée
+#         sftp_client.mkdir(remote_dir)
+#         sftp_client.chdir(remote_dir)
 
-    # Reboot du serveur 
-    stdin, stdout, stderr = ssh_client.exec_command("reboot")
-    print("Commande de reboot envoyée au serveur.")
+#     # Nettoyer le contenu du dossier distant (uniquement les fichiers)
+#     for file in sftp_client.listdir():
+#         remote_file = os.path.join(remote_dir, file)
+#         try:
+#             sftp_client.remove(remote_file)
+#             print(f"Fichier {remote_file} supprimé sur le serveur.")
+#         except Exception as e:
+#             print(f"Impossible de supprimer {remote_file} : {e}")
 
-    # Fermeture des connexions SFTP et SSH
-    sftp_client.close()
-    ssh_client.close()
+#     # Upload des fichiers
+#     for f in local_files:
+#         local_path = os.path.join(OUTPUT_PATH, f)
+#         remote_path = f  # Puisqu'on est déjà dans remote_dir
+#         if os.path.isfile(local_path):
+#             sftp_client.put(local_path, remote_path)
+#             print(f"Fichier {local_path} uploadé avec succès dans {remote_dir}.")
 
-except Exception as e:
-    print(f"Erreur lors de l'upload : \n{e}")
+#     # Reboot du serveur 
+#     stdin, stdout, stderr = ssh_client.exec_command("reboot")
+#     print("Commande de reboot envoyée au serveur.")
+
+#     # Fermeture des connexions SFTP et SSH
+#     sftp_client.close()
+#     ssh_client.close()
+
+# except Exception as e:
+#     print(f"Erreur lors de l'upload : \n{e}")

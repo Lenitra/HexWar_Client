@@ -16,7 +16,6 @@ public class Controller : MonoBehaviour
     private GameManager gameManager;
     private CamController camController;
     private Camera mainCamera;
-    private string playerName;
 
 
     // --- Tile selection state ---
@@ -24,18 +23,16 @@ public class Controller : MonoBehaviour
     private bool moveMode = false;
 
 
-    [Header("Tile Info Panels")]
-    [SerializeField] private TilePanel hoverInfoPanel;
+
 
 
 
     [Header("Action Panels")]
-    [SerializeField] private BuildPanel buildPanel;
-    [SerializeField] private MovePanel movePanel;
+    // [SerializeField] private BuildPanel buildPanel;
+    // [SerializeField] private MovePanel movePanel;
 
     [Header("Other Panels")]
     [SerializeField] private Button optionsButton;
-    [SerializeField] private OptionsPanel optionsPanel;
 
 
 
@@ -43,6 +40,7 @@ public class Controller : MonoBehaviour
     private readonly float tapThreshold = 0.3f;
     private readonly float doubleTapMaxDelay = 0.25f;
     private readonly float longPressThreshold = 0.5f;
+
 
     [Header("Drag Detection (pixels)")]
     private readonly float dragThreshold = 10f;
@@ -56,49 +54,7 @@ public class Controller : MonoBehaviour
     private Coroutine tapCoroutine;
 
 
-    private int unitsToMove = 0; // Nombre d'unités à déplacer
 
-
-    /// <summary>
-    /// Currently selected tile by the player.
-    /// Setting this property will handle visual feedback and info panel.
-    /// </summary>
-    public Tile SelectedTile
-    {
-        get => selectedTile;
-        set
-        {
-            if (selectedTile != null)
-            {
-                // Deselect previous tile
-                selectedTile.UnSelect();
-            }
-
-
-            if (selectedTile == value)
-            {
-                selectedTile = null;
-            }
-            else
-            {
-                selectedTile = value;
-            }
-
-
-            if (selectedTile != null)
-            {
-                // Select new tile
-                selectedTile.Select();
-                hoverInfoPanel.gameObject.SetActive(true);
-                hoverInfoPanel.SetInfoTilePanel(selectedTile);
-            }
-            else
-            {
-                // Hide info panel if no tile is selected
-                hoverInfoPanel.gameObject.SetActive(false);
-            }
-        }
-    }
 
     private void Start()
     {
@@ -106,19 +62,6 @@ public class Controller : MonoBehaviour
         gameManager = GetComponent<GameManager>();
         mainCamera = Camera.main;
         camController = mainCamera.GetComponent<CamController>();
-
-        // Retrieve current player name
-        playerName = PlayerPrefs.GetString("username");
-
-        // Initialize panels
-        buildPanel.gameObject.SetActive(false);
-        movePanel.gameObject.SetActive(false);
-        optionsPanel.gameObject.SetActive(false);
-        optionsButton.onClick.AddListener(() =>
-        {
-            // Show options panel
-            ShowOnlyPanel(optionsPanel.gameObject);
-        });
     }
 
 
@@ -248,68 +191,18 @@ public class Controller : MonoBehaviour
 
     private void OneTap(Tile tile)
     {
-        if (moveMode)
-        {
-            if (gameManager.GetValidMoveDestination(SelectedTile).Contains(tile))
-            {
-                MoveUnits(SelectedTile, tile, unitsToMove);
-                gameManager.UnHighlightAllTiles();
-                moveMode = false;
-                return;
-            }
-            else
-            {
-                if (SelectedTile == tile)
-                {
-                    SelectedTile = null;
-                }
-                Debug.LogWarning("Invalid tile for movement.");
-                return;
-            }
-        }
-        else
-        {
-            SelectedTile = tile;
-        }
+        Debug.Log("One Tap");
     }
 
     private void DoubleTap(Tile tile)
     {
-        if (tile == null || moveMode) return;
-
-        if (tile.Owner != playerName || tile.Units <= 0)
-        {
-            Debug.LogWarning("Tile cannot be selected for unit movement.");
-            return;
-        }
-
-        if (SelectedTile != tile)
-        {
-            SelectedTile = tile;
-        }
-
-        movePanel.gameObject.SetActive(true);
-        movePanel.SetupPanel(tile);
+        Debug.Log("Double Tap");
     }
 
     private void LongPress(Tile tile)
     {
-        if (tile == null || moveMode) return;
-
-        if (tile.Owner != playerName)
-        {
-            Debug.LogWarning("Tile cannot be selected for actions.");
-            return;
-        }
-
-
-        if (SelectedTile != tile)
-        {
-            SelectedTile = tile;
-        }
-        buildPanel.gameObject.SetActive(true);
-        buildPanel.SetupPanel(tile);
-
+        Debug.Log("Long Press");
+    
     }
 
     #endregion
@@ -317,61 +210,6 @@ public class Controller : MonoBehaviour
 
 
 
-    #region Validation des paneaux d'action/panels
-
-    public void BuildTile(Tile tile, string type)
-    {
-        if (SelectedTile == null || SelectedTile.Owner != playerName)
-            return;
-        string[] tileCoords = { tile.X.ToString(), tile.Y.ToString() };
-        gameManager.BuildTile(tileCoords, type);
-        SelectedTile = null;
-    }
-
-    public void DestroyTile(Tile tileSelected)
-    {
-        if (SelectedTile == null || SelectedTile.Owner != playerName)
-            return;
-        string[] tileCoords = { tileSelected.X.ToString(), tileSelected.Y.ToString() };
-        gameManager.DestroyTile(tileCoords);
-        SelectedTile = null;
-    }
-
-    public void ValidateMovePanel(Tile origin, int unitsCount)
-    {
-        if (unitsCount <= 0)
-        {
-            moveMode = false;
-            gameManager.UnHighlightAllTiles();
-            SelectedTile = null;
-            return;
-        }
-        unitsToMove = unitsCount;
-        gameManager.HighlightMoveTiles(origin);
-        moveMode = true;
-    }
-
-
-    private void MoveUnits(Tile origin, Tile destination, int untisCount)
-    {
-        string[] originCoods = { origin.X.ToString(), origin.Y.ToString() };
-        string[] destinationCoods = { destination.X.ToString(), destination.Y.ToString() };
-        gameManager.MoveUnitsTile(originCoods, destinationCoods, untisCount);
-        Debug.Log($"Moving {untisCount} units from ({origin.X}, {origin.Y}) to ({destination.X}, {destination.Y})");
-        SelectedTile = null;
-    }
-
-
-    public void RallyTile(Tile tileSelected)
-    {
-        if (SelectedTile == null || SelectedTile.Owner != playerName)
-            return;
-        string[] tileCoords = { tileSelected.X.ToString(), tileSelected.Y.ToString() };
-        gameManager.RallyUnits(tileCoords);
-        SelectedTile = null;
-    }
-
-    #endregion
 
 
     #region Gestion du panel d'options
